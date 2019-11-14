@@ -1,0 +1,17 @@
+#!/bin/bash
+
+if [ -z "$NATIVE_IMAGE" ]; then
+    echo 'Please set $NATIVE_IMAGE'
+    exit 1
+fi
+
+$NATIVE_IMAGE \
+    -jar target/graphql-fmt-0.1.0-SNAPSHOT-standalone.jar \
+    -H:Name=graphql-fmt \
+    -H:+ReportExceptionStackTraces \
+    --initialize-at-build-time  \
+    --report-unsupported-elements-at-runtime \
+    --verbose \
+    --no-fallback \
+    --no-server \
+    "-J-Xmx3g"
