@@ -1,3 +1,8 @@
-Token = Punctuator | Name
+Token = Punctuator | Name | IntValue
 Punctuator = "!" | "$" | "(" | ")" | "..." | ":" | "=" | "@" | "[" | "]" | "{" | "|" | "}"
 Name = #"[_A-Za-z][_0-9A-Za-z]*"
+IntValue = IntegerPart
+IntegerPart = (NegativeSign? "0") | (NegativeSign? NonZeroDigit Digit*)
+Digit = #"[0-9]"
+NonZeroDigit = #"[1-9]"
+NegativeSign = "-"
