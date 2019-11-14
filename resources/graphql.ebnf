@@ -1,4 +1,4 @@
-Token = Punctuator | Name | IntValue
+Token = Punctuator | Name | IntValue | FloatValue
 Punctuator = "!" | "$" | "(" | ")" | "..." | ":" | "=" | "@" | "[" | "]" | "{" | "|" | "}"
 Name = #"[_A-Za-z][_0-9A-Za-z]*"
 IntValue = IntegerPart
@@ -6,3 +6,10 @@ IntegerPart = (NegativeSign? "0") | (NegativeSign? NonZeroDigit Digit*)
 Digit = #"[0-9]"
 NonZeroDigit = #"[1-9]"
 NegativeSign = "-"
+FloatValue = (IntegerPart FractionalPart) |
+             (IntegerPart ExponentPart) |
+             (IntegerPart FractionalPart ExponentPart)
+FractionalPart = (#"\." Digit*)
+ExponentPart = (ExponentIndicator Sign? Digit*)
+ExponentIndicator = "e" | "E"
+Sign = "+" | "-"
