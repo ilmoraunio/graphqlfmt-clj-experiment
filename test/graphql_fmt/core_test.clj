@@ -3,7 +3,5 @@
             [graphql-fmt.core :as core]))
 
 (deftest test-example
-  (is (= [:S
-          [:AB [:A "a" "a" "a" "a" "a"] [:B "b" "b" "b"]]
-          [:AB [:A "a" "a" "a" "a"] [:B "b" "b"]]]
-         (core/as-and-bs* "aaaaabbbaaaabb"))))
+  (is (= [:Punctuator "{"]
+         (core/graphql-parser "{"))))

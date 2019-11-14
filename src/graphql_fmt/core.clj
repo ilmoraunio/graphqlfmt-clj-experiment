@@ -3,7 +3,7 @@
             [instaparse.core :as insta])
   (:gen-class))
 
-(def as-and-bs*
+(def graphql-parser
   (insta/parser
     (-> "graphql.ebnf"
       io/resource
@@ -11,4 +11,4 @@
       slurp)))
 
 (defn -main [& _args]
-  (println (as-and-bs* "aaaaabbbaaaabb")))
+  (println (graphql-parser "{")))
