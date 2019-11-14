@@ -1,1 +1,3 @@
+Token = Punctuator | Name
 Punctuator = "!" | "$" | "(" | ")" | "..." | ":" | "=" | "@" | "[" | "]" | "{" | "|" | "}"
+Name = #"[_A-Za-z][_0-9A-Za-z]*"

@@ -2,6 +2,8 @@
   (:require [clojure.test :refer [are deftest is testing]]
             [graphql-fmt.core :as core]))
 
-(deftest test-example
+(deftest test-tokens
   (is (= [:Punctuator "{"]
-         (core/graphql-parser "{"))))
+         (core/graphql-parser "{")))
+  (is (= [:Token [:Name "frob"]]
+         (core/graphql-parser "frob"))))
