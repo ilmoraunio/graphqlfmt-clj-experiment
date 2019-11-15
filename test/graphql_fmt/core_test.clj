@@ -131,4 +131,24 @@
             [:Digit "1"]
             [:Digit "3"]]
            [:ExponentPart [:ExponentIndicator "e"] [:Sign "-"] [:Digit "2"] [:Digit "3"]]]]
-         (graphql-parser "-6.0221413e-23"))))
+         (graphql-parser "-6.0221413e-23")))
+  (is (= [:Token [:StringValue]] (graphql-parser "\"\"")))
+  (is (= [:Token [:StringValue [:StringCharacter "*"]]]
+         (graphql-parser "\"*\"")))
+  (is (= [:Token
+          [:StringValue
+           [:StringCharacter "f"]
+           [:StringCharacter "r"]
+           [:StringCharacter "o"]
+           [:StringCharacter "b"]]]
+         (graphql-parser "\"frob\"")))
+  (is (= [:Token
+          [:StringValue [:StringCharacter "\\u" [:EscapedUnicode "0000"]]]]
+         (graphql-parser "\"\\u0000\"")))
+  (is (= [:Token
+          [:StringValue
+           [:StringCharacter "\\" [:EscapedCharacter "r"]]
+           [:StringCharacter "\\" [:EscapedCharacter "n"]]]]
+        (graphql-parser "\"\\r\\n\"")))
+
+  )
