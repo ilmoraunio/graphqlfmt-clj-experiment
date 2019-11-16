@@ -3,12 +3,12 @@
             [instaparse.core :as insta])
   (:gen-class))
 
-(def graphql-parser
+(def token-parser
   (insta/parser
-    (-> "graphql.ebnf"
+    (-> "token.ebnf"
       io/resource
       io/reader
       slurp)))
 
 (defn -main [& _args]
-  (println (graphql-parser "{")))
+  (println (token-parser "{")))
