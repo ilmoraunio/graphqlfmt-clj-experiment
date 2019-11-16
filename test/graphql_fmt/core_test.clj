@@ -23,26 +23,26 @@
   (is (= [:Token
           [:FloatValue
            [:IntegerPart [:NonZeroDigit "1"]]
-           [:FractionalPart "." [:Digit "0"]]]]
+           [:FractionalPart [:Digit "0"]]]]
          (token-parser "1.0")))
   (is (= [:Token
           [:FloatValue
            [:IntegerPart [:NegativeSign "-"] [:NonZeroDigit "1"]]
-           [:FractionalPart "." [:Digit "0"]]]]
+           [:FractionalPart [:Digit "0"]]]]
          (token-parser "-1.0")))
-  (is (= [:Token [:FloatValue [:IntegerPart "0"] [:FractionalPart "." [:Digit "1"]]]]
+  (is (= [:Token [:FloatValue [:IntegerPart "0"] [:FractionalPart [:Digit "1"]]]]
          (token-parser "0.1")))
   (is (= [:Token
           [:FloatValue
            [:IntegerPart [:NegativeSign "-"] "0"]
-           [:FractionalPart "." [:Digit "1"]]]]
+           [:FractionalPart [:Digit "1"]]]]
          (token-parser "-0.1")))
-  (is (= [:Token [:FloatValue [:IntegerPart "0"] [:FractionalPart "." [:Digit "0"]]]]
+  (is (= [:Token [:FloatValue [:IntegerPart "0"] [:FractionalPart [:Digit "0"]]]]
          (token-parser "0.0")))
   (is (= [:Token
           [:FloatValue
            [:IntegerPart [:NegativeSign "-"] "0"]
-           [:FractionalPart "." [:Digit "0"]]]]
+           [:FractionalPart [:Digit "0"]]]]
          (token-parser "-0.0")))
   (is (= [:Token
           [:FloatValue
@@ -108,7 +108,6 @@
           [:FloatValue
            [:IntegerPart [:NonZeroDigit "6"]]
            [:FractionalPart
-            "."
             [:Digit "0"]
             [:Digit "2"]
             [:Digit "2"]
@@ -122,7 +121,6 @@
           [:FloatValue
            [:IntegerPart [:NegativeSign "-"] [:NonZeroDigit "6"]]
            [:FractionalPart
-            "."
             [:Digit "0"]
             [:Digit "2"]
             [:Digit "2"]

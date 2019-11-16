@@ -9,7 +9,7 @@ NegativeSign = "-"
 FloatValue = (IntegerPart FractionalPart) |
              (IntegerPart ExponentPart) |
              (IntegerPart FractionalPart ExponentPart)
-FractionalPart = (#"\." Digit*)
+FractionalPart = (<#"\."> Digit*)
 ExponentPart = (ExponentIndicator Sign? Digit*)
 ExponentIndicator = "e" | "E"
 Sign = "+" | "-"
