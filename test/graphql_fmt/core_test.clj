@@ -150,5 +150,40 @@
            [:StringCharacter "\\" [:EscapedCharacter "r"]]
            [:StringCharacter "\\" [:EscapedCharacter "n"]]]]
         (graphql-parser "\"\\r\\n\"")))
-
-  )
+  (is (= [:Token
+          [:StringValue
+           [:BlockStringCharacter " "]
+           [:BlockStringCharacter "f"]
+           [:BlockStringCharacter "r"]
+           [:BlockStringCharacter "o"]
+           [:BlockStringCharacter "b"]
+           [:BlockStringCharacter "\""]
+           [:BlockStringCharacter "f"]
+           [:BlockStringCharacter "r"]
+           [:BlockStringCharacter "o"]
+           [:BlockStringCharacter "b"]
+           [:BlockStringCharacter "n"]
+           [:BlockStringCharacter "i"]
+           [:BlockStringCharacter "t"]
+           [:BlockStringCharacter "z"]
+           [:BlockStringCharacter "\"\""]
+           [:BlockStringCharacter "f"]
+           [:BlockStringCharacter "r"]
+           [:BlockStringCharacter "o"]
+           [:BlockStringCharacter "b"]
+           [:BlockStringCharacter "n"]
+           [:BlockStringCharacter "i"]
+           [:BlockStringCharacter "c"]
+           [:BlockStringCharacter "a"]
+           [:BlockStringCharacter "t"]
+           [:BlockStringCharacter "e"]
+           [:BlockStringCharacter " "]]]
+         (graphql-parser "\"\"\" frob\"frobnitz\"\"frobnicate \"\"\"")))
+  (is (instance? instaparse.gll.Failure
+                 (graphql-parser "\"\"\" \"\"\" \"\"\"")))
+  (is (= [:Token
+          [:StringValue
+           [:BlockStringCharacter " "]
+           [:BlockStringCharacter "\"\"\""]
+           [:BlockStringCharacter " "]]]
+         (graphql-parser "\"\"\" \\\"\"\" \"\"\""))))
