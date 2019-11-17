@@ -1,4 +1,4 @@
-Token = Punctuator | Name | IntValue | FloatValue | StringValue
+Token = Punctuator | Name | IntValue | FloatValue | StringValue | BooleanValue | NullValue
 Punctuator = "!" | "$" | "(" | ")" | "..." | ":" | "=" | "@" | "[" | "]" | "{" | "|" | "}"
 Name = #"[_A-Za-z][_0-9A-Za-z]*"
 IntValue = IntegerPart
@@ -22,3 +22,6 @@ EscapedUnicode = #"[0-9A-Fa-f]{4}"
 EscapedCharacter = "\"" | "\\" | "/" | "b" | "f" | "n" | "r" | "t"
 BlockStringCharacter = #"([\u0009\u000A\u000D\u0020-\u0021\u0023-\uFFFF]|(\"\"?(?!\")))" |
                        <'\\'> '\"\"\"'
+(* not included as lexical tokens in June 2018 edition *)
+BooleanValue = 'true' | 'false'
+NullValue = <'null'>

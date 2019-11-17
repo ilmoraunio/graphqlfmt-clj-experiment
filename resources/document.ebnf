@@ -1,0 +1,19 @@
+Document = Definition+
+Definition = ExecutableDefinition
+ExecutableDefinition = OperationDefinition
+OperationDefinition = SelectionSet
+SelectionSet = <'{'> Selection+ <'}'>
+Selection = Field
+Field = Alias? Name Arguments?
+Alias = Name <':'>
+Arguments = <'('> Argument+ <')'>
+Argument = Name <':'> Value
+Value = Variable |
+        IntValue |
+        FloatValue |
+        StringValue |
+        BooleanValue |
+        NullValue |
+        EnumValue
+Variable = <'$'> Name
+EnumValue = #"^(?!(true|false|null))[_A-Za-z][_0-9A-Za-z]*"

@@ -1,6 +1,6 @@
 (ns graphql-fmt.core-test
   (:require [clojure.test :refer [are deftest is testing]]
-            [graphql-fmt.core :refer [token-parser]]))
+            [graphql-fmt.core :refer [document-parser token-parser]]))
 
 (deftest test-tokens
   (is (= [:Token [:Punctuator "{"]]
@@ -184,4 +184,135 @@
            [:BlockStringCharacter " "]
            [:BlockStringCharacter "\"\"\""]
            [:BlockStringCharacter " "]]]
-         (token-parser "\"\"\" \\\"\"\" \"\"\""))))
+         (token-parser "\"\"\" \\\"\"\" \"\"\"")))
+  (is (= [:Token [:BooleanValue "true"]]
+        (token-parser "true")))
+  (is (= [:Token [:BooleanValue "false"]]
+         (token-parser "false")))
+  (is (= [:Token [:NullValue]]
+         (token-parser "null"))))
+
+(deftest test-document
+  (are [document ast]
+       (is (= ast (document-parser document)))
+
+       "{foo}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition [:SelectionSet [:Selection [:Field [:Name "foo"]]]]]]]]
+
+       "{foo_alias:foo}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:SelectionSet
+            [:Selection [:Field [:Alias [:Name "foo_alias"]] [:Name "foo"]]]]]]]]
+
+       "{foo(bar:$foobar)}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:SelectionSet
+            [:Selection
+             [:Field
+              [:Name "foo"]
+              [:Arguments
+               [:Argument [:Name "bar"] [:Value [:Variable [:Name "foobar"]]]]]]]]]]]]
+
+       "{foo(bar:1)}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:SelectionSet
+            [:Selection
+             [:Field
+              [:Name "foo"]
+              [:Arguments
+               [:Argument
+                [:Name "bar"]
+                [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]]]]]]]]]
+
+       "{foo(bar:1.0)}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:SelectionSet
+            [:Selection
+             [:Field
+              [:Name "foo"]
+              [:Arguments
+               [:Argument
+                [:Name "bar"]
+                [:Value
+                 [:FloatValue
+                  [:IntegerPart [:NonZeroDigit "1"]]
+                  [:FractionalPart [:Digit "0"]]]]]]]]]]]]]
+
+       "{foo(bar:\"foobar\")}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:SelectionSet
+            [:Selection
+             [:Field
+              [:Name "foo"]
+              [:Arguments
+               [:Argument
+                [:Name "bar"]
+                [:Value
+                 [:StringValue
+                  [:StringCharacter "f"]
+                  [:StringCharacter "o"]
+                  [:StringCharacter "o"]
+                  [:StringCharacter "b"]
+                  [:StringCharacter "a"]
+                  [:StringCharacter "r"]]]]]]]]]]]]
+
+       "{foo(bar:\"\"\"foobar\"\"\")}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:SelectionSet
+            [:Selection
+             [:Field
+              [:Name "foo"]
+              [:Arguments
+               [:Argument
+                [:Name "bar"]
+                [:Value
+                 [:StringValue
+                  [:BlockStringCharacter "f"]
+                  [:BlockStringCharacter "o"]
+                  [:BlockStringCharacter "o"]
+                  [:BlockStringCharacter "b"]
+                  [:BlockStringCharacter "a"]
+                  [:BlockStringCharacter "r"]]]]]]]]]]]]
+
+       "{foo(bar:true)}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:SelectionSet
+            [:Selection
+             [:Field
+              [:Name "foo"]
+              [:Arguments [:Argument [:Name "bar"] [:Value [:BooleanValue "true"]]]]]]]]]]]
+
+       "{foo(bar:null)}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:SelectionSet
+            [:Selection
+             [:Field
+              [:Name "foo"]
+              [:Arguments [:Argument [:Name "bar"] [:Value [:NullValue]]]]]]]]]]]))
