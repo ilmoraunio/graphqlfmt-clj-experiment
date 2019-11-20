@@ -1,0 +1,14 @@
+Ignored = UnicodeBOM |
+          WhiteSpace |
+          LineTerminator |
+          Comment |
+          Comma
+UnicodeBOM = #"[\uFEFF]"
+WhiteSpace = #"[\u0009\u0020]"
+LineTerminator = NewLine
+NewLine = #"[\u000A]" |
+          #"[\u000D](?![\u000A])" |
+          #"[\u000D]" #"[\u000A]"
+Comment = <'#'> CommentChar*
+CommentChar = #"[\u0009\u0020-\uFFFF]"
+Comma = <','>
