@@ -382,6 +382,17 @@
             [:Selection
              [:Field [:Name "frob"] [:Directives [:Directive [:Name "foo"]]]]]]]]]]
 
+       "{frob @foo @bar}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:SelectionSet
+            [:Selection
+             [:Field
+              [:Name "frob"]
+              [:Directives [:Directive [:Name "foo"]] [:Directive [:Name "bar"]]]]]]]]]]
+
        "{frob @foo(bar:true)}"
        [:Document
         [:Definition
@@ -415,6 +426,29 @@
                  [:Argument
                   [:Name "b"]
                   [:Value [:IntValue [:IntegerPart [:NonZeroDigit "2"]]]]]]]]]]]]]]]
+
+       "{frob @foo(a:1) @bar(a:1)}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:SelectionSet
+            [:Selection
+             [:Field
+              [:Name "frob"]
+              [:Directives
+               [:Directive
+                [:Name "foo"]
+                [:Arguments
+                 [:Argument
+                  [:Name "a"]
+                  [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]]]
+               [:Directive
+                [:Name "bar"]
+                [:Arguments
+                 [:Argument
+                  [:Name "a"]
+                  [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]]]]]]]]]]]
 
        "{foo{bar}}"
        [:Document
