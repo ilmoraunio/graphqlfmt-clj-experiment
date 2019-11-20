@@ -414,4 +414,58 @@
                   [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]
                  [:Argument
                   [:Name "b"]
-                  [:Value [:IntValue [:IntegerPart [:NonZeroDigit "2"]]]]]]]]]]]]]]]))
+                  [:Value [:IntValue [:IntegerPart [:NonZeroDigit "2"]]]]]]]]]]]]]]]
+
+       "{foo{bar}}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:SelectionSet
+            [:Selection
+             [:Field [:Name "foo"] [:SelectionSet [:Selection [:Field [:Name "bar"]]]]]]]]]]]
+
+       "{foo{bar{foobar}}}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:SelectionSet
+            [:Selection
+             [:Field
+              [:Name "foo"]
+              [:SelectionSet
+               [:Selection
+                [:Field
+                 [:Name "bar"]
+                 [:SelectionSet [:Selection [:Field [:Name "foobar"]]]]]]]]]]]]]]
+
+       "{foo bar}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:SelectionSet
+            [:Selection [:Field [:Name "foo"]]]
+            [:Selection [:Field [:Name "bar"]]]]]]]]
+
+       "{foo{a} bar{a b} foobar{a{b}}}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:SelectionSet
+            [:Selection
+             [:Field [:Name "foo"] [:SelectionSet [:Selection [:Field [:Name "a"]]]]]]
+            [:Selection
+             [:Field
+              [:Name "bar"]
+              [:SelectionSet
+               [:Selection [:Field [:Name "a"]]]
+               [:Selection [:Field [:Name "b"]]]]]]
+            [:Selection
+             [:Field
+              [:Name "foobar"]
+              [:SelectionSet
+               [:Selection
+                [:Field [:Name "a"] [:SelectionSet [:Selection [:Field [:Name "b"]]]]]]]]]]]]]]))
