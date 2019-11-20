@@ -4,7 +4,7 @@ ExecutableDefinition = OperationDefinition
 OperationDefinition = SelectionSet
 SelectionSet = <'{'> Selection+ <'}'>
 Selection = Field
-Field = Alias? Name Arguments?
+Field = Alias? Name Arguments? Directives?
 Alias = Name <':'>
 Arguments = <'('> Argument+ <')'>
 Argument = Name <':'> Value<Comma*>
@@ -17,3 +17,5 @@ Value = Variable |
         EnumValue
 Variable = <'$'> Name
 EnumValue = #"^(?!(true|false|null))[_A-Za-z][_0-9A-Za-z]*"
+Directives = <WhiteSpace+> Directive+
+Directive = <'@'> Name Arguments?

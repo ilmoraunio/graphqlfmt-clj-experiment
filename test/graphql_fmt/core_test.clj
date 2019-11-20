@@ -371,4 +371,47 @@
               [:Name "frob"]
               [:Arguments
                [:Argument [:Name "foo"] [:Value [:BooleanValue "true"]]]
-               [:Argument [:Name "bar"] [:Value [:BooleanValue "false"]]]]]]]]]]]))
+               [:Argument [:Name "bar"] [:Value [:BooleanValue "false"]]]]]]]]]]]
+
+       "{frob @foo}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:SelectionSet
+            [:Selection
+             [:Field [:Name "frob"] [:Directives [:Directive [:Name "foo"]]]]]]]]]]
+
+       "{frob @foo(bar:true)}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:SelectionSet
+            [:Selection
+             [:Field
+              [:Name "frob"]
+              [:Directives
+               [:Directive
+                [:Name "foo"]
+                [:Arguments [:Argument [:Name "bar"] [:Value [:BooleanValue "true"]]]]]]]]]]]]]
+
+       "{frob @foo(a:1,b:2)}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:SelectionSet
+            [:Selection
+             [:Field
+              [:Name "frob"]
+              [:Directives
+               [:Directive
+                [:Name "foo"]
+                [:Arguments
+                 [:Argument
+                  [:Name "a"]
+                  [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]
+                 [:Argument
+                  [:Name "b"]
+                  [:Value [:IntValue [:IntegerPart [:NonZeroDigit "2"]]]]]]]]]]]]]]]))
