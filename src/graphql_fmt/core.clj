@@ -18,7 +18,7 @@
   (insta/parser (ebnf "token")))
 
 (def document-parser
-  (insta/parser (ebnf "document" "token")))
+  (insta/parser (ebnf "document" "token" "ignored")))
 
 (defn -main [& _args]
   (println (token-parser "{")))

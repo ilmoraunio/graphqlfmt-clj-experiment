@@ -358,4 +358,17 @@
             [:Selection
              [:Field
               [:Name "foo"]
-              [:Arguments [:Argument [:Name "bar"] [:Value [:NullValue]]]]]]]]]]]))
+              [:Arguments [:Argument [:Name "bar"] [:Value [:NullValue]]]]]]]]]]]
+
+       "{frob(foo:true,bar:false)}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:SelectionSet
+            [:Selection
+             [:Field
+              [:Name "frob"]
+              [:Arguments
+               [:Argument [:Name "foo"] [:Value [:BooleanValue "true"]]]
+               [:Argument [:Name "bar"] [:Value [:BooleanValue "false"]]]]]]]]]]]))

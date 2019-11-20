@@ -7,7 +7,7 @@ Selection = Field
 Field = Alias? Name Arguments?
 Alias = Name <':'>
 Arguments = <'('> Argument+ <')'>
-Argument = Name <':'> Value
+Argument = Name <':'> Value<Comma*>
 Value = Variable |
         IntValue |
         FloatValue |
