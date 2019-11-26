@@ -3,7 +3,9 @@ Definition = ExecutableDefinition
 ExecutableDefinition = OperationDefinition
 OperationDefinition = SelectionSet
 SelectionSet = <'{'> Selection+ <'}'>
-Selection = Field | FragmentSpread
+Selection = Field |
+            FragmentSpread |
+            InlineFragment
 Field = <WhiteSpace*> Alias? Name Arguments? Directives? SelectionSet?
 Alias = Name <':'>
 Arguments = <'('> Argument+ <')'>
@@ -20,4 +22,7 @@ EnumValue = #"^(?!(true|false|null))[_A-Za-z][_0-9A-Za-z]*"
 Directives = Directive+
 Directive = <WhiteSpace*> <'@'> Name Arguments?
 FragmentSpread = <WhiteSpace*> <'...'> FragmentName Directives?
-FragmentName = #"^(?!on$)[_A-Za-z][_0-9A-Za-z]*"
+FragmentName = #"^(?!on)[_A-Za-z][_0-9A-Za-z]*"
+InlineFragment = <'...'> TypeCondition? Directives? SelectionSet
+TypeCondition = <'on'> <WhiteSpace*> NamedType
+NamedType = Name

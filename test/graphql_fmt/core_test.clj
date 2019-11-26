@@ -529,4 +529,40 @@
           [:OperationDefinition
            [:SelectionSet
             [:Selection [:FragmentSpread [:FragmentName "foo"]]]
-            [:Selection [:FragmentSpread [:FragmentName "bar"]]]]]]]]))
+            [:Selection [:FragmentSpread [:FragmentName "bar"]]]]]]]]
+
+       "{...{frob}}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:SelectionSet
+            [:Selection
+             [:InlineFragment [:SelectionSet [:Selection [:Field [:Name "frob"]]]]]]]]]]]
+
+       "{...on Foo{...on Bar{foobar}}}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:SelectionSet
+            [:Selection
+             [:InlineFragment
+              [:TypeCondition [:NamedType [:Name "Foo"]]]
+              [:SelectionSet
+               [:Selection
+                [:InlineFragment
+                 [:TypeCondition [:NamedType [:Name "Bar"]]]
+                 [:SelectionSet [:Selection [:Field [:Name "foobar"]]]]]]]]]]]]]]
+
+       "{...on Foo @bar{foobar}}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:SelectionSet
+            [:Selection
+             [:InlineFragment
+              [:TypeCondition [:NamedType [:Name "Foo"]]]
+              [:Directives [:Directive [:Name "bar"]]]
+              [:SelectionSet [:Selection [:Field [:Name "foobar"]]]]]]]]]]]))
