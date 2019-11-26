@@ -502,4 +502,31 @@
               [:Name "foobar"]
               [:SelectionSet
                [:Selection
-                [:Field [:Name "a"] [:SelectionSet [:Selection [:Field [:Name "b"]]]]]]]]]]]]]]))
+                [:Field [:Name "a"] [:SelectionSet [:Selection [:Field [:Name "b"]]]]]]]]]]]]]]
+
+       "{...frob}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:SelectionSet [:Selection [:FragmentSpread [:FragmentName "frob"]]]]]]]]
+
+       "{...frob @foo}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:SelectionSet
+            [:Selection
+             [:FragmentSpread
+              [:FragmentName "frob"]
+              [:Directives [:Directive [:Name "foo"]]]]]]]]]]
+
+       "{...foo ...bar}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:SelectionSet
+            [:Selection [:FragmentSpread [:FragmentName "foo"]]]
+            [:Selection [:FragmentSpread [:FragmentName "bar"]]]]]]]]))
