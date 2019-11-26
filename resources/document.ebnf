@@ -1,7 +1,11 @@
 Document = Definition+
 Definition = ExecutableDefinition
 ExecutableDefinition = OperationDefinition
-OperationDefinition = SelectionSet
+OperationDefinition = (OperationType <WhiteSpace*> Name? VariableDefinitions? Directives? SelectionSet) |
+                      SelectionSet
+OperationType = 'query' | 'mutation' | 'subscription'
+VariableDefinitions = <'('> VariableDefinition+ <')'>
+VariableDefinition = <WhiteSpace*> Variable <':'> Type DefaultValue?
 SelectionSet = <'{'> Selection+ <'}'>
 Selection = Field |
             FragmentSpread |
@@ -18,6 +22,7 @@ Value = Variable |
         NullValue |
         EnumValue
 Variable = <'$'> Name
+DefaultValue = <'='> Value
 EnumValue = #"^(?!(true|false|null))[_A-Za-z][_0-9A-Za-z]*"
 Directives = Directive+
 Directive = <WhiteSpace*> <'@'> Name Arguments?
@@ -25,4 +30,10 @@ FragmentSpread = <WhiteSpace*> <'...'> FragmentName Directives?
 FragmentName = #"^(?!on)[_A-Za-z][_0-9A-Za-z]*"
 InlineFragment = <'...'> TypeCondition? Directives? SelectionSet
 TypeCondition = <'on'> <WhiteSpace*> NamedType
+Type = NamedType |
+       ListType |
+       NonNullType
 NamedType = Name
+ListType = <'['> Type <']'>
+NonNullType = NamedType <'!'> |
+              ListType <'!'>

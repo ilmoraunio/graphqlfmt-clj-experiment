@@ -565,4 +565,188 @@
              [:InlineFragment
               [:TypeCondition [:NamedType [:Name "Foo"]]]
               [:Directives [:Directive [:Name "bar"]]]
-              [:SelectionSet [:Selection [:Field [:Name "foobar"]]]]]]]]]]]))
+              [:SelectionSet [:Selection [:Field [:Name "foobar"]]]]]]]]]]]
+
+       "query{frob}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:OperationType "query"]
+           [:SelectionSet [:Selection [:Field [:Name "frob"]]]]]]]]
+
+       "mutation{frob}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:OperationType "mutation"]
+           [:SelectionSet [:Selection [:Field [:Name "frob"]]]]]]]]
+
+       "subscription{frob}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:OperationType "subscription"]
+           [:SelectionSet [:Selection [:Field [:Name "frob"]]]]]]]]
+
+       "query frobnicator{frob}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:OperationType "query"]
+           [:Name "frobnicator"]
+           [:SelectionSet [:Selection [:Field [:Name "frob"]]]]]]]]
+
+       "query frobnicator @foo{frob}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:OperationType "query"]
+           [:Name "frobnicator"]
+           [:Directives [:Directive [:Name "foo"]]]
+           [:SelectionSet [:Selection [:Field [:Name "frob"]]]]]]]]
+
+       "query frob($foo:bar){a b}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:OperationType "query"]
+           [:Name "frob"]
+           [:VariableDefinitions
+            [:VariableDefinition
+             [:Variable [:Name "foo"]]
+             [:Type [:NamedType [:Name "bar"]]]]]
+           [:SelectionSet
+            [:Selection [:Field [:Name "a"]]]
+            [:Selection [:Field [:Name "b"]]]]]]]]
+
+       "query frob($foo:bar $qux:baz){a b}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:OperationType "query"]
+           [:Name "frob"]
+           [:VariableDefinitions
+            [:VariableDefinition
+             [:Variable [:Name "foo"]]
+             [:Type [:NamedType [:Name "bar"]]]]
+            [:VariableDefinition
+             [:Variable [:Name "qux"]]
+             [:Type [:NamedType [:Name "baz"]]]]]
+           [:SelectionSet
+            [:Selection [:Field [:Name "a"]]]
+            [:Selection [:Field [:Name "b"]]]]]]]]
+
+       "query frob($foo:[bar]){a b}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:OperationType "query"]
+           [:Name "frob"]
+           [:VariableDefinitions
+            [:VariableDefinition
+             [:Variable [:Name "foo"]]
+             [:Type [:ListType [:Type [:NamedType [:Name "bar"]]]]]]]
+           [:SelectionSet
+            [:Selection [:Field [:Name "a"]]]
+            [:Selection [:Field [:Name "b"]]]]]]]]
+
+       "query frob($foo:[[bar]]){a b}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:OperationType "query"]
+           [:Name "frob"]
+           [:VariableDefinitions
+            [:VariableDefinition
+             [:Variable [:Name "foo"]]
+             [:Type [:ListType [:Type [:ListType [:Type [:NamedType [:Name "bar"]]]]]]]]]
+           [:SelectionSet
+            [:Selection [:Field [:Name "a"]]]
+            [:Selection [:Field [:Name "b"]]]]]]]]
+
+       "query frob($foo:bar!){a b}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:OperationType "query"]
+           [:Name "frob"]
+           [:VariableDefinitions
+            [:VariableDefinition
+             [:Variable [:Name "foo"]]
+             [:Type [:NonNullType [:NamedType [:Name "bar"]]]]]]
+           [:SelectionSet
+            [:Selection [:Field [:Name "a"]]]
+            [:Selection [:Field [:Name "b"]]]]]]]]
+
+       "query frob($foo:[bar]!){a b}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:OperationType "query"]
+           [:Name "frob"]
+           [:VariableDefinitions
+            [:VariableDefinition
+             [:Variable [:Name "foo"]]
+             [:Type [:NonNullType [:ListType [:Type [:NamedType [:Name "bar"]]]]]]]]
+           [:SelectionSet
+            [:Selection [:Field [:Name "a"]]]
+            [:Selection [:Field [:Name "b"]]]]]]]]
+
+       "query frob($foo:[bar!]){a b}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:OperationType "query"]
+           [:Name "frob"]
+           [:VariableDefinitions
+            [:VariableDefinition
+             [:Variable [:Name "foo"]]
+             [:Type [:ListType [:Type [:NonNullType [:NamedType [:Name "bar"]]]]]]]]
+           [:SelectionSet
+            [:Selection [:Field [:Name "a"]]]
+            [:Selection [:Field [:Name "b"]]]]]]]]
+
+       "query frob($foo:[bar!]!){a b}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:OperationType "query"]
+           [:Name "frob"]
+           [:VariableDefinitions
+            [:VariableDefinition
+             [:Variable [:Name "foo"]]
+             [:Type
+              [:NonNullType
+               [:ListType [:Type [:NonNullType [:NamedType [:Name "bar"]]]]]]]]]
+           [:SelectionSet
+            [:Selection [:Field [:Name "a"]]]
+            [:Selection [:Field [:Name "b"]]]]]]]]
+
+       "query frob($foo:bar=true){a b}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:OperationType "query"]
+           [:Name "frob"]
+           [:VariableDefinitions
+            [:VariableDefinition
+             [:Variable [:Name "foo"]]
+             [:Type [:NamedType [:Name "bar"]]]
+             [:DefaultValue [:Value [:BooleanValue "true"]]]]]
+           [:SelectionSet
+            [:Selection [:Field [:Name "a"]]]
+            [:Selection [:Field [:Name "b"]]]]]]]]))
