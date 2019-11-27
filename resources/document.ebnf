@@ -1,8 +1,10 @@
 Document = Definition+
 Definition = ExecutableDefinition
-ExecutableDefinition = OperationDefinition
+ExecutableDefinition = OperationDefinition |
+                       FragmentDefinition
 OperationDefinition = (OperationType <WhiteSpace*> Name? VariableDefinitions? Directives? SelectionSet) |
                       SelectionSet
+FragmentDefinition = <'fragment'> <WhiteSpace+> FragmentName <WhiteSpace+> TypeCondition Directives? SelectionSet
 OperationType = 'query' | 'mutation' | 'subscription'
 VariableDefinitions = <'('> VariableDefinition+ <')'>
 VariableDefinition = <WhiteSpace*> Variable <':'> Type DefaultValue?

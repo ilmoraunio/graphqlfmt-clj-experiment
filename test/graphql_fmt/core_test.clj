@@ -749,4 +749,17 @@
              [:DefaultValue [:Value [:BooleanValue "true"]]]]]
            [:SelectionSet
             [:Selection [:Field [:Name "a"]]]
-            [:Selection [:Field [:Name "b"]]]]]]]]))
+            [:Selection [:Field [:Name "b"]]]]]]]]
+
+       "fragment foo on Bar @foobar{a b c}"
+       [:Document
+        [:Definition
+         [:ExecutableDefinition
+          [:FragmentDefinition
+           [:FragmentName "foo"]
+           [:TypeCondition [:NamedType [:Name "Bar"]]]
+           [:Directives [:Directive [:Name "foobar"]]]
+           [:SelectionSet
+            [:Selection [:Field [:Name "a"]]]
+            [:Selection [:Field [:Name "b"]]]
+            [:Selection [:Field [:Name "c"]]]]]]]]))
