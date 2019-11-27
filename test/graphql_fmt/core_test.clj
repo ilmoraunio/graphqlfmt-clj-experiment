@@ -762,4 +762,29 @@
            [:SelectionSet
             [:Selection [:Field [:Name "a"]]]
             [:Selection [:Field [:Name "b"]]]
-            [:Selection [:Field [:Name "c"]]]]]]]]))
+            [:Selection [:Field [:Name "c"]]]]]]]]
+
+       "schema{query:Foo subscription:Bar mutation:Foobar}"
+       [:Document
+        [:Definition
+         [:TypeSystemDefinition
+          [:SchemaDefinition
+           [:RootOperationTypeDefinition
+            [:OperationType "query"]
+            [:NamedType [:Name "Foo"]]]
+           [:RootOperationTypeDefinition
+            [:OperationType "subscription"]
+            [:NamedType [:Name "Bar"]]]
+           [:RootOperationTypeDefinition
+            [:OperationType "mutation"]
+            [:NamedType [:Name "Foobar"]]]]]]]
+
+       "schema @foo{query:Foo}"
+       [:Document
+        [:Definition
+         [:TypeSystemDefinition
+          [:SchemaDefinition
+           [:Directives [:Directive [:Name "foo"]]]
+           [:RootOperationTypeDefinition
+            [:OperationType "query"]
+            [:NamedType [:Name "Foo"]]]]]]]))

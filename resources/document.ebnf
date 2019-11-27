@@ -1,7 +1,11 @@
 Document = Definition+
-Definition = ExecutableDefinition
+Definition = ExecutableDefinition |
+             TypeSystemDefinition
 ExecutableDefinition = OperationDefinition |
                        FragmentDefinition
+TypeSystemDefinition = SchemaDefinition
+SchemaDefinition = <'schema'> Directives? <'{'> RootOperationTypeDefinition+ <'}'>
+RootOperationTypeDefinition = <WhiteSpace*> OperationType <':'> NamedType
 OperationDefinition = (OperationType <WhiteSpace*> Name? VariableDefinitions? Directives? SelectionSet) |
                       SelectionSet
 FragmentDefinition = <'fragment'> <WhiteSpace+> FragmentName <WhiteSpace+> TypeCondition Directives? SelectionSet
