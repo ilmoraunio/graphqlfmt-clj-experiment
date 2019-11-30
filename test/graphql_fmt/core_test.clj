@@ -787,4 +787,141 @@
            [:Directives [:Directive [:Name "foo"]]]
            [:RootOperationTypeDefinition
             [:OperationType "query"]
-            [:NamedType [:Name "Foo"]]]]]]]))
+            [:NamedType [:Name "Foo"]]]]]]]
+
+       "\"the scalar\" scalar Foo @bar"
+       [:Document
+        [:Definition
+         [:TypeSystemDefinition
+          [:TypeDefinition
+           [:ScalarTypeDefinition
+            [:Description
+             [:StringValue
+              [:StringCharacter "t"]
+              [:StringCharacter "h"]
+              [:StringCharacter "e"]
+              [:StringCharacter " "]
+              [:StringCharacter "s"]
+              [:StringCharacter "c"]
+              [:StringCharacter "a"]
+              [:StringCharacter "l"]
+              [:StringCharacter "a"]
+              [:StringCharacter "r"]]]
+            [:Name "Foo"]
+            [:Directives [:Directive [:Name "bar"]]]]]]]]
+
+       "\"documents the\" type Foo @bar"
+       [:Document
+        [:Definition
+         [:TypeSystemDefinition
+          [:TypeDefinition
+           [:ObjectTypeDefinition
+            [:Description
+             [:StringValue
+              [:StringCharacter "d"]
+              [:StringCharacter "o"]
+              [:StringCharacter "c"]
+              [:StringCharacter "u"]
+              [:StringCharacter "m"]
+              [:StringCharacter "e"]
+              [:StringCharacter "n"]
+              [:StringCharacter "t"]
+              [:StringCharacter "s"]
+              [:StringCharacter " "]
+              [:StringCharacter "t"]
+              [:StringCharacter "h"]
+              [:StringCharacter "e"]]]
+            [:Name "Foo"]
+            [:Directives [:Directive [:Name "bar"]]]]]]]]
+
+       "type Foo{\"the field definition\" Bar:String @foobar}"
+       [:Document
+        [:Definition
+         [:TypeSystemDefinition
+          [:TypeDefinition
+           [:ObjectTypeDefinition
+            [:Name "Foo"]
+            [:FieldsDefinition
+             [:FieldDefinition
+              [:Description
+               [:StringValue
+                [:StringCharacter "t"]
+                [:StringCharacter "h"]
+                [:StringCharacter "e"]
+                [:StringCharacter " "]
+                [:StringCharacter "f"]
+                [:StringCharacter "i"]
+                [:StringCharacter "e"]
+                [:StringCharacter "l"]
+                [:StringCharacter "d"]
+                [:StringCharacter " "]
+                [:StringCharacter "d"]
+                [:StringCharacter "e"]
+                [:StringCharacter "f"]
+                [:StringCharacter "i"]
+                [:StringCharacter "n"]
+                [:StringCharacter "i"]
+                [:StringCharacter "t"]
+                [:StringCharacter "i"]
+                [:StringCharacter "o"]
+                [:StringCharacter "n"]]]
+              [:Name "Bar"]
+              [:Type [:NamedType [:Name "String"]]]
+              [:Directives [:Directive [:Name "foobar"]]]]]]]]]]
+
+       "type Foo{Bar:String}"
+       [:Document
+        [:Definition
+         [:TypeSystemDefinition
+          [:TypeDefinition
+           [:ObjectTypeDefinition
+            [:Name "Foo"]
+            [:FieldsDefinition
+             [:FieldDefinition [:Name "Bar"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
+
+       "type Foo{Qux:String Baz:String}"
+       [:Document
+        [:Definition
+         [:TypeSystemDefinition
+          [:TypeDefinition
+           [:ObjectTypeDefinition
+            [:Name "Foo"]
+            [:FieldsDefinition
+             [:FieldDefinition [:Name "Qux"] [:Type [:NamedType [:Name "String"]]]]
+             [:FieldDefinition [:Name "Baz"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
+
+       "type Foo implements Bar{qux:String}"
+       [:Document
+        [:Definition
+         [:TypeSystemDefinition
+          [:TypeDefinition
+           [:ObjectTypeDefinition
+            [:Name "Foo"]
+            [:ImplementsInterfaces [:NamedType [:Name "Bar"]]]
+            [:FieldsDefinition
+             [:FieldDefinition [:Name "qux"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
+
+       "type Foo implements & Bar{qux:String}"
+       [:Document
+        [:Definition
+         [:TypeSystemDefinition
+          [:TypeDefinition
+           [:ObjectTypeDefinition
+            [:Name "Foo"]
+            [:ImplementsInterfaces [:NamedType [:Name "Bar"]]]
+            [:FieldsDefinition
+             [:FieldDefinition [:Name "qux"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
+
+       "type Foo implements Bar & Foobar{qux:String}"
+       [:Document
+        [:Definition
+         [:TypeSystemDefinition
+          [:TypeDefinition
+           [:ObjectTypeDefinition
+            [:Name "Foo"]
+            [:ImplementsInterfaces
+             [:ImplementsInterfaces [:NamedType [:Name "Bar"]]]
+             [:NamedType [:Name "Foobar"]]]
+            [:FieldsDefinition
+             [:FieldDefinition [:Name "qux"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
+       ))

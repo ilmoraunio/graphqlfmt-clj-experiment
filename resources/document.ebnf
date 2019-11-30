@@ -1,11 +1,21 @@
 Document = Definition+
-Definition = ExecutableDefinition |
-             TypeSystemDefinition
+Definition = TypeSystemDefinition /
+             ExecutableDefinition
 ExecutableDefinition = OperationDefinition |
                        FragmentDefinition
-TypeSystemDefinition = SchemaDefinition
+TypeSystemDefinition = SchemaDefinition |
+                       TypeDefinition
 SchemaDefinition = <'schema'> Directives? <'{'> RootOperationTypeDefinition+ <'}'>
 RootOperationTypeDefinition = <WhiteSpace*> OperationType <':'> NamedType
+TypeDefinition = ScalarTypeDefinition |
+                 ObjectTypeDefinition
+ScalarTypeDefinition = Description? <WhiteSpace*> <'scalar'> <WhiteSpace+> Name Directives?
+ObjectTypeDefinition = Description? <WhiteSpace*> <'type'> <WhiteSpace+> Name ImplementsInterfaces? Directives? FieldsDefinition?
+Description = StringValue
+FieldsDefinition = <'{'> FieldDefinition+ <'}'>
+FieldDefinition = Description? <WhiteSpace*> Name <':'> Type Directives?
+ImplementsInterfaces = (<WhiteSpace*> <'implements'> <WhiteSpace*> <'&'?> <WhiteSpace*> NamedType) |
+                       (ImplementsInterfaces <WhiteSpace*> <'&'> <WhiteSpace*> NamedType)
 OperationDefinition = (OperationType <WhiteSpace*> Name? VariableDefinitions? Directives? SelectionSet) |
                       SelectionSet
 FragmentDefinition = <'fragment'> <WhiteSpace+> FragmentName <WhiteSpace+> TypeCondition Directives? SelectionSet
