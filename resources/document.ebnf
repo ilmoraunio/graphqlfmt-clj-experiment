@@ -8,9 +8,11 @@ TypeSystemDefinition = SchemaDefinition |
 SchemaDefinition = <'schema'> Directives? <'{'> RootOperationTypeDefinition+ <'}'>
 RootOperationTypeDefinition = <WhiteSpace*> OperationType <':'> NamedType
 TypeDefinition = ScalarTypeDefinition |
-                 ObjectTypeDefinition
+                 ObjectTypeDefinition |
+                 InterfaceTypeDefinition
 ScalarTypeDefinition = Description? <WhiteSpace*> <'scalar'> <WhiteSpace+> Name Directives?
 ObjectTypeDefinition = Description? <WhiteSpace*> <'type'> <WhiteSpace+> Name ImplementsInterfaces? Directives? FieldsDefinition?
+InterfaceTypeDefinition = Description? <WhiteSpace*> <'interface'> <WhiteSpace+> Name Directives? FieldsDefinition?
 Description = StringValue
 FieldsDefinition = <'{'> FieldDefinition+ <'}'>
 FieldDefinition = Description? <WhiteSpace*> Name <':'> Type Directives?

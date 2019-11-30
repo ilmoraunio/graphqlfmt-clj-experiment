@@ -924,4 +924,30 @@
              [:NamedType [:Name "Foobar"]]]
             [:FieldsDefinition
              [:FieldDefinition [:Name "qux"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
-       ))
+
+       "interface Foo{qux:String}"
+       [:Document
+        [:Definition
+         [:TypeSystemDefinition
+          [:TypeDefinition
+           [:InterfaceTypeDefinition
+            [:Name "Foo"]
+            [:FieldsDefinition
+             [:FieldDefinition [:Name "qux"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
+
+       ;; a bit more fleshed out
+       "\"the\" interface Foo @bar{qux:String}"
+       [:Document
+        [:Definition
+         [:TypeSystemDefinition
+          [:TypeDefinition
+           [:InterfaceTypeDefinition
+            [:Description
+             [:StringValue
+              [:StringCharacter "t"]
+              [:StringCharacter "h"]
+              [:StringCharacter "e"]]]
+            [:Name "Foo"]
+            [:Directives [:Directive [:Name "bar"]]]
+            [:FieldsDefinition
+             [:FieldDefinition [:Name "qux"] [:Type [:NamedType [:Name "String"]]]]]]]]]]))
