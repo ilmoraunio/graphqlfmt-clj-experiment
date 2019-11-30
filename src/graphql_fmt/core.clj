@@ -20,5 +20,6 @@
 (def document-parser
   (insta/parser (ebnf "document" "token" "ignored")))
 
-(defn -main [& _args]
-  (println (token-parser "{")))
+(defn -main [& args]
+  (let [graphql-query (first args)]
+    (println (document-parser graphql-query))))
