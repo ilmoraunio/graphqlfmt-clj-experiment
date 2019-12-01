@@ -936,7 +936,7 @@
              [:FieldDefinition [:Name "qux"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
 
        ;; a bit more fleshed out
-       "\"the\" interface Foo @bar{qux:String}"
+       "\"the\" interface Foo @bar{\"the\" qux:String \"the\" baz:String}"
        [:Document
         [:Definition
          [:TypeSystemDefinition
@@ -950,7 +950,22 @@
             [:Name "Foo"]
             [:Directives [:Directive [:Name "bar"]]]
             [:FieldsDefinition
-             [:FieldDefinition [:Name "qux"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
+             [:FieldDefinition
+              [:Description
+               [:StringValue
+                [:StringCharacter "t"]
+                [:StringCharacter "h"]
+                [:StringCharacter "e"]]]
+              [:Name "qux"]
+              [:Type [:NamedType [:Name "String"]]]]
+             [:FieldDefinition
+              [:Description
+               [:StringValue
+                [:StringCharacter "t"]
+                [:StringCharacter "h"]
+                [:StringCharacter "e"]]]
+              [:Name "baz"]
+              [:Type [:NamedType [:Name "String"]]]]]]]]]]
 
        "union Foobar"
        [:Document
@@ -993,4 +1008,65 @@
             [:Directives [:Directive [:Name "qux"]]]
             [:UnionMemberTypes
              [:UnionMemberTypes [:NamedType [:Name "Foo"]]]
-             [:NamedType [:Name "Bar"]]]]]]]]))
+             [:NamedType [:Name "Bar"]]]]]]]]
+
+       "enum Foobar"
+       [:Document
+        [:Definition
+         [:TypeSystemDefinition
+          [:TypeDefinition [:EnumTypeDefinition [:Name "Foobar"]]]]]]
+
+       "enum Foobar{FOO}"
+       [:Document
+        [:Definition
+         [:TypeSystemDefinition
+          [:TypeDefinition
+           [:EnumTypeDefinition
+            [:Name "Foobar"]
+            [:EnumValuesDefinition [:EnumValueDefinition [:EnumValue "FOO"]]]]]]]]
+
+       "enum Foobar{FOO BAR}"
+       [:Document
+        [:Definition
+         [:TypeSystemDefinition
+          [:TypeDefinition
+           [:EnumTypeDefinition
+            [:Name "Foobar"]
+            [:EnumValuesDefinition
+             [:EnumValueDefinition [:EnumValue "FOO"]]
+             [:EnumValueDefinition [:EnumValue "BAR"]]]]]]]]
+
+       "\"the\" enum Foobar @qux{\"it foo\" FOO \"it bar\" BAR}"
+       [:Document
+        [:Definition
+         [:TypeSystemDefinition
+          [:TypeDefinition
+           [:EnumTypeDefinition
+            [:Description
+             [:StringValue
+              [:StringCharacter "t"]
+              [:StringCharacter "h"]
+              [:StringCharacter "e"]]]
+            [:Name "Foobar"]
+            [:Directives [:Directive [:Name "qux"]]]
+            [:EnumValuesDefinition
+             [:EnumValueDefinition
+              [:Description
+               [:StringValue
+                [:StringCharacter "i"]
+                [:StringCharacter "t"]
+                [:StringCharacter " "]
+                [:StringCharacter "f"]
+                [:StringCharacter "o"]
+                [:StringCharacter "o"]]]
+              [:EnumValue "FOO"]]
+             [:EnumValueDefinition
+              [:Description
+               [:StringValue
+                [:StringCharacter "i"]
+                [:StringCharacter "t"]
+                [:StringCharacter " "]
+                [:StringCharacter "b"]
+                [:StringCharacter "a"]
+                [:StringCharacter "r"]]]
+              [:EnumValue "BAR"]]]]]]]]))

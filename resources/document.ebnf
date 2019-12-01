@@ -10,18 +10,22 @@ RootOperationTypeDefinition = <WhiteSpace*> OperationType <':'> NamedType
 TypeDefinition = ScalarTypeDefinition |
                  ObjectTypeDefinition |
                  InterfaceTypeDefinition |
-                 UnionTypeDefinition
+                 UnionTypeDefinition |
+                 EnumTypeDefinition
 ScalarTypeDefinition = Description? <WhiteSpace*> <'scalar'> <WhiteSpace+> Name Directives?
 ObjectTypeDefinition = Description? <WhiteSpace*> <'type'> <WhiteSpace+> Name ImplementsInterfaces? Directives? FieldsDefinition?
 InterfaceTypeDefinition = Description? <WhiteSpace*> <'interface'> <WhiteSpace+> Name Directives? FieldsDefinition?
 UnionTypeDefinition = Description? <WhiteSpace*> <'union'> <WhiteSpace+> Name Directives? UnionMemberTypes?
+EnumTypeDefinition = Description? <WhiteSpace*> <'enum'> <WhiteSpace+> Name Directives? EnumValuesDefinition?
 Description = StringValue
 FieldsDefinition = <'{'> FieldDefinition+ <'}'>
-FieldDefinition = Description? <WhiteSpace*> Name <':'> Type Directives?
+FieldDefinition = <WhiteSpace*> Description? <WhiteSpace*> Name <':'> Type Directives?
 ImplementsInterfaces = (<WhiteSpace*> <'implements'> <WhiteSpace*> <'&'?> <WhiteSpace*> NamedType) |
                        (ImplementsInterfaces <WhiteSpace*> <'&'> <WhiteSpace*> NamedType)
 UnionMemberTypes = (<WhiteSpace*> <'='> <WhiteSpace*> <'|'?> <WhiteSpace*> NamedType) |
                    (UnionMemberTypes <WhiteSpace*> <'|'> <WhiteSpace*> NamedType)
+EnumValuesDefinition = <'{'> EnumValueDefinition+ <'}'>
+EnumValueDefinition = <WhiteSpace*> Description? <WhiteSpace*> EnumValue Directives?
 OperationDefinition = (OperationType <WhiteSpace*> Name? VariableDefinitions? Directives? SelectionSet) |
                       SelectionSet
 FragmentDefinition = <'fragment'> <WhiteSpace+> FragmentName <WhiteSpace+> TypeCondition Directives? SelectionSet
