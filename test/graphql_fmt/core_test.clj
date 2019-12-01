@@ -950,4 +950,47 @@
             [:Name "Foo"]
             [:Directives [:Directive [:Name "bar"]]]
             [:FieldsDefinition
-             [:FieldDefinition [:Name "qux"] [:Type [:NamedType [:Name "String"]]]]]]]]]]))
+             [:FieldDefinition [:Name "qux"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
+
+       "union Foobar"
+       [:Document
+        [:Definition
+         [:TypeSystemDefinition
+          [:TypeDefinition [:UnionTypeDefinition [:Name "Foobar"]]]]]]
+
+       "union Foo = Bar"
+       [:Document
+        [:Definition
+         [:TypeSystemDefinition
+          [:TypeDefinition
+           [:UnionTypeDefinition
+            [:Name "Foo"]
+            [:UnionMemberTypes [:NamedType [:Name "Bar"]]]]]]]]
+
+       "union Foobar = Foo | Bar"
+       [:Document
+        [:Definition
+         [:TypeSystemDefinition
+          [:TypeDefinition
+           [:UnionTypeDefinition
+            [:Name "Foobar"]
+            [:UnionMemberTypes
+             [:UnionMemberTypes [:NamedType [:Name "Foo"]]]
+             [:NamedType [:Name "Bar"]]]]]]]]
+
+       "\"the\" union Foobar @qux = Foo | Bar"
+       [:Document
+        [:Definition
+         [:TypeSystemDefinition
+          [:TypeDefinition
+           [:UnionTypeDefinition
+            [:Description
+             [:StringValue
+              [:StringCharacter "t"]
+              [:StringCharacter "h"]
+              [:StringCharacter "e"]]]
+            [:Name "Foobar"]
+            [:Directives [:Directive [:Name "qux"]]]
+            [:UnionMemberTypes
+             [:UnionMemberTypes [:NamedType [:Name "Foo"]]]
+             [:NamedType [:Name "Bar"]]]]]]]]))

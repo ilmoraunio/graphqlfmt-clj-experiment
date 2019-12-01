@@ -9,15 +9,19 @@ SchemaDefinition = <'schema'> Directives? <'{'> RootOperationTypeDefinition+ <'}
 RootOperationTypeDefinition = <WhiteSpace*> OperationType <':'> NamedType
 TypeDefinition = ScalarTypeDefinition |
                  ObjectTypeDefinition |
-                 InterfaceTypeDefinition
+                 InterfaceTypeDefinition |
+                 UnionTypeDefinition
 ScalarTypeDefinition = Description? <WhiteSpace*> <'scalar'> <WhiteSpace+> Name Directives?
 ObjectTypeDefinition = Description? <WhiteSpace*> <'type'> <WhiteSpace+> Name ImplementsInterfaces? Directives? FieldsDefinition?
 InterfaceTypeDefinition = Description? <WhiteSpace*> <'interface'> <WhiteSpace+> Name Directives? FieldsDefinition?
+UnionTypeDefinition = Description? <WhiteSpace*> <'union'> <WhiteSpace+> Name Directives? UnionMemberTypes?
 Description = StringValue
 FieldsDefinition = <'{'> FieldDefinition+ <'}'>
 FieldDefinition = Description? <WhiteSpace*> Name <':'> Type Directives?
 ImplementsInterfaces = (<WhiteSpace*> <'implements'> <WhiteSpace*> <'&'?> <WhiteSpace*> NamedType) |
                        (ImplementsInterfaces <WhiteSpace*> <'&'> <WhiteSpace*> NamedType)
+UnionMemberTypes = (<WhiteSpace*> <'='> <WhiteSpace*> <'|'?> <WhiteSpace*> NamedType) |
+                   (UnionMemberTypes <WhiteSpace*> <'|'> <WhiteSpace*> NamedType)
 OperationDefinition = (OperationType <WhiteSpace*> Name? VariableDefinitions? Directives? SelectionSet) |
                       SelectionSet
 FragmentDefinition = <'fragment'> <WhiteSpace+> FragmentName <WhiteSpace+> TypeCondition Directives? SelectionSet
