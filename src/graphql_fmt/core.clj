@@ -21,5 +21,6 @@
   (insta/parser (ebnf "document" "token" "ignored")))
 
 (defn -main [& args]
-  (let [graphql-query (first args)]
-    (println (document-parser graphql-query))))
+  (println (if (first args)
+             (document-parser (first args))
+             (document-parser (read-line)))))
