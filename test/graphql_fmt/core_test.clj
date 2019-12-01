@@ -1069,4 +1069,82 @@
                 [:StringCharacter "b"]
                 [:StringCharacter "a"]
                 [:StringCharacter "r"]]]
-              [:EnumValue "BAR"]]]]]]]]))
+              [:EnumValue "BAR"]]]]]]]]
+
+       "input Foobar"
+       [:Document
+        [:Definition
+         [:TypeSystemDefinition
+          [:TypeDefinition [:InputObjectTypeDefinition [:Name "Foobar"]]]]]]
+
+       "input Foobar{foo:String}"
+       [:Document
+        [:Definition
+         [:TypeSystemDefinition
+          [:TypeDefinition
+           [:InputObjectTypeDefinition
+            [:Name "Foobar"]
+            [:InputFieldsDefinition
+             [:InputValueDefinition
+              [:Name "foo"]
+              [:Type [:NamedType [:Name "String"]]]]]]]]]]
+
+       "input Foobar{foo:String bar:String}"
+       [:Document
+        [:Definition
+         [:TypeSystemDefinition
+          [:TypeDefinition
+           [:InputObjectTypeDefinition
+            [:Name "Foobar"]
+            [:InputFieldsDefinition
+             [:InputValueDefinition
+              [:Name "foo"]
+              [:Type [:NamedType [:Name "String"]]]]
+             [:InputValueDefinition
+              [:Name "bar"]
+              [:Type [:NamedType [:Name "String"]]]]]]]]]]
+
+       "\"the\" input Foobar @qux{\"the\" foo:String=\"foo\" @qux \"the\" bar:String=\"bar\" @qux}"
+       [:Document
+        [:Definition
+         [:TypeSystemDefinition
+          [:TypeDefinition
+           [:InputObjectTypeDefinition
+            [:Description
+             [:StringValue
+              [:StringCharacter "t"]
+              [:StringCharacter "h"]
+              [:StringCharacter "e"]]]
+            [:Name "Foobar"]
+            [:Directives [:Directive [:Name "qux"]]]
+            [:InputFieldsDefinition
+             [:InputValueDefinition
+              [:Description
+               [:StringValue
+                [:StringCharacter "t"]
+                [:StringCharacter "h"]
+                [:StringCharacter "e"]]]
+              [:Name "foo"]
+              [:Type [:NamedType [:Name "String"]]]
+              [:DefaultValue
+               [:Value
+                [:StringValue
+                 [:StringCharacter "f"]
+                 [:StringCharacter "o"]
+                 [:StringCharacter "o"]]]]
+              [:Directives [:Directive [:Name "qux"]]]]
+             [:InputValueDefinition
+              [:Description
+               [:StringValue
+                [:StringCharacter "t"]
+                [:StringCharacter "h"]
+                [:StringCharacter "e"]]]
+              [:Name "bar"]
+              [:Type [:NamedType [:Name "String"]]]
+              [:DefaultValue
+               [:Value
+                [:StringValue
+                 [:StringCharacter "b"]
+                 [:StringCharacter "a"]
+                 [:StringCharacter "r"]]]]
+              [:Directives [:Directive [:Name "qux"]]]]]]]]]]))
