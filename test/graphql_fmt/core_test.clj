@@ -1213,4 +1213,84 @@
           [:OperationDefinition
            [:SelectionSet
             [:Selection [:Field [:Alias [:Name "query"]] [:Name "frobnicate"]]]
-            [:Selection [:Field [:Alias [:Name "mutation"]] [:Name "frobnitz"]]]]]]]]))
+            [:Selection [:Field [:Alias [:Name "mutation"]] [:Name "frobnitz"]]]]]]]]
+
+       "extend scalar Foo @bar"
+       [:Document
+        [:Definition
+         [:TypeSystemExtension
+          [:TypeExtension
+           [:ScalarTypeExtension
+            [:Name "Foo"]
+            [:Directives [:Directive [:Name "bar"]]]]]]]]
+
+       "extend type Foo implements Qux"
+       [:Document
+        [:Definition
+         [:TypeSystemExtension
+          [:TypeExtension
+           [:ObjectTypeExtension
+            [:Name "Foo"]
+            [:ImplementsInterfaces [:NamedType [:Name "Qux"]]]]]]]]
+
+       "extend type Foo implements Qux & Baz"
+       [:Document
+        [:Definition
+         [:TypeSystemExtension
+          [:TypeExtension
+           [:ObjectTypeExtension
+            [:Name "Foo"]
+            [:ImplementsInterfaces
+             [:ImplementsInterfaces [:NamedType [:Name "Qux"]]]
+             [:NamedType [:Name "Baz"]]]]]]]]
+
+       "extend type Foo @bar"
+       [:Document
+        [:Definition
+         [:TypeSystemExtension
+          [:TypeExtension
+           [:ObjectTypeExtension
+            [:Name "Foo"]
+            [:Directives [:Directive [:Name "bar"]]]]]]]]
+
+       "extend type Foo implements Qux & Baz @bar"
+       [:Document
+        [:Definition
+         [:TypeSystemExtension
+          [:TypeExtension
+           [:ObjectTypeExtension
+            [:Name "Foo"]
+            [:ImplementsInterfaces
+             [:ImplementsInterfaces [:NamedType [:Name "Qux"]]]
+             [:NamedType [:Name "Baz"]]]
+            [:Directives [:Directive [:Name "bar"]]]]]]]]
+
+       "extend type Foo{qux:String}"
+       [:Document
+        [:Definition
+         [:TypeSystemExtension
+          [:TypeExtension
+           [:ObjectTypeExtension
+            [:Name "Foo"]
+            [:FieldsDefinition
+             [:FieldDefinition [:Name "qux"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
+
+       "extend type Foo implements Bar @foobar{\"the\" qux:String @baz}"
+       [:Document
+        [:Definition
+         [:TypeSystemExtension
+          [:TypeExtension
+           [:ObjectTypeExtension
+            [:Name "Foo"]
+            [:ImplementsInterfaces [:NamedType [:Name "Bar"]]]
+            [:Directives [:Directive [:Name "foobar"]]]
+            [:FieldsDefinition
+             [:FieldDefinition
+              [:Description
+               [:StringValue
+                [:StringCharacter "t"]
+                [:StringCharacter "h"]
+                [:StringCharacter "e"]]]
+              [:Name "qux"]
+              [:Type [:NamedType [:Name "String"]]]
+              [:Directives [:Directive [:Name "baz"]]]]]]]]]]))

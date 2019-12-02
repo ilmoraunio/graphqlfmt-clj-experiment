@@ -2,10 +2,17 @@ Document = Definition+
 Definition = TypeSystemExtension /
              TypeSystemDefinition /
              ExecutableDefinition
-TypeSystemExtension = SchemaExtension
+TypeSystemExtension = SchemaExtension |
+                      TypeExtension
 SchemaExtension = (<'extend'> <WhiteSpace*> <'schema'> Directives? <'{'> OperationTypeDefinition+ <'}'>) |
                   (<'extend'> <WhiteSpace*> <'schema'> Directives)
 OperationTypeDefinition = OperationType <':'> NamedType
+TypeExtension = ScalarTypeExtension |
+                ObjectTypeExtension
+ScalarTypeExtension = <'extend'> <WhiteSpace*> <'scalar'> <WhiteSpace*> Name Directives
+ObjectTypeExtension = (<'extend'> <WhiteSpace*> <'type'> <WhiteSpace*> Name ImplementsInterfaces? Directives? FieldsDefinition) |
+                      (<'extend'> <WhiteSpace*> <'type'> <WhiteSpace*> Name ImplementsInterfaces? Directives) |
+                      (<'extend'> <WhiteSpace*> <'type'> <WhiteSpace*> Name ImplementsInterfaces)
 ExecutableDefinition = OperationDefinition |
                        FragmentDefinition
 TypeSystemDefinition = SchemaDefinition |
