@@ -1185,4 +1185,32 @@
              [:DirectiveLocations
               [:DirectiveLocation [:ExecutableDirectiveLocation "FIELD"]]]
              [:DirectiveLocation [:ExecutableDirectiveLocation "FRAGMENT_SPREAD"]]]
-            [:DirectiveLocation [:ExecutableDirectiveLocation "INLINE_FRAGMENT"]]]]]]]))
+            [:DirectiveLocation [:ExecutableDirectiveLocation "INLINE_FRAGMENT"]]]]]]]
+
+       "extend schema @foo @bar"
+       [:Document
+        [:Definition
+         [:TypeSystemExtension
+          [:SchemaExtension
+           [:Directives [:Directive [:Name "foo"]] [:Directive [:Name "bar"]]]]]]]
+
+       "extend schema{query:frobnicate}"
+       [:Document
+        [:Definition
+         [:TypeSystemExtension
+          [:SchemaExtension
+           [:OperationTypeDefinition
+            [:OperationType "query"]
+            [:NamedType [:Name "frobnicate"]]]]]]]
+
+       "extend schema @foo{query:frobnicate mutation:frobnitz}"
+       [:Document
+        [:Definition
+         [:TypeSystemExtension
+          [:SchemaExtension [:Directives [:Directive [:Name "foo"]]]]]]
+        [:Definition
+         [:ExecutableDefinition
+          [:OperationDefinition
+           [:SelectionSet
+            [:Selection [:Field [:Alias [:Name "query"]] [:Name "frobnicate"]]]
+            [:Selection [:Field [:Alias [:Name "mutation"]] [:Name "frobnitz"]]]]]]]]))
