@@ -1147,4 +1147,42 @@
                  [:StringCharacter "b"]
                  [:StringCharacter "a"]
                  [:StringCharacter "r"]]]]
-              [:Directives [:Directive [:Name "qux"]]]]]]]]]]))
+              [:Directives [:Directive [:Name "qux"]]]]]]]]]]
+
+       "directive @foo on FIELD"
+       [:Document
+        [:Definition
+         [:TypeSystemDefinition
+          [:DirectiveDefinition
+           [:Name "foo"]
+           [:DirectiveLocations
+            [:DirectiveLocation [:ExecutableDirectiveLocation "FIELD"]]]]]]]
+
+       "directive @foo on |FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT"
+       [:Document
+        [:Definition
+         [:TypeSystemDefinition
+          [:DirectiveDefinition
+           [:Name "foo"]
+           [:DirectiveLocations
+            [:DirectiveLocations
+             [:DirectiveLocations
+              [:DirectiveLocation [:ExecutableDirectiveLocation "FIELD"]]]
+             [:DirectiveLocation [:ExecutableDirectiveLocation "FRAGMENT_SPREAD"]]]
+            [:DirectiveLocation [:ExecutableDirectiveLocation "INLINE_FRAGMENT"]]]]]]]
+
+       "directive @foo(qux:String baz:String) on |FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT"
+       [:Document
+        [:Definition
+         [:TypeSystemDefinition
+          [:DirectiveDefinition
+           [:Name "foo"]
+           [:ArgumentsDefinition
+            [:InputValueDefinition [:Name "qux"] [:Type [:NamedType [:Name "String"]]]]
+            [:InputValueDefinition [:Name "baz"] [:Type [:NamedType [:Name "String"]]]]]
+           [:DirectiveLocations
+            [:DirectiveLocations
+             [:DirectiveLocations
+              [:DirectiveLocation [:ExecutableDirectiveLocation "FIELD"]]]
+             [:DirectiveLocation [:ExecutableDirectiveLocation "FRAGMENT_SPREAD"]]]
+            [:DirectiveLocation [:ExecutableDirectiveLocation "INLINE_FRAGMENT"]]]]]]]))

@@ -4,7 +4,8 @@ Definition = TypeSystemDefinition /
 ExecutableDefinition = OperationDefinition |
                        FragmentDefinition
 TypeSystemDefinition = SchemaDefinition |
-                       TypeDefinition
+                       TypeDefinition |
+                       DirectiveDefinition
 SchemaDefinition = <'schema'> Directives? <'{'> RootOperationTypeDefinition+ <'}'>
 RootOperationTypeDefinition = <WhiteSpace*> OperationType <':'> NamedType
 TypeDefinition = ScalarTypeDefinition |
@@ -19,6 +20,30 @@ InterfaceTypeDefinition = Description? <WhiteSpace*> <'interface'> <WhiteSpace+>
 UnionTypeDefinition = Description? <WhiteSpace*> <'union'> <WhiteSpace+> Name Directives? UnionMemberTypes?
 EnumTypeDefinition = Description? <WhiteSpace*> <'enum'> <WhiteSpace+> Name Directives? EnumValuesDefinition?
 InputObjectTypeDefinition = Description? <WhiteSpace*> <'input'> <WhiteSpace+> Name Directives? InputFieldsDefinition?
+DirectiveDefinition = Description? <WhiteSpace*> <'directive'> <WhiteSpace*> <'@'> Name <WhiteSpace*> ArgumentsDefinition? <WhiteSpace*> <'on'> <WhiteSpace*> DirectiveLocations
+ArgumentsDefinition = <'('> InputValueDefinition+ <')'>
+DirectiveLocations = (<'|'?> DirectiveLocation) |
+                     (DirectiveLocations <'|'> DirectiveLocation)
+DirectiveLocation = ExecutableDirectiveLocation |
+                    TypeSystemDirectiveLocation
+ExecutableDirectiveLocation = 'QUERY' |
+                              'MUTATION' |
+                              'SUBSCRIPTION' |
+                              'FIELD' |
+                              'FRAGMENT_DEFINITION' |
+                              'FRAGMENT_SPREAD' |
+                              'INLINE_FRAGMENT'
+TypeSystemDirectiveLocation = 'SCHEMA' |
+                              'SCALAR' |
+                              'OBJECT' |
+                              'FIELD_DEFINITION' |
+                              'ARGUMENT_DEFINITION' |
+                              'INTERFACE' |
+                              'UNION' |
+                              'ENUM' |
+                              'ENUM_VALUE' |
+                              'INPUT_OBJECT' |
+                              'INPUT_FIELD_DEFINITION'
 Description = StringValue
 FieldsDefinition = <'{'> FieldDefinition+ <'}'>
 FieldDefinition = <WhiteSpace*> Description? <WhiteSpace*> Name <':'> Type Directives?
