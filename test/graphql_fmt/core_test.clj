@@ -1384,4 +1384,41 @@
            [:EnumTypeExtension
             [:Name "Foobar"]
             [:Directives [:Directive [:Name "qux"]]]
-            [:EnumValuesDefinition [:EnumValueDefinition [:EnumValue "BAZ"]]]]]]]]))
+            [:EnumValuesDefinition [:EnumValueDefinition [:EnumValue "BAZ"]]]]]]]]
+
+       "extend input Foobar @foo @bar"
+       [:Document
+        [:Definition
+         [:TypeSystemExtension
+          [:TypeExtension
+           [:InputObjectTypeExtension
+            [:Name "Foobar"]
+            [:Directives [:Directive [:Name "foo"]] [:Directive [:Name "bar"]]]]]]]]
+
+       "extend input Foobar{qux:String baz:String}"
+       [:Document
+        [:Definition
+         [:TypeSystemExtension
+          [:TypeExtension
+           [:InputObjectTypeExtension
+            [:Name "Foobar"]
+            [:InputFieldsDefinition
+             [:InputValueDefinition
+              [:Name "qux"]
+              [:Type [:NamedType [:Name "String"]]]]
+             [:InputValueDefinition
+              [:Name "baz"]
+              [:Type [:NamedType [:Name "String"]]]]]]]]]]
+
+       "extend input Foobar @qux{baz:String}"
+       [:Document
+        [:Definition
+         [:TypeSystemExtension
+          [:TypeExtension
+           [:InputObjectTypeExtension
+            [:Name "Foobar"]
+            [:Directives [:Directive [:Name "qux"]]]
+            [:InputFieldsDefinition
+             [:InputValueDefinition
+              [:Name "baz"]
+              [:Type [:NamedType [:Name "String"]]]]]]]]]]))

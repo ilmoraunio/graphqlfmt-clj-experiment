@@ -11,7 +11,8 @@ TypeExtension = ScalarTypeExtension |
                 ObjectTypeExtension |
                 InterfaceTypeExtension |
                 UnionTypeExtension |
-                EnumTypeExtension
+                EnumTypeExtension |
+                InputObjectTypeExtension
 ScalarTypeExtension = <'extend'> <WhiteSpace*> <'scalar'> <WhiteSpace*> Name Directives
 ObjectTypeExtension = (<'extend'> <WhiteSpace*> <'type'> <WhiteSpace*> Name ImplementsInterfaces? Directives? FieldsDefinition) |
                       (<'extend'> <WhiteSpace*> <'type'> <WhiteSpace*> Name ImplementsInterfaces? Directives) |
@@ -22,6 +23,8 @@ UnionTypeExtension = (<'extend'> <WhiteSpace*> <'union'> <WhiteSpace*> Name Dire
                      (<'extend'> <WhiteSpace*> <'union'> <WhiteSpace*> Name Directives)
 EnumTypeExtension = (<'extend'> <WhiteSpace*> <'enum'> <WhiteSpace*> Name Directives? EnumValuesDefinition) |
                     (<'extend'> <WhiteSpace*> <'enum'> <WhiteSpace*> Name Directives)
+InputObjectTypeExtension = (<'extend'> <WhiteSpace*> <'input'> <WhiteSpace*> Name Directives? InputFieldsDefinition) |
+                           (<'extend'> <WhiteSpace*> <'input'> <WhiteSpace*> Name Directives)
 ExecutableDefinition = OperationDefinition |
                        FragmentDefinition
 TypeSystemDefinition = SchemaDefinition |
