@@ -10,7 +10,8 @@ OperationTypeDefinition = OperationType <':'> NamedType
 TypeExtension = ScalarTypeExtension |
                 ObjectTypeExtension |
                 InterfaceTypeExtension |
-                UnionTypeExtension
+                UnionTypeExtension |
+                EnumTypeExtension
 ScalarTypeExtension = <'extend'> <WhiteSpace*> <'scalar'> <WhiteSpace*> Name Directives
 ObjectTypeExtension = (<'extend'> <WhiteSpace*> <'type'> <WhiteSpace*> Name ImplementsInterfaces? Directives? FieldsDefinition) |
                       (<'extend'> <WhiteSpace*> <'type'> <WhiteSpace*> Name ImplementsInterfaces? Directives) |
@@ -19,6 +20,8 @@ InterfaceTypeExtension = (<'extend'> <WhiteSpace*> <'interface'> <WhiteSpace*> N
                          (<'extend'> <WhiteSpace*> <'interface'> <WhiteSpace*> Name Directives)
 UnionTypeExtension = (<'extend'> <WhiteSpace*> <'union'> <WhiteSpace*> Name Directives? UnionMemberTypes) |
                      (<'extend'> <WhiteSpace*> <'union'> <WhiteSpace*> Name Directives)
+EnumTypeExtension = (<'extend'> <WhiteSpace*> <'enum'> <WhiteSpace*> Name Directives? EnumValuesDefinition) |
+                    (<'extend'> <WhiteSpace*> <'enum'> <WhiteSpace*> Name Directives)
 ExecutableDefinition = OperationDefinition |
                        FragmentDefinition
 TypeSystemDefinition = SchemaDefinition |

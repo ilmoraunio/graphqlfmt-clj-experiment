@@ -1354,4 +1354,34 @@
            [:UnionTypeExtension
             [:Name "Foobar"]
             [:Directives [:Directive [:Name "qux"]]]
-            [:UnionMemberTypes [:NamedType [:Name "Baz"]]]]]]]]))
+            [:UnionMemberTypes [:NamedType [:Name "Baz"]]]]]]]]
+
+       "extend enum Foobar @foo @bar"
+       [:Document
+        [:Definition
+         [:TypeSystemExtension
+          [:TypeExtension
+           [:EnumTypeExtension
+            [:Name "Foobar"]
+            [:Directives [:Directive [:Name "foo"]] [:Directive [:Name "bar"]]]]]]]]
+
+       "extend enum Foobar{QUX BAZ}"
+       [:Document
+        [:Definition
+         [:TypeSystemExtension
+          [:TypeExtension
+           [:EnumTypeExtension
+            [:Name "Foobar"]
+            [:EnumValuesDefinition
+             [:EnumValueDefinition [:EnumValue "QUX"]]
+             [:EnumValueDefinition [:EnumValue "BAZ"]]]]]]]]
+
+       "extend enum Foobar @qux{BAZ}"
+       [:Document
+        [:Definition
+         [:TypeSystemExtension
+          [:TypeExtension
+           [:EnumTypeExtension
+            [:Name "Foobar"]
+            [:Directives [:Directive [:Name "qux"]]]
+            [:EnumValuesDefinition [:EnumValueDefinition [:EnumValue "BAZ"]]]]]]]]))
