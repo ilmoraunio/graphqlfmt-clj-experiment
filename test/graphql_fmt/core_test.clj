@@ -1293,4 +1293,35 @@
                 [:StringCharacter "e"]]]
               [:Name "qux"]
               [:Type [:NamedType [:Name "String"]]]
-              [:Directives [:Directive [:Name "baz"]]]]]]]]]]))
+              [:Directives [:Directive [:Name "baz"]]]]]]]]]]
+
+       "extend interface Foo @bar"
+       [:Document
+        [:Definition
+         [:TypeSystemExtension
+          [:TypeExtension
+           [:InterfaceTypeExtension
+            [:Name "Foo"]
+            [:Directives [:Directive [:Name "bar"]]]]]]]]
+
+       "extend interface Foobar{foo:String bar:String}"
+       [:Document
+        [:Definition
+         [:TypeSystemExtension
+          [:TypeExtension
+           [:InterfaceTypeExtension
+            [:Name "Foobar"]
+            [:FieldsDefinition
+             [:FieldDefinition [:Name "foo"] [:Type [:NamedType [:Name "String"]]]]
+             [:FieldDefinition [:Name "bar"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
+
+       "extend interface Foobar @foo{bar:String}"
+       [:Document
+        [:Definition
+         [:TypeSystemExtension
+          [:TypeExtension
+           [:InterfaceTypeExtension
+            [:Name "Foobar"]
+            [:Directives [:Directive [:Name "foo"]]]
+            [:FieldsDefinition
+             [:FieldDefinition [:Name "bar"] [:Type [:NamedType [:Name "String"]]]]]]]]]]))
