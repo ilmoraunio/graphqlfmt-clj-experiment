@@ -9,13 +9,16 @@ SchemaExtension = (<'extend'> <WhiteSpace*> <'schema'> Directives? <'{'> Operati
 OperationTypeDefinition = OperationType <':'> NamedType
 TypeExtension = ScalarTypeExtension |
                 ObjectTypeExtension |
-                InterfaceTypeExtension
+                InterfaceTypeExtension |
+                UnionTypeExtension
 ScalarTypeExtension = <'extend'> <WhiteSpace*> <'scalar'> <WhiteSpace*> Name Directives
 ObjectTypeExtension = (<'extend'> <WhiteSpace*> <'type'> <WhiteSpace*> Name ImplementsInterfaces? Directives? FieldsDefinition) |
                       (<'extend'> <WhiteSpace*> <'type'> <WhiteSpace*> Name ImplementsInterfaces? Directives) |
                       (<'extend'> <WhiteSpace*> <'type'> <WhiteSpace*> Name ImplementsInterfaces)
 InterfaceTypeExtension = (<'extend'> <WhiteSpace*> <'interface'> <WhiteSpace*> Name Directives? FieldsDefinition) |
                          (<'extend'> <WhiteSpace*> <'interface'> <WhiteSpace*> Name Directives)
+UnionTypeExtension = (<'extend'> <WhiteSpace*> <'union'> <WhiteSpace*> Name Directives? UnionMemberTypes) |
+                     (<'extend'> <WhiteSpace*> <'union'> <WhiteSpace*> Name Directives)
 ExecutableDefinition = OperationDefinition |
                        FragmentDefinition
 TypeSystemDefinition = SchemaDefinition |

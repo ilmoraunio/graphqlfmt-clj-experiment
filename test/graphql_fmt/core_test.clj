@@ -1324,4 +1324,34 @@
             [:Name "Foobar"]
             [:Directives [:Directive [:Name "foo"]]]
             [:FieldsDefinition
-             [:FieldDefinition [:Name "bar"] [:Type [:NamedType [:Name "String"]]]]]]]]]]))
+             [:FieldDefinition [:Name "bar"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
+
+       "extend union Foobar @foo @bar"
+       [:Document
+        [:Definition
+         [:TypeSystemExtension
+          [:TypeExtension
+           [:UnionTypeExtension
+            [:Name "Foobar"]
+            [:Directives [:Directive [:Name "foo"]] [:Directive [:Name "bar"]]]]]]]]
+
+       "extend union Foobar = Qux | Baz"
+       [:Document
+        [:Definition
+         [:TypeSystemExtension
+          [:TypeExtension
+           [:UnionTypeExtension
+            [:Name "Foobar"]
+            [:UnionMemberTypes
+             [:UnionMemberTypes [:NamedType [:Name "Qux"]]]
+             [:NamedType [:Name "Baz"]]]]]]]]
+
+       "extend union Foobar @qux = Baz"
+       [:Document
+        [:Definition
+         [:TypeSystemExtension
+          [:TypeExtension
+           [:UnionTypeExtension
+            [:Name "Foobar"]
+            [:Directives [:Directive [:Name "qux"]]]
+            [:UnionMemberTypes [:NamedType [:Name "Baz"]]]]]]]]))
