@@ -1,4 +1,4 @@
-Document = Definition+
+Document = <WhiteSpace*> Definition+ <WhiteSpace*>
 Definition = TypeSystemExtension /
              TypeSystemDefinition /
              ExecutableDefinition
@@ -6,7 +6,7 @@ TypeSystemExtension = SchemaExtension |
                       TypeExtension
 SchemaExtension = (<'extend'> <WhiteSpace*> <'schema'> Directives? <WhiteSpace*> <'{'> OperationTypeDefinition+ <WhiteSpace*> <'}'>) |
                   (<'extend'> <WhiteSpace*> <'schema'> Directives)
-OperationTypeDefinition = <WhiteSpace*> OperationType <':'> <WhiteSpace*> NamedType
+OperationTypeDefinition = <WhiteSpace*> OperationType <WhiteSpace*> <':'> <WhiteSpace*> NamedType
 TypeExtension = ScalarTypeExtension |
                 ObjectTypeExtension |
                 InterfaceTypeExtension |
@@ -31,7 +31,7 @@ TypeSystemDefinition = SchemaDefinition |
                        TypeDefinition |
                        DirectiveDefinition
 SchemaDefinition = <'schema'> Directives? <WhiteSpace*> <'{'> RootOperationTypeDefinition+ <WhiteSpace*> <'}'>
-RootOperationTypeDefinition = <WhiteSpace*> OperationType <':'> <WhiteSpace*> NamedType
+RootOperationTypeDefinition = <WhiteSpace*> OperationType <WhiteSpace*> <':'> <WhiteSpace*> NamedType
 TypeDefinition = ScalarTypeDefinition |
                  ObjectTypeDefinition |
                  InterfaceTypeDefinition |
@@ -44,8 +44,8 @@ InterfaceTypeDefinition = Description? <WhiteSpace*> <'interface'> <WhiteSpace+>
 UnionTypeDefinition = Description? <WhiteSpace*> <'union'> <WhiteSpace+> Name Directives? UnionMemberTypes?
 EnumTypeDefinition = Description? <WhiteSpace*> <'enum'> <WhiteSpace+> Name Directives? EnumValuesDefinition?
 InputObjectTypeDefinition = Description? <WhiteSpace*> <'input'> <WhiteSpace+> Name Directives? InputFieldsDefinition?
-DirectiveDefinition = Description? <WhiteSpace*> <'directive'> <WhiteSpace*> <'@'> Name <WhiteSpace*> ArgumentsDefinition? <WhiteSpace*> <'on'> <WhiteSpace*> DirectiveLocations
-ArgumentsDefinition = <'('> InputValueDefinition+ <')'>
+DirectiveDefinition = Description? <WhiteSpace*> <'directive'> <WhiteSpace*> <'@'> <WhiteSpace*> Name <WhiteSpace*> ArgumentsDefinition? <WhiteSpace*> <'on'> <WhiteSpace*> DirectiveLocations
+ArgumentsDefinition = <'('> InputValueDefinition+ <WhiteSpace*> <')'>
 DirectiveLocations = (<'|'?> <WhiteSpace*> DirectiveLocation) |
                      (DirectiveLocations <WhiteSpace*> <'|'> <WhiteSpace*> DirectiveLocation)
 DirectiveLocation = ExecutableDirectiveLocation |
@@ -70,7 +70,7 @@ TypeSystemDirectiveLocation = 'SCHEMA' |
                               'INPUT_FIELD_DEFINITION'
 Description = StringValue
 FieldsDefinition = <WhiteSpace*> <'{'> FieldDefinition+ <WhiteSpace*> <'}'>
-FieldDefinition = <WhiteSpace*> Description? <WhiteSpace*> Name <':'> Type Directives?
+FieldDefinition = <WhiteSpace*> Description? <WhiteSpace*> Name <WhiteSpace*> <':'> Type Directives?
 ImplementsInterfaces = (<WhiteSpace*> <'implements'> <WhiteSpace*> <'&'?> <WhiteSpace*> NamedType) |
                        (ImplementsInterfaces <WhiteSpace*> <'&'> <WhiteSpace*> NamedType)
 UnionMemberTypes = (<WhiteSpace*> <'='> <WhiteSpace*> <'|'?> <WhiteSpace*> NamedType) |
@@ -78,21 +78,21 @@ UnionMemberTypes = (<WhiteSpace*> <'='> <WhiteSpace*> <'|'?> <WhiteSpace*> Named
 EnumValuesDefinition = <WhiteSpace*> <'{'> EnumValueDefinition+ <WhiteSpace*> <'}'>
 EnumValueDefinition = <WhiteSpace*> Description? <WhiteSpace*> EnumValue Directives?
 InputFieldsDefinition = <WhiteSpace*> <'{'> InputValueDefinition+ <WhiteSpace*> <'}'>
-InputValueDefinition = <WhiteSpace*> Description? <WhiteSpace*> Name <':'> Type DefaultValue? Directives?
+InputValueDefinition = <WhiteSpace*> Description? <WhiteSpace*> Name <WhiteSpace*> <':'> Type DefaultValue? Directives?
 OperationDefinition = (OperationType <WhiteSpace*> Name? VariableDefinitions? Directives? SelectionSet) |
                       SelectionSet
 FragmentDefinition = <'fragment'> <WhiteSpace+> FragmentName <WhiteSpace+> TypeCondition Directives? SelectionSet
 OperationType = 'query' | 'mutation' | 'subscription'
-VariableDefinitions = <'('> VariableDefinition+ <')'>
-VariableDefinition = <WhiteSpace*> Variable <':'> Type DefaultValue?
+VariableDefinitions = <WhiteSpace*> <'('> VariableDefinition+ <WhiteSpace*> <')'>
+VariableDefinition = <WhiteSpace*> Variable <WhiteSpace*> <':'> Type DefaultValue?
 SelectionSet = <WhiteSpace*> <'{'> <WhiteSpace*> Selection+ <WhiteSpace*> <'}'>
 Selection = Field |
             FragmentSpread |
             InlineFragment
 Field = <WhiteSpace*> Alias? <WhiteSpace*> Name Arguments? Directives? SelectionSet?
 Alias = <WhiteSpace*> Name <WhiteSpace*> <':'>
-Arguments = <'('> Argument+ <')'>
-Argument = <WhiteSpace*> Name <':'> Value <Comma*>
+Arguments = <WhiteSpace*> <'('> Argument+ <WhiteSpace*> <')'>
+Argument = <WhiteSpace*> Name <WhiteSpace*> <':'> Value <WhiteSpace*> <Comma*>
 Value = <WhiteSpace*> (Variable |
                        IntValue |
                        FloatValue |
@@ -100,11 +100,11 @@ Value = <WhiteSpace*> (Variable |
                        BooleanValue |
                        NullValue |
                        EnumValue)
-Variable = <'$'> Name
+Variable = <'$'> <WhiteSpace*> Name
 DefaultValue = <WhiteSpace*> <'='> Value
 EnumValue = #"^(?!(true|false|null))[_A-Za-z][_0-9A-Za-z]*"
 Directives = Directive+
-Directive = <WhiteSpace*> <'@'> Name Arguments?
+Directive = <WhiteSpace*> <'@'> <WhiteSpace*> Name Arguments?
 FragmentSpread = <WhiteSpace*> <'...'> <WhiteSpace*> FragmentName Directives?
 FragmentName = #"^(?!on)[_A-Za-z][_0-9A-Za-z]*"
 InlineFragment = <'...'> TypeCondition? Directives? SelectionSet
@@ -113,6 +113,6 @@ Type = <WhiteSpace*> (NamedType |
                       ListType |
                       NonNullType)
 NamedType = Name
-ListType = <'['> Type <']'>
-NonNullType = NamedType <'!'> |
-              ListType <'!'>
+ListType = <WhiteSpace*> <'['> Type <WhiteSpace*> <']'>
+NonNullType = NamedType <WhiteSpace*> <'!'> |
+              ListType <WhiteSpace*> <'!'>
