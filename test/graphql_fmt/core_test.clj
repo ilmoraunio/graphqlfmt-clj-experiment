@@ -239,13 +239,13 @@
   (are [document ast]
        (is (= ast (document-parser document)))
 
-       "{foo}"
+       "{ foo }"
        [:Document
         [:Definition
          [:ExecutableDefinition
           [:OperationDefinition [:SelectionSet [:Selection [:Field [:Name "foo"]]]]]]]]
 
-       "{foo_alias:foo}"
+       "{ foo_alias: foo }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -253,7 +253,7 @@
            [:SelectionSet
             [:Selection [:Field [:Alias [:Name "foo_alias"]] [:Name "foo"]]]]]]]]
 
-       "{foo(bar:$foobar)}"
+       "{ foo(bar: $foobar) }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -265,7 +265,7 @@
               [:Arguments
                [:Argument [:Name "bar"] [:Value [:Variable [:Name "foobar"]]]]]]]]]]]]
 
-       "{foo(bar:1)}"
+       "{ foo(bar: 1) }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -279,7 +279,7 @@
                 [:Name "bar"]
                 [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]]]]]]]]]
 
-       "{foo(bar:1.0)}"
+       "{ foo(bar: 1.0) }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -296,7 +296,7 @@
                   [:IntegerPart [:NonZeroDigit "1"]]
                   [:FractionalPart [:Digit "0"]]]]]]]]]]]]]
 
-       "{foo(bar:\"foobar\")}"
+       "{ foo(bar: \"foobar\") }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -317,7 +317,7 @@
                   [:StringCharacter "a"]
                   [:StringCharacter "r"]]]]]]]]]]]]
 
-       "{foo(bar:\"\"\"foobar\"\"\")}"
+       "{ foo(bar: \"\"\"foobar\"\"\") }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -338,7 +338,7 @@
                   [:BlockStringCharacter "a"]
                   [:BlockStringCharacter "r"]]]]]]]]]]]]
 
-       "{foo(bar:true)}"
+       "{ foo(bar: true) }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -349,7 +349,7 @@
               [:Name "foo"]
               [:Arguments [:Argument [:Name "bar"] [:Value [:BooleanValue "true"]]]]]]]]]]]
 
-       "{foo(bar:null)}"
+       "{ foo(bar: null) }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -360,7 +360,7 @@
               [:Name "foo"]
               [:Arguments [:Argument [:Name "bar"] [:Value [:NullValue]]]]]]]]]]]
 
-       "{frob(foo:true,bar:false)}"
+       "{ frob(foo: true, bar: false) }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -373,7 +373,7 @@
                [:Argument [:Name "foo"] [:Value [:BooleanValue "true"]]]
                [:Argument [:Name "bar"] [:Value [:BooleanValue "false"]]]]]]]]]]]
 
-       "{frob @foo}"
+       "{ frob @foo }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -382,7 +382,7 @@
             [:Selection
              [:Field [:Name "frob"] [:Directives [:Directive [:Name "foo"]]]]]]]]]]
 
-       "{frob @foo @bar}"
+       "{ frob @foo @bar }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -393,7 +393,8 @@
               [:Name "frob"]
               [:Directives [:Directive [:Name "foo"]] [:Directive [:Name "bar"]]]]]]]]]]
 
-       "{frob @foo(bar:true)}"
+       ;; TODO: WhiteSpace* before Arguments
+       "{ frob @foo(bar: true) }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -407,7 +408,7 @@
                 [:Name "foo"]
                 [:Arguments [:Argument [:Name "bar"] [:Value [:BooleanValue "true"]]]]]]]]]]]]]
 
-       "{frob @foo(a:1,b:2)}"
+       "{ frob @foo(a:1, b:2) }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -427,7 +428,7 @@
                   [:Name "b"]
                   [:Value [:IntValue [:IntegerPart [:NonZeroDigit "2"]]]]]]]]]]]]]]]
 
-       "{frob @foo(a:1) @bar(a:1)}"
+       "{ frob @foo(a: 1) @bar(a: 1) }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -450,7 +451,7 @@
                   [:Name "a"]
                   [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]]]]]]]]]]]
 
-       "{foo{bar}}"
+       "{ foo { bar } }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -459,7 +460,7 @@
             [:Selection
              [:Field [:Name "foo"] [:SelectionSet [:Selection [:Field [:Name "bar"]]]]]]]]]]]
 
-       "{foo{bar{foobar}}}"
+       "{ foo { bar { foobar } } }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -474,7 +475,7 @@
                  [:Name "bar"]
                  [:SelectionSet [:Selection [:Field [:Name "foobar"]]]]]]]]]]]]]]
 
-       "{foo bar}"
+       "{ foo bar }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -483,7 +484,7 @@
             [:Selection [:Field [:Name "foo"]]]
             [:Selection [:Field [:Name "bar"]]]]]]]]
 
-       "{foo{a} bar{a b} foobar{a{b}}}"
+       "{ foo { a } bar { a b } foobar { a { b } } }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -504,14 +505,14 @@
                [:Selection
                 [:Field [:Name "a"] [:SelectionSet [:Selection [:Field [:Name "b"]]]]]]]]]]]]]]
 
-       "{...frob}"
+       "{ ... frob }"
        [:Document
         [:Definition
          [:ExecutableDefinition
           [:OperationDefinition
            [:SelectionSet [:Selection [:FragmentSpread [:FragmentName "frob"]]]]]]]]
 
-       "{...frob @foo}"
+       "{ ...frob @foo }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -522,7 +523,7 @@
               [:FragmentName "frob"]
               [:Directives [:Directive [:Name "foo"]]]]]]]]]]
 
-       "{...foo ...bar}"
+       "{ ...foo ...bar }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -531,7 +532,7 @@
             [:Selection [:FragmentSpread [:FragmentName "foo"]]]
             [:Selection [:FragmentSpread [:FragmentName "bar"]]]]]]]]
 
-       "{...{frob}}"
+       "{ ... { frob } }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -540,7 +541,7 @@
             [:Selection
              [:InlineFragment [:SelectionSet [:Selection [:Field [:Name "frob"]]]]]]]]]]]
 
-       "{...on Foo{...on Bar{foobar}}}"
+       "{ ... on Foo { ... on Bar { foobar } } }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -555,7 +556,7 @@
                  [:TypeCondition [:NamedType [:Name "Bar"]]]
                  [:SelectionSet [:Selection [:Field [:Name "foobar"]]]]]]]]]]]]]]
 
-       "{...on Foo @bar{foobar}}"
+       "{ ... on Foo @bar { foobar } }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -567,7 +568,7 @@
               [:Directives [:Directive [:Name "bar"]]]
               [:SelectionSet [:Selection [:Field [:Name "foobar"]]]]]]]]]]]
 
-       "query{frob}"
+       "query { frob }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -575,7 +576,7 @@
            [:OperationType "query"]
            [:SelectionSet [:Selection [:Field [:Name "frob"]]]]]]]]
 
-       "mutation{frob}"
+       "mutation { frob }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -583,7 +584,7 @@
            [:OperationType "mutation"]
            [:SelectionSet [:Selection [:Field [:Name "frob"]]]]]]]]
 
-       "subscription{frob}"
+       "subscription { frob }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -591,7 +592,7 @@
            [:OperationType "subscription"]
            [:SelectionSet [:Selection [:Field [:Name "frob"]]]]]]]]
 
-       "query frobnicator{frob}"
+       "query frobnicator { frob }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -600,7 +601,7 @@
            [:Name "frobnicator"]
            [:SelectionSet [:Selection [:Field [:Name "frob"]]]]]]]]
 
-       "query frobnicator @foo{frob}"
+       "query frobnicator @foo { frob }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -610,7 +611,10 @@
            [:Directives [:Directive [:Name "foo"]]]
            [:SelectionSet [:Selection [:Field [:Name "frob"]]]]]]]]
 
-       "query frob($foo:bar){a b}"
+       ;; TODO: <WhiteSpace*> within Variable
+       ;; TODO: <WhiteSpace*> preceding Arguments
+       ;; TODO: <WhiteSpace*> within VariableDefinitions
+       "query frob($foo: bar) { a b }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -625,7 +629,7 @@
             [:Selection [:Field [:Name "a"]]]
             [:Selection [:Field [:Name "b"]]]]]]]]
 
-       "query frob($foo:bar $qux:baz){a b}"
+       "query frob($foo: bar $qux: baz) { a b }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -643,7 +647,8 @@
             [:Selection [:Field [:Name "a"]]]
             [:Selection [:Field [:Name "b"]]]]]]]]
 
-       "query frob($foo:[bar]){a b}"
+       ;; TODO: <WhiteSpace*> within ListTypes
+       "query frob($foo: [bar]) { a b }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -658,7 +663,7 @@
             [:Selection [:Field [:Name "a"]]]
             [:Selection [:Field [:Name "b"]]]]]]]]
 
-       "query frob($foo:[[bar]]){a b}"
+       "query frob($foo: [[bar]]) { a b }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -673,7 +678,8 @@
             [:Selection [:Field [:Name "a"]]]
             [:Selection [:Field [:Name "b"]]]]]]]]
 
-       "query frob($foo:bar!){a b}"
+       ;; TODO: <WhiteSpace*> within NonNullType (between NamedType and '!')
+       "query frob($foo: bar!) { a b }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -688,7 +694,7 @@
             [:Selection [:Field [:Name "a"]]]
             [:Selection [:Field [:Name "b"]]]]]]]]
 
-       "query frob($foo:[bar]!){a b}"
+       "query frob($foo: [bar]!) { a b }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -703,7 +709,7 @@
             [:Selection [:Field [:Name "a"]]]
             [:Selection [:Field [:Name "b"]]]]]]]]
 
-       "query frob($foo:[bar!]){a b}"
+       "query frob($foo: [bar!]) { a b }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -718,7 +724,7 @@
             [:Selection [:Field [:Name "a"]]]
             [:Selection [:Field [:Name "b"]]]]]]]]
 
-       "query frob($foo:[bar!]!){a b}"
+       "query frob($foo: [bar!]!) { a b }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -735,7 +741,7 @@
             [:Selection [:Field [:Name "a"]]]
             [:Selection [:Field [:Name "b"]]]]]]]]
 
-       "query frob($foo:bar=true){a b}"
+       "query frob($foo: bar = true) { a b }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -751,7 +757,7 @@
             [:Selection [:Field [:Name "a"]]]
             [:Selection [:Field [:Name "b"]]]]]]]]
 
-       "fragment foo on Bar @foobar{a b c}"
+       "fragment foo on Bar @foobar { a b c }"
        [:Document
         [:Definition
          [:ExecutableDefinition
@@ -764,7 +770,7 @@
             [:Selection [:Field [:Name "b"]]]
             [:Selection [:Field [:Name "c"]]]]]]]]
 
-       "schema{query:Foo subscription:Bar mutation:Foobar}"
+       "schema { query: Foo subscription: Bar mutation: Foobar }"
        [:Document
         [:Definition
          [:TypeSystemDefinition
@@ -779,7 +785,7 @@
             [:OperationType "mutation"]
             [:NamedType [:Name "Foobar"]]]]]]]
 
-       "schema @foo{query:Foo}"
+       "schema @foo { query: Foo }"
        [:Document
         [:Definition
          [:TypeSystemDefinition
@@ -834,7 +840,7 @@
             [:Name "Foo"]
             [:Directives [:Directive [:Name "bar"]]]]]]]]
 
-       "type Foo{\"the field definition\" Bar:String @foobar}"
+       "type Foo{ \"the field definition\" Bar: String @foobar }"
        [:Document
         [:Definition
          [:TypeSystemDefinition
@@ -869,7 +875,7 @@
               [:Type [:NamedType [:Name "String"]]]
               [:Directives [:Directive [:Name "foobar"]]]]]]]]]]
 
-       "type Foo{Bar:String}"
+       "type Foo { Bar: String }"
        [:Document
         [:Definition
          [:TypeSystemDefinition
@@ -879,7 +885,7 @@
             [:FieldsDefinition
              [:FieldDefinition [:Name "Bar"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
 
-       "type Foo{Qux:String Baz:String}"
+       "type Foo { Qux: String Baz: String }"
        [:Document
         [:Definition
          [:TypeSystemDefinition
@@ -890,7 +896,7 @@
              [:FieldDefinition [:Name "Qux"] [:Type [:NamedType [:Name "String"]]]]
              [:FieldDefinition [:Name "Baz"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
 
-       "type Foo implements Bar{qux:String}"
+       "type Foo implements Bar { qux: String }"
        [:Document
         [:Definition
          [:TypeSystemDefinition
@@ -901,7 +907,7 @@
             [:FieldsDefinition
              [:FieldDefinition [:Name "qux"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
 
-       "type Foo implements & Bar{qux:String}"
+       "type Foo implements & Bar { qux: String }"
        [:Document
         [:Definition
          [:TypeSystemDefinition
@@ -912,7 +918,7 @@
             [:FieldsDefinition
              [:FieldDefinition [:Name "qux"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
 
-       "type Foo implements Bar & Foobar{qux:String}"
+       "type Foo implements Bar & Foobar { qux: String }"
        [:Document
         [:Definition
          [:TypeSystemDefinition
@@ -925,7 +931,7 @@
             [:FieldsDefinition
              [:FieldDefinition [:Name "qux"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
 
-       "interface Foo{qux:String}"
+       "interface Foo { qux: String }"
        [:Document
         [:Definition
          [:TypeSystemDefinition
@@ -936,7 +942,7 @@
              [:FieldDefinition [:Name "qux"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
 
        ;; a bit more fleshed out
-       "\"the\" interface Foo @bar{\"the\" qux:String \"the\" baz:String}"
+       "\"the\" interface Foo @bar { \"the\" qux: String \"the\" baz: String }"
        [:Document
         [:Definition
          [:TypeSystemDefinition
@@ -993,6 +999,7 @@
              [:UnionMemberTypes [:NamedType [:Name "Foo"]]]
              [:NamedType [:Name "Bar"]]]]]]]]
 
+       ;; TODO: <WhiteSpace*> preceding Description (at start of Document or Definition)
        "\"the\" union Foobar @qux = Foo | Bar"
        [:Document
         [:Definition
@@ -1016,7 +1023,7 @@
          [:TypeSystemDefinition
           [:TypeDefinition [:EnumTypeDefinition [:Name "Foobar"]]]]]]
 
-       "enum Foobar{FOO}"
+       "enum Foobar { FOO }"
        [:Document
         [:Definition
          [:TypeSystemDefinition
@@ -1025,7 +1032,7 @@
             [:Name "Foobar"]
             [:EnumValuesDefinition [:EnumValueDefinition [:EnumValue "FOO"]]]]]]]]
 
-       "enum Foobar{FOO BAR}"
+       "enum Foobar { FOO BAR }"
        [:Document
         [:Definition
          [:TypeSystemDefinition
@@ -1036,7 +1043,7 @@
              [:EnumValueDefinition [:EnumValue "FOO"]]
              [:EnumValueDefinition [:EnumValue "BAR"]]]]]]]]
 
-       "\"the\" enum Foobar @qux{\"it foo\" FOO \"it bar\" BAR}"
+       "\"the\" enum Foobar @qux { \"it foo\" FOO \"it bar\" BAR }"
        [:Document
         [:Definition
          [:TypeSystemDefinition
@@ -1077,7 +1084,7 @@
          [:TypeSystemDefinition
           [:TypeDefinition [:InputObjectTypeDefinition [:Name "Foobar"]]]]]]
 
-       "input Foobar{foo:String}"
+       "input Foobar { foo: String }"
        [:Document
         [:Definition
          [:TypeSystemDefinition
@@ -1089,7 +1096,7 @@
               [:Name "foo"]
               [:Type [:NamedType [:Name "String"]]]]]]]]]]
 
-       "input Foobar{foo:String bar:String}"
+       "input Foobar { foo: String bar: String}"
        [:Document
         [:Definition
          [:TypeSystemDefinition
@@ -1104,7 +1111,7 @@
               [:Name "bar"]
               [:Type [:NamedType [:Name "String"]]]]]]]]]]
 
-       "\"the\" input Foobar @qux{\"the\" foo:String=\"foo\" @qux \"the\" bar:String=\"bar\" @qux}"
+       "\"the\" input Foobar @qux { \"the\" foo: String = \"foo\" @qux \"the\" bar: String = \"bar\" @qux }"
        [:Document
         [:Definition
          [:TypeSystemDefinition
@@ -1158,7 +1165,8 @@
            [:DirectiveLocations
             [:DirectiveLocation [:ExecutableDirectiveLocation "FIELD"]]]]]]]
 
-       "directive @foo on |FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT"
+       ;; TODO: DirectiveLocation without preceding '|'
+       "directive @foo on | FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT"
        [:Document
         [:Definition
          [:TypeSystemDefinition
@@ -1171,7 +1179,8 @@
              [:DirectiveLocation [:ExecutableDirectiveLocation "FRAGMENT_SPREAD"]]]
             [:DirectiveLocation [:ExecutableDirectiveLocation "INLINE_FRAGMENT"]]]]]]]
 
-       "directive @foo(qux:String baz:String) on |FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT"
+       ;; TODO: <WhiteSpace*> preceding and within ArgumentsDefinition
+       "directive @foo(qux: String baz: String) on | FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT"
        [:Document
         [:Definition
          [:TypeSystemDefinition
@@ -1194,7 +1203,8 @@
           [:SchemaExtension
            [:Directives [:Directive [:Name "foo"]] [:Directive [:Name "bar"]]]]]]]
 
-       "extend schema{query:frobnicate}"
+       ;; TODO: <WhiteSpace*> within OperationTypeDefinition preceding NamedType
+       "extend schema { query: frobnicate }"
        [:Document
         [:Definition
          [:TypeSystemExtension
@@ -1203,17 +1213,18 @@
             [:OperationType "query"]
             [:NamedType [:Name "frobnicate"]]]]]]]
 
-       "extend schema @foo{query:frobnicate mutation:frobnitz}"
+       "extend schema @foo { query: frobnicate mutation: frobnitz }"
        [:Document
         [:Definition
          [:TypeSystemExtension
-          [:SchemaExtension [:Directives [:Directive [:Name "foo"]]]]]]
-        [:Definition
-         [:ExecutableDefinition
-          [:OperationDefinition
-           [:SelectionSet
-            [:Selection [:Field [:Alias [:Name "query"]] [:Name "frobnicate"]]]
-            [:Selection [:Field [:Alias [:Name "mutation"]] [:Name "frobnitz"]]]]]]]]
+          [:SchemaExtension
+           [:Directives [:Directive [:Name "foo"]]]
+           [:OperationTypeDefinition
+            [:OperationType "query"]
+            [:NamedType [:Name "frobnicate"]]]
+           [:OperationTypeDefinition
+            [:OperationType "mutation"]
+            [:NamedType [:Name "frobnitz"]]]]]]]
 
        "extend scalar Foo @bar"
        [:Document
@@ -1265,7 +1276,7 @@
              [:NamedType [:Name "Baz"]]]
             [:Directives [:Directive [:Name "bar"]]]]]]]]
 
-       "extend type Foo{qux:String}"
+       "extend type Foo { qux: String }"
        [:Document
         [:Definition
          [:TypeSystemExtension
@@ -1275,7 +1286,7 @@
             [:FieldsDefinition
              [:FieldDefinition [:Name "qux"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
 
-       "extend type Foo implements Bar @foobar{\"the\" qux:String @baz}"
+       "extend type Foo implements Bar @foobar { \"the\" qux: String @baz }"
        [:Document
         [:Definition
          [:TypeSystemExtension
@@ -1304,7 +1315,7 @@
             [:Name "Foo"]
             [:Directives [:Directive [:Name "bar"]]]]]]]]
 
-       "extend interface Foobar{foo:String bar:String}"
+       "extend interface Foobar { foo: String bar: String }"
        [:Document
         [:Definition
          [:TypeSystemExtension
@@ -1315,7 +1326,7 @@
              [:FieldDefinition [:Name "foo"] [:Type [:NamedType [:Name "String"]]]]
              [:FieldDefinition [:Name "bar"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
 
-       "extend interface Foobar @foo{bar:String}"
+       "extend interface Foobar @foo { bar: String }"
        [:Document
         [:Definition
          [:TypeSystemExtension
@@ -1365,7 +1376,7 @@
             [:Name "Foobar"]
             [:Directives [:Directive [:Name "foo"]] [:Directive [:Name "bar"]]]]]]]]
 
-       "extend enum Foobar{QUX BAZ}"
+       "extend enum Foobar { QUX BAZ }"
        [:Document
         [:Definition
          [:TypeSystemExtension
@@ -1376,7 +1387,7 @@
              [:EnumValueDefinition [:EnumValue "QUX"]]
              [:EnumValueDefinition [:EnumValue "BAZ"]]]]]]]]
 
-       "extend enum Foobar @qux{BAZ}"
+       "extend enum Foobar @qux { BAZ }"
        [:Document
         [:Definition
          [:TypeSystemExtension
@@ -1395,7 +1406,7 @@
             [:Name "Foobar"]
             [:Directives [:Directive [:Name "foo"]] [:Directive [:Name "bar"]]]]]]]]
 
-       "extend input Foobar{qux:String baz:String}"
+       "extend input Foobar { qux: String baz: String }"
        [:Document
         [:Definition
          [:TypeSystemExtension
@@ -1410,7 +1421,7 @@
               [:Name "baz"]
               [:Type [:NamedType [:Name "String"]]]]]]]]]]
 
-       "extend input Foobar @qux{baz:String}"
+       "extend input Foobar @qux { baz: String }"
        [:Document
         [:Definition
          [:TypeSystemExtension
