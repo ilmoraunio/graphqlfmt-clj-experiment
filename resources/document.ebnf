@@ -1,53 +1,53 @@
-Document = <WhiteSpace*> Definition+ <WhiteSpace*>
-Definition = <WhiteSpace*> (TypeSystemExtension /
-                            TypeSystemDefinition /
-                            ExecutableDefinition)
+Document = Ignored* Definition+ Ignored*
+Definition = Ignored* (TypeSystemExtension /
+                       TypeSystemDefinition /
+                       ExecutableDefinition)
 TypeSystemExtension = SchemaExtension |
                       TypeExtension
-SchemaExtension = (<'extend'> <WhiteSpace*> <'schema'> Directives? <WhiteSpace*> <'{'> OperationTypeDefinition+ <WhiteSpace*> <'}'>) |
-                  (<'extend'> <WhiteSpace*> <'schema'> Directives)
-OperationTypeDefinition = <WhiteSpace*> OperationType <WhiteSpace*> <':'> <WhiteSpace*> NamedType
+SchemaExtension = (<'extend'> Ignored* <'schema'> Directives? Ignored* <'{'> OperationTypeDefinition+ Ignored* <'}'>) |
+                  (<'extend'> Ignored* <'schema'> Directives)
+OperationTypeDefinition = Ignored* OperationType Ignored* <':'> Ignored* NamedType
 TypeExtension = ScalarTypeExtension |
                 ObjectTypeExtension |
                 InterfaceTypeExtension |
                 UnionTypeExtension |
                 EnumTypeExtension |
                 InputObjectTypeExtension
-ScalarTypeExtension = <'extend'> <WhiteSpace*> <'scalar'> <WhiteSpace*> Name Directives
-ObjectTypeExtension = (<'extend'> <WhiteSpace*> <'type'> <WhiteSpace*> Name ImplementsInterfaces? Directives? FieldsDefinition) |
-                      (<'extend'> <WhiteSpace*> <'type'> <WhiteSpace*> Name ImplementsInterfaces? Directives) |
-                      (<'extend'> <WhiteSpace*> <'type'> <WhiteSpace*> Name ImplementsInterfaces)
-InterfaceTypeExtension = (<'extend'> <WhiteSpace*> <'interface'> <WhiteSpace*> Name Directives? FieldsDefinition) |
-                         (<'extend'> <WhiteSpace*> <'interface'> <WhiteSpace*> Name Directives)
-UnionTypeExtension = (<'extend'> <WhiteSpace*> <'union'> <WhiteSpace*> Name Directives? UnionMemberTypes) |
-                     (<'extend'> <WhiteSpace*> <'union'> <WhiteSpace*> Name Directives)
-EnumTypeExtension = (<'extend'> <WhiteSpace*> <'enum'> <WhiteSpace*> Name Directives? EnumValuesDefinition) |
-                    (<'extend'> <WhiteSpace*> <'enum'> <WhiteSpace*> Name Directives)
-InputObjectTypeExtension = (<'extend'> <WhiteSpace*> <'input'> <WhiteSpace*> Name Directives? InputFieldsDefinition) |
-                           (<'extend'> <WhiteSpace*> <'input'> <WhiteSpace*> Name Directives)
+ScalarTypeExtension = <'extend'> Ignored* <'scalar'> Ignored* Name Directives
+ObjectTypeExtension = (<'extend'> Ignored* <'type'> Ignored* Name ImplementsInterfaces? Directives? FieldsDefinition) |
+                      (<'extend'> Ignored* <'type'> Ignored* Name ImplementsInterfaces? Directives) |
+                      (<'extend'> Ignored* <'type'> Ignored* Name ImplementsInterfaces)
+InterfaceTypeExtension = (<'extend'> Ignored* <'interface'> Ignored* Name Directives? FieldsDefinition) |
+                         (<'extend'> Ignored* <'interface'> Ignored* Name Directives)
+UnionTypeExtension = (<'extend'> Ignored* <'union'> Ignored* Name Directives? UnionMemberTypes) |
+                     (<'extend'> Ignored* <'union'> Ignored* Name Directives)
+EnumTypeExtension = (<'extend'> Ignored* <'enum'> Ignored* Name Directives? EnumValuesDefinition) |
+                    (<'extend'> Ignored* <'enum'> Ignored* Name Directives)
+InputObjectTypeExtension = (<'extend'> Ignored* <'input'> Ignored* Name Directives? InputFieldsDefinition) |
+                           (<'extend'> Ignored* <'input'> Ignored* Name Directives)
 ExecutableDefinition = OperationDefinition |
                        FragmentDefinition
 TypeSystemDefinition = SchemaDefinition |
                        TypeDefinition |
                        DirectiveDefinition
-SchemaDefinition = <'schema'> Directives? <WhiteSpace*> <'{'> RootOperationTypeDefinition+ <WhiteSpace*> <'}'>
-RootOperationTypeDefinition = <WhiteSpace*> OperationType <WhiteSpace*> <':'> <WhiteSpace*> NamedType
+SchemaDefinition = <'schema'> Directives? Ignored* <'{'> RootOperationTypeDefinition+ Ignored* <'}'>
+RootOperationTypeDefinition = Ignored* OperationType Ignored* <':'> Ignored* NamedType
 TypeDefinition = ScalarTypeDefinition |
                  ObjectTypeDefinition |
                  InterfaceTypeDefinition |
                  UnionTypeDefinition |
                  EnumTypeDefinition |
                  InputObjectTypeDefinition
-ScalarTypeDefinition = Description? <WhiteSpace*> <'scalar'> <WhiteSpace+> Name Directives?
-ObjectTypeDefinition = Description? <WhiteSpace*> <'type'> <WhiteSpace+> Name ImplementsInterfaces? Directives? FieldsDefinition?
-InterfaceTypeDefinition = Description? <WhiteSpace*> <'interface'> <WhiteSpace+> Name Directives? FieldsDefinition?
-UnionTypeDefinition = Description? <WhiteSpace*> <'union'> <WhiteSpace+> Name Directives? UnionMemberTypes?
-EnumTypeDefinition = Description? <WhiteSpace*> <'enum'> <WhiteSpace+> Name Directives? EnumValuesDefinition?
-InputObjectTypeDefinition = Description? <WhiteSpace*> <'input'> <WhiteSpace+> Name Directives? InputFieldsDefinition?
-DirectiveDefinition = Description? <WhiteSpace*> <'directive'> <WhiteSpace*> <'@'> <WhiteSpace*> Name <WhiteSpace*> ArgumentsDefinition? <WhiteSpace*> <'on'> <WhiteSpace*> DirectiveLocations
-ArgumentsDefinition = <'('> InputValueDefinition+ <WhiteSpace*> <')'>
-DirectiveLocations = (<'|'?> <WhiteSpace*> DirectiveLocation) |
-                     (DirectiveLocations <WhiteSpace*> <'|'> <WhiteSpace*> DirectiveLocation)
+ScalarTypeDefinition = Description? Ignored* <'scalar'> Ignored+ Name Directives?
+ObjectTypeDefinition = Description? Ignored* <'type'> Ignored+ Name ImplementsInterfaces? Directives? FieldsDefinition?
+InterfaceTypeDefinition = Description? Ignored* <'interface'> Ignored+ Name Directives? FieldsDefinition?
+UnionTypeDefinition = Description? Ignored* <'union'> Ignored+ Name Directives? UnionMemberTypes?
+EnumTypeDefinition = Description? Ignored* <'enum'> Ignored+ Name Directives? EnumValuesDefinition?
+InputObjectTypeDefinition = Description? Ignored* <'input'> Ignored+ Name Directives? InputFieldsDefinition?
+DirectiveDefinition = Description? Ignored* <'directive'> Ignored* <'@'> Ignored* Name Ignored* ArgumentsDefinition? Ignored* <'on'> Ignored* DirectiveLocations
+ArgumentsDefinition = <'('> InputValueDefinition+ Ignored* <')'>
+DirectiveLocations = (<'|'?> Ignored* DirectiveLocation) |
+                     (DirectiveLocations Ignored* <'|'> Ignored* DirectiveLocation)
 DirectiveLocation = ExecutableDirectiveLocation |
                     TypeSystemDirectiveLocation
 ExecutableDirectiveLocation = 'QUERY' |
@@ -69,50 +69,50 @@ TypeSystemDirectiveLocation = 'SCHEMA' |
                               'INPUT_OBJECT' |
                               'INPUT_FIELD_DEFINITION'
 Description = StringValue
-FieldsDefinition = <WhiteSpace*> <'{'> FieldDefinition+ <WhiteSpace*> <'}'>
-FieldDefinition = <WhiteSpace*> Description? <WhiteSpace*> Name <WhiteSpace*> <':'> Type Directives?
-ImplementsInterfaces = (<WhiteSpace*> <'implements'> <WhiteSpace*> <'&'?> <WhiteSpace*> NamedType) |
-                       (ImplementsInterfaces <WhiteSpace*> <'&'> <WhiteSpace*> NamedType)
-UnionMemberTypes = (<WhiteSpace*> <'='> <WhiteSpace*> <'|'?> <WhiteSpace*> NamedType) |
-                   (UnionMemberTypes <WhiteSpace*> <'|'> <WhiteSpace*> NamedType)
-EnumValuesDefinition = <WhiteSpace*> <'{'> EnumValueDefinition+ <WhiteSpace*> <'}'>
-EnumValueDefinition = <WhiteSpace*> Description? <WhiteSpace*> EnumValue Directives?
-InputFieldsDefinition = <WhiteSpace*> <'{'> InputValueDefinition+ <WhiteSpace*> <'}'>
-InputValueDefinition = <WhiteSpace*> Description? <WhiteSpace*> Name <WhiteSpace*> <':'> Type DefaultValue? Directives?
-OperationDefinition = (OperationType <WhiteSpace*> Name? VariableDefinitions? Directives? SelectionSet) |
+FieldsDefinition = Ignored* <'{'> FieldDefinition+ Ignored* <'}'>
+FieldDefinition = Ignored* Description? Ignored* Name Ignored* <':'> Type Directives?
+ImplementsInterfaces = (Ignored* <'implements'> Ignored* <'&'?> Ignored* NamedType) |
+                       (ImplementsInterfaces Ignored* <'&'> Ignored* NamedType)
+UnionMemberTypes = (Ignored* <'='> Ignored* <'|'?> Ignored* NamedType) |
+                   (UnionMemberTypes Ignored* <'|'> Ignored* NamedType)
+EnumValuesDefinition = Ignored* <'{'> EnumValueDefinition+ Ignored* <'}'>
+EnumValueDefinition = Ignored* Description? Ignored* EnumValue Directives?
+InputFieldsDefinition = Ignored* <'{'> InputValueDefinition+ Ignored* <'}'>
+InputValueDefinition = Ignored* Description? Ignored* Name Ignored* <':'> Type DefaultValue? Directives?
+OperationDefinition = (OperationType Ignored* Name? VariableDefinitions? Directives? SelectionSet) |
                       SelectionSet
-FragmentDefinition = <'fragment'> <WhiteSpace+> FragmentName <WhiteSpace+> TypeCondition Directives? SelectionSet
+FragmentDefinition = <'fragment'> Ignored+ FragmentName Ignored+ TypeCondition Directives? SelectionSet
 OperationType = 'query' | 'mutation' | 'subscription'
-VariableDefinitions = <WhiteSpace*> <'('> VariableDefinition+ <WhiteSpace*> <')'>
-VariableDefinition = <WhiteSpace*> Variable <WhiteSpace*> <':'> Type DefaultValue?
-SelectionSet = <WhiteSpace*> <'{'> <WhiteSpace*> Selection+ <WhiteSpace*> <'}'>
+VariableDefinitions = Ignored* <'('> VariableDefinition+ Ignored* <')'>
+VariableDefinition = Ignored* Variable Ignored* <':'> Type DefaultValue?
+SelectionSet = Ignored* <'{'> Ignored* Selection+ Ignored* <'}'>
 Selection = Field |
             FragmentSpread |
             InlineFragment
-Field = <WhiteSpace*> Alias? <WhiteSpace*> Name Arguments? Directives? SelectionSet?
-Alias = <WhiteSpace*> Name <WhiteSpace*> <':'>
-Arguments = <WhiteSpace*> <'('> Argument+ <WhiteSpace*> <')'>
-Argument = <WhiteSpace*> Name <WhiteSpace*> <':'> Value <WhiteSpace*> <Comma*>
-Value = <WhiteSpace*> (Variable |
-                       IntValue |
-                       FloatValue |
-                       StringValue |
-                       BooleanValue |
-                       NullValue |
-                       EnumValue)
-Variable = <'$'> <WhiteSpace*> Name
-DefaultValue = <WhiteSpace*> <'='> Value
+Field = Ignored* Alias? Ignored* Name Arguments? Directives? SelectionSet?
+Alias = Ignored* Name Ignored* <':'>
+Arguments = Ignored* <'('> Argument+ Ignored* <')'>
+Argument = Ignored* Name Ignored* <':'> Value Ignored* <Comma*>
+Value = Ignored* (Variable |
+                  IntValue |
+                  FloatValue |
+                  StringValue |
+                  BooleanValue |
+                  NullValue |
+                  EnumValue)
+Variable = <'$'> Ignored* Name
+DefaultValue = Ignored* <'='> Value
 EnumValue = #"^(?!(true|false|null))[_A-Za-z][_0-9A-Za-z]*"
 Directives = Directive+
-Directive = <WhiteSpace*> <'@'> <WhiteSpace*> Name Arguments?
-FragmentSpread = <WhiteSpace*> <'...'> <WhiteSpace*> FragmentName Directives?
+Directive = Ignored* <'@'> Ignored* Name Arguments?
+FragmentSpread = Ignored* <'...'> Ignored* FragmentName Directives?
 FragmentName = #"^(?!on)[_A-Za-z][_0-9A-Za-z]*"
 InlineFragment = <'...'> TypeCondition? Directives? SelectionSet
-TypeCondition = <WhiteSpace*> <'on'> <WhiteSpace*> NamedType
-Type = <WhiteSpace*> (NamedType |
-                      ListType |
-                      NonNullType)
+TypeCondition = Ignored* <'on'> Ignored* NamedType
+Type = Ignored* (NamedType |
+                 ListType |
+                 NonNullType)
 NamedType = Name
-ListType = <WhiteSpace*> <'['> Type <WhiteSpace*> <']'>
-NonNullType = NamedType <WhiteSpace*> <'!'> |
-              ListType <WhiteSpace*> <'!'>
+ListType = Ignored* <'['> Type Ignored* <']'>
+NonNullType = NamedType Ignored* <'!'> |
+              ListType Ignored* <'!'>

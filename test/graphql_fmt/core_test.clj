@@ -9,29 +9,28 @@
        (= ast (ignored-parser input))
 
     (str \uFEFF)
-    [:Ignored [:UnicodeBOM (str \uFEFF)]]
+    []
 
     (str \u0009)
-    [:Ignored [:WhiteSpace (str \u0009)]]
+    []
 
     (str \u0020)
-    [:Ignored [:WhiteSpace (str \u0020)]]
+    []
 
     "\n"
-    [:Ignored [:LineTerminator [:NewLine "\n"]]]
+    []
 
     "\r"
-    [:Ignored [:LineTerminator [:NewLine "\r"]]]
+    []
 
     "\r\n"
-    [:Ignored [:LineTerminator [:NewLine "\r" "\n"]]]
+    []
 
     "#"
-    [:Ignored [:Comment]]
+    [[:Comment]]
 
     "# frobnitz"
-    [:Ignored
-     [:Comment
+    [[:Comment
       [:CommentChar " "]
       [:CommentChar "f"]
       [:CommentChar "r"]
@@ -43,7 +42,7 @@
       [:CommentChar "z"]]]
 
     ","
-    [:Ignored [:Comma]]))
+    []))
 
 (deftest test-tokens
   (is (= [:Token [:Punctuator "{"]]
