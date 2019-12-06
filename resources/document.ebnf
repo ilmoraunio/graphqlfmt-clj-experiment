@@ -1,7 +1,7 @@
 Document = <WhiteSpace*> Definition+ <WhiteSpace*>
-Definition = TypeSystemExtension /
-             TypeSystemDefinition /
-             ExecutableDefinition
+Definition = <WhiteSpace*> (TypeSystemExtension /
+                            TypeSystemDefinition /
+                            ExecutableDefinition)
 TypeSystemExtension = SchemaExtension |
                       TypeExtension
 SchemaExtension = (<'extend'> <WhiteSpace*> <'schema'> Directives? <WhiteSpace*> <'{'> OperationTypeDefinition+ <WhiteSpace*> <'}'>) |

@@ -1602,6 +1602,34 @@
          [:InputFieldsDefinition
           [:InputValueDefinition
            [:Name "baz"]
-           [:Type [:NamedType [:Name "String"]]]]]]]]]]))
+           [:Type [:NamedType [:Name "String"]]]]]]]]]]
 
-;; TODO: multiple Definitions
+    ["query{foo}{foo:String}fragment foo on Bar{foo}type Foo schema{query:Foo}"
+     "query {foo} { foo : String } fragment foo on Bar {foo} type Foo schema {query:Foo}"
+     " query { foo } { foo : String } fragment foo on Bar { foo } type Foo schema { query : Foo } "]
+    [:Document
+     [:Definition
+      [:ExecutableDefinition
+       [:OperationDefinition
+        [:OperationType "query"]
+        [:SelectionSet [:Selection [:Field [:Name "foo"]]]]]]]
+     [:Definition
+      [:ExecutableDefinition
+       [:OperationDefinition
+        [:SelectionSet
+         [:Selection [:Field [:Alias [:Name "foo"]] [:Name "String"]]]]]]]
+     [:Definition
+      [:ExecutableDefinition
+       [:FragmentDefinition
+        [:FragmentName "foo"]
+        [:TypeCondition [:NamedType [:Name "Bar"]]]
+        [:SelectionSet [:Selection [:Field [:Name "foo"]]]]]]]
+     [:Definition
+      [:TypeSystemDefinition
+       [:TypeDefinition [:ObjectTypeDefinition [:Name "Foo"]]]]]
+     [:Definition
+      [:TypeSystemDefinition
+       [:SchemaDefinition
+        [:RootOperationTypeDefinition
+         [:OperationType "query"]
+         [:NamedType [:Name "Foo"]]]]]]]))
