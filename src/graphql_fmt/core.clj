@@ -1,5 +1,6 @@
 (ns graphql-fmt.core
   (:require [clojure.java.io :as io]
+            [clojure.string :as str]
             [instaparse.core :as insta])
   (:gen-class))
 
@@ -23,4 +24,5 @@
 (defn -main [& args]
   (println (if (first args)
              (document-parser (first args))
-             (document-parser (read-line)))))
+             (document-parser
+               (str/join "\n" (line-seq (java.io.BufferedReader. *in*)))))))
