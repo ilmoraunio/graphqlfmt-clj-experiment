@@ -100,12 +100,16 @@ Value = Ignored* (Variable |
                   BooleanValue |
                   NullValue |
                   EnumValue |
-                  ListValue)
+                  ListValue |
+                  ObjectValue)
 Variable = <'$'> Ignored* Name
 DefaultValue = Ignored* <'='> Value
 EnumValue = #"^(?!(true|false|null))[_A-Za-z][_0-9A-Za-z]*"
 ListValue = (<'['> Ignored* <']'>) |
             (<'['> Value+ Ignored* <']'>)
+ObjectValue = (<'{'> Ignored* <'}'>) |
+              (<'{'> ObjectField+ Ignored* <'}'>)
+ObjectField = Ignored* Name Ignored* <':'> Ignored* Value
 Directives = Directive+
 Directive = Ignored* <'@'> Ignored* Name Arguments?
 FragmentSpread = Ignored* <'...'> Ignored* FragmentName Directives?

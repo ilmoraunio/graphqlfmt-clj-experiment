@@ -423,7 +423,61 @@
                  [:Value [:IntValue [:IntegerPart [:NonZeroDigit "3"]]]]]]
                [:Value [:Variable [:Name "foobar"]]]]]]]]]]]]]]
 
-    ;; TODO make this work "mutation { foo(bar:{foobar: 1}) }"
+    ["{foo(bar:{})}"
+     "{ foo(bar: {}) }"
+     " { foo ( bar : { } ) } "]
+    [:Document
+     [:Definition
+      [:ExecutableDefinition
+       [:OperationDefinition
+        [:SelectionSet
+         [:Selection
+          [:Field
+           [:Name "foo"]
+           [:Arguments [:Argument [:Name "bar"] [:Value [:ObjectValue]]]]]]]]]]]
+
+    ["{foo(bar:{foobar:1})}"
+     "{ foo(bar: {foobar:1}) }"
+     " { foo ( bar : { foobar : 1 } ) } "]
+    [:Document
+     [:Definition
+      [:ExecutableDefinition
+       [:OperationDefinition
+        [:SelectionSet
+         [:Selection
+          [:Field
+           [:Name "foo"]
+           [:Arguments
+            [:Argument
+             [:Name "bar"]
+             [:Value
+              [:ObjectValue
+               [:ObjectField
+                [:Name "foobar"]
+                [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]]]]]]]]]]]]
+
+    ["{foo(bar:{qux:1,baz:2})}"
+     "{ foo(bar: { qux: 1, baz: 2 }) }"
+     " { foo ( bar : { qux : 1 , baz : 2 } ) } "]
+    [:Document
+     [:Definition
+      [:ExecutableDefinition
+       [:OperationDefinition
+        [:SelectionSet
+         [:Selection
+          [:Field
+           [:Name "foo"]
+           [:Arguments
+            [:Argument
+             [:Name "bar"]
+             [:Value
+              [:ObjectValue
+               [:ObjectField
+                [:Name "qux"]
+                [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]
+               [:ObjectField
+                [:Name "baz"]
+                [:Value [:IntValue [:IntegerPart [:NonZeroDigit "2"]]]]]]]]]]]]]]]]
 
     ["{frob(foo:true,bar:false)}"
      "{ frob(foo: true, bar: false) }"
