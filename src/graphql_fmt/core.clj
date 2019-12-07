@@ -1,5 +1,6 @@
 (ns graphql-fmt.core
   (:require [clojure.java.io :as io]
+            [clojure.pprint]
             [clojure.string :as str]
             [instaparse.core :as insta])
   (:gen-class))
@@ -22,7 +23,8 @@
   (insta/parser (ebnf "document" "token" "ignored")))
 
 (defn -main [& args]
-  (println (if (first args)
-             (document-parser (first args))
-             (document-parser
-               (str/join "\n" (line-seq (java.io.BufferedReader. *in*)))))))
+  (clojure.pprint/pprint
+    (if (first args)
+      (document-parser (first args))
+      (document-parser
+        (str/join "\n" (line-seq (java.io.BufferedReader. *in*)))))))
