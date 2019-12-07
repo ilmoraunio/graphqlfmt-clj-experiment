@@ -386,6 +386,45 @@
            [:Name "foo"]
            [:Arguments [:Argument [:Name "bar"] [:Value [:NullValue]]]]]]]]]]]
 
+    ["{foo(bar:[])}"
+     "{ foo(bar: []) }"
+     " { foo ( bar : [ ] ) } "]
+    [:Document
+     [:Definition
+      [:ExecutableDefinition
+       [:OperationDefinition
+        [:SelectionSet
+         [:Selection
+          [:Field
+           [:Name "foo"]
+           [:Arguments [:Argument [:Name "bar"] [:Value [:ListValue]]]]]]]]]]]
+
+    ["{foo(bar:[1[1 2 3]$foobar])}"
+     "{ foo(bar: [1 [1 2 3] $foobar]) }"
+     " { foo ( bar : [ 1 [ 1 2 3 ] $ foobar ] ) } "]
+    [:Document
+     [:Definition
+      [:ExecutableDefinition
+       [:OperationDefinition
+        [:SelectionSet
+         [:Selection
+          [:Field
+           [:Name "foo"]
+           [:Arguments
+            [:Argument
+             [:Name "bar"]
+             [:Value
+              [:ListValue
+               [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]
+               [:Value
+                [:ListValue
+                 [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]
+                 [:Value [:IntValue [:IntegerPart [:NonZeroDigit "2"]]]]
+                 [:Value [:IntValue [:IntegerPart [:NonZeroDigit "3"]]]]]]
+               [:Value [:Variable [:Name "foobar"]]]]]]]]]]]]]]
+
+    ;; TODO make this work "mutation { foo(bar:{foobar: 1}) }"
+
     ["{frob(foo:true,bar:false)}"
      "{ frob(foo: true, bar: false) }"
      " { frob ( foo : true , bar: false ) } "
