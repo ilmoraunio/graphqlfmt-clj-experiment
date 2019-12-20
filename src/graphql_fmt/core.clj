@@ -54,8 +54,8 @@
 (defn null-value []
   [:NullValue {} "null"])
 
-(defn string-value [x & ys]
-  [:StringValue {} (str x (apply str ys))])
+(defn string-value [& xs]
+  [:StringValue {} (apply str xs)])
 
 (def transform-map
   {:Alias (fn [x] [:Alias {} x [:Printable {} ":"]])
@@ -71,6 +71,7 @@
                   [:Arguments {}]
                   (conj (into [[:Printable {} "("]] xs)
                         [:Printable {} ")"])))
+   :BlockQuote (fn [] "\"\"\"")
    :BlockStringCharacter str
    :BooleanValue boolean-value
    :Comment comment
@@ -96,6 +97,7 @@
    :NonZeroDigit str
    :NullValue null-value
    :OperationDefinition (fn [x] [:OperationDefinition {} x])
+   :Quote (fn [] "\"")
    :Selection selection
    :SelectionSet selection-set
    :Sign str

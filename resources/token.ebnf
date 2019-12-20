@@ -13,9 +13,10 @@ FractionalPart = (<#"\."> Digit*)
 ExponentPart = (ExponentIndicator Sign? Digit*)
 ExponentIndicator = "e" | "E"
 Sign = "+" | "-"
-(* TODO: start using quotes for StringValue *)
-StringValue = (<"\""> StringCharacter* <"\"">) |
-              (<"\"\"\""> BlockStringCharacter* <"\"\"\"">)
+StringValue = (Quote StringCharacter* Quote) |
+              (BlockQuote BlockStringCharacter* BlockQuote)
+Quote = <"\"">
+BlockQuote = <"\"\"\"">
 StringCharacter = #"[\u0009\u0020-\u0021\u0023-\u005B\u005D-\uFFFF]" |
                   ("\\u" EscapedUnicode) |
                   ("\\" EscapedCharacter)

@@ -172,26 +172,34 @@
             [:Digit "3"]]
            [:ExponentPart [:ExponentIndicator "e"] [:Sign "-"] [:Digit "2"] [:Digit "3"]]]]
          (token-parser "-6.0221413e-23")))
-  (is (= [:Token [:StringValue]] (token-parser "\"\"")))
-  (is (= [:Token [:StringValue [:StringCharacter "*"]]]
+  (is (= [:Token [:StringValue [:Quote] [:Quote]]] (token-parser "\"\"")))
+  (is (= [:Token [:StringValue [:Quote] [:StringCharacter "*"] [:Quote]]]
          (token-parser "\"*\"")))
   (is (= [:Token
           [:StringValue
+           [:Quote]
            [:StringCharacter "f"]
            [:StringCharacter "r"]
            [:StringCharacter "o"]
-           [:StringCharacter "b"]]]
+           [:StringCharacter "b"]
+           [:Quote]]]
          (token-parser "\"frob\"")))
   (is (= [:Token
-          [:StringValue [:StringCharacter "\\u" [:EscapedUnicode "0000"]]]]
+          [:StringValue
+           [:Quote]
+           [:StringCharacter "\\u" [:EscapedUnicode "0000"]]
+           [:Quote]]]
          (token-parser "\"\\u0000\"")))
   (is (= [:Token
           [:StringValue
+           [:Quote]
            [:StringCharacter "\\" [:EscapedCharacter "r"]]
-           [:StringCharacter "\\" [:EscapedCharacter "n"]]]]
+           [:StringCharacter "\\" [:EscapedCharacter "n"]]
+           [:Quote]]]
          (token-parser "\"\\r\\n\"")))
   (is (= [:Token
           [:StringValue
+           [:BlockQuote]
            [:BlockStringCharacter " "]
            [:BlockStringCharacter "f"]
            [:BlockStringCharacter "r"]
@@ -217,15 +225,18 @@
            [:BlockStringCharacter "a"]
            [:BlockStringCharacter "t"]
            [:BlockStringCharacter "e"]
-           [:BlockStringCharacter " "]]]
+           [:BlockStringCharacter " "]
+           [:BlockQuote]]]
          (token-parser "\"\"\" frob\"frobnitz\"\"frobnicate \"\"\"")))
   (is (instance? instaparse.gll.Failure
                  (token-parser "\"\"\" \"\"\" \"\"\"")))
   (is (= [:Token
           [:StringValue
+           [:BlockQuote]
            [:BlockStringCharacter " "]
            [:BlockStringCharacter "\"\"\""]
-           [:BlockStringCharacter " "]]]
+           [:BlockStringCharacter " "]
+           [:BlockQuote]]]
          (token-parser "\"\"\" \\\"\"\" \"\"\"")))
   (is (= [:Token [:BooleanValue "true"]]
         (token-parser "true")))
@@ -330,12 +341,14 @@
              [:Name "bar"]
              [:Value
               [:StringValue
+               [:Quote]
                [:StringCharacter "f"]
                [:StringCharacter "o"]
                [:StringCharacter "o"]
                [:StringCharacter "b"]
                [:StringCharacter "a"]
-               [:StringCharacter "r"]]]]]]]]]]]]
+               [:StringCharacter "r"]
+               [:Quote]]]]]]]]]]]]
 
     ["{foo(bar:\"\"\"foobar\"\"\")}"
      "{ foo(bar: \"\"\"foobar\"\"\") }"
@@ -353,12 +366,14 @@
              [:Name "bar"]
              [:Value
               [:StringValue
+               [:BlockQuote]
                [:BlockStringCharacter "f"]
                [:BlockStringCharacter "o"]
                [:BlockStringCharacter "o"]
                [:BlockStringCharacter "b"]
                [:BlockStringCharacter "a"]
-               [:BlockStringCharacter "r"]]]]]]]]]]]]
+               [:BlockStringCharacter "r"]
+               [:BlockQuote]]]]]]]]]]]]
 
     ["{foo(bar:true)}"
      "{ foo(bar: true) }"
@@ -988,6 +1003,7 @@
         [:ScalarTypeDefinition
          [:Description
           [:StringValue
+           [:Quote]
            [:StringCharacter "t"]
            [:StringCharacter "h"]
            [:StringCharacter "e"]
@@ -997,7 +1013,8 @@
            [:StringCharacter "a"]
            [:StringCharacter "l"]
            [:StringCharacter "a"]
-           [:StringCharacter "r"]]]
+           [:StringCharacter "r"]
+           [:Quote]]]
          [:Name "Foo"]
          [:Directives [:Directive [:Name "bar"]]]]]]]]
 
@@ -1011,6 +1028,7 @@
         [:ObjectTypeDefinition
          [:Description
           [:StringValue
+           [:Quote]
            [:StringCharacter "d"]
            [:StringCharacter "o"]
            [:StringCharacter "c"]
@@ -1023,7 +1041,8 @@
            [:StringCharacter " "]
            [:StringCharacter "t"]
            [:StringCharacter "h"]
-           [:StringCharacter "e"]]]
+           [:StringCharacter "e"]
+           [:Quote]]]
          [:Name "Foo"]
          [:Directives [:Directive [:Name "bar"]]]]]]]]
 
@@ -1040,6 +1059,7 @@
           [:FieldDefinition
            [:Description
             [:StringValue
+             [:Quote]
              [:StringCharacter "t"]
              [:StringCharacter "h"]
              [:StringCharacter "e"]
@@ -1059,7 +1079,8 @@
              [:StringCharacter "t"]
              [:StringCharacter "i"]
              [:StringCharacter "o"]
-             [:StringCharacter "n"]]]
+             [:StringCharacter "n"]
+             [:Quote]]]
            [:Name "Bar"]
            [:Type [:NamedType [:Name "String"]]]
            [:Directives [:Directive [:Name "foobar"]]]]]]]]]]
@@ -1152,26 +1173,32 @@
         [:InterfaceTypeDefinition
          [:Description
           [:StringValue
+           [:Quote]
            [:StringCharacter "t"]
            [:StringCharacter "h"]
-           [:StringCharacter "e"]]]
+           [:StringCharacter "e"]
+           [:Quote]]]
          [:Name "Foo"]
          [:Directives [:Directive [:Name "bar"]]]
          [:FieldsDefinition
           [:FieldDefinition
            [:Description
             [:StringValue
+             [:Quote]
              [:StringCharacter "t"]
              [:StringCharacter "h"]
-             [:StringCharacter "e"]]]
+             [:StringCharacter "e"]
+             [:Quote]]]
            [:Name "qux"]
            [:Type [:NamedType [:Name "String"]]]]
           [:FieldDefinition
            [:Description
             [:StringValue
+             [:Quote]
              [:StringCharacter "t"]
              [:StringCharacter "h"]
-             [:StringCharacter "e"]]]
+             [:StringCharacter "e"]
+             [:Quote]]]
            [:Name "baz"]
            [:Type [:NamedType [:Name "String"]]]]]]]]]]
 
@@ -1214,9 +1241,11 @@
         [:UnionTypeDefinition
          [:Description
           [:StringValue
+           [:Quote]
            [:StringCharacter "t"]
            [:StringCharacter "h"]
-           [:StringCharacter "e"]]]
+           [:StringCharacter "e"]
+           [:Quote]]]
          [:Name "Foobar"]
          [:Directives [:Directive [:Name "qux"]]]
          [:UnionMemberTypes
@@ -1262,31 +1291,37 @@
         [:EnumTypeDefinition
          [:Description
           [:StringValue
+           [:Quote]
            [:StringCharacter "t"]
            [:StringCharacter "h"]
-           [:StringCharacter "e"]]]
+           [:StringCharacter "e"]
+           [:Quote]]]
          [:Name "Foobar"]
          [:Directives [:Directive [:Name "qux"]]]
          [:EnumValuesDefinition
           [:EnumValueDefinition
            [:Description
             [:StringValue
+             [:Quote]
              [:StringCharacter "i"]
              [:StringCharacter "t"]
              [:StringCharacter " "]
              [:StringCharacter "f"]
              [:StringCharacter "o"]
-             [:StringCharacter "o"]]]
+             [:StringCharacter "o"]
+             [:Quote]]]
            [:EnumValue "FOO"]]
           [:EnumValueDefinition
            [:Description
             [:StringValue
+             [:Quote]
              [:StringCharacter "i"]
              [:StringCharacter "t"]
              [:StringCharacter " "]
              [:StringCharacter "b"]
              [:StringCharacter "a"]
-             [:StringCharacter "r"]]]
+             [:StringCharacter "r"]
+             [:Quote]]]
            [:EnumValue "BAR"]]]]]]]]
 
     ["input Foobar"
@@ -1337,41 +1372,51 @@
         [:InputObjectTypeDefinition
          [:Description
           [:StringValue
+           [:Quote]
            [:StringCharacter "t"]
            [:StringCharacter "h"]
-           [:StringCharacter "e"]]]
+           [:StringCharacter "e"]
+           [:Quote]]]
          [:Name "Foobar"]
          [:Directives [:Directive [:Name "qux"]]]
          [:InputFieldsDefinition
           [:InputValueDefinition
            [:Description
             [:StringValue
+             [:Quote]
              [:StringCharacter "t"]
              [:StringCharacter "h"]
-             [:StringCharacter "e"]]]
+             [:StringCharacter "e"]
+             [:Quote]]]
            [:Name "foo"]
            [:Type [:NamedType [:Name "String"]]]
            [:DefaultValue
             [:Value
              [:StringValue
+              [:Quote]
               [:StringCharacter "f"]
               [:StringCharacter "o"]
-              [:StringCharacter "o"]]]]
+              [:StringCharacter "o"]
+              [:Quote]]]]
            [:Directives [:Directive [:Name "qux"]]]]
           [:InputValueDefinition
            [:Description
             [:StringValue
+             [:Quote]
              [:StringCharacter "t"]
              [:StringCharacter "h"]
-             [:StringCharacter "e"]]]
+             [:StringCharacter "e"]
+             [:Quote]]]
            [:Name "bar"]
            [:Type [:NamedType [:Name "String"]]]
            [:DefaultValue
             [:Value
              [:StringValue
+              [:Quote]
               [:StringCharacter "b"]
               [:StringCharacter "a"]
-              [:StringCharacter "r"]]]]
+              [:StringCharacter "r"]
+              [:Quote]]]]
            [:Directives [:Directive [:Name "qux"]]]]]]]]]]
 
     ["directive@foo on FIELD"
@@ -1539,9 +1584,11 @@
           [:FieldDefinition
            [:Description
             [:StringValue
+             [:Quote]
              [:StringCharacter "t"]
              [:StringCharacter "h"]
-             [:StringCharacter "e"]]]
+             [:StringCharacter "e"]
+             [:Quote]]]
            [:Name "qux"]
            [:Type [:NamedType [:Name "String"]]]
            [:Directives [:Directive [:Name "baz"]]]]]]]]]]
