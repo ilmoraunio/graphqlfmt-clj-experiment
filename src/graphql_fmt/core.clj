@@ -92,6 +92,12 @@
    :FractionalPart (partial str ".")
    :IntValue int-value
    :IntegerPart str
+   :ListValue (fn [& xs]
+                (conj (reduce
+                        (fn [coll x] (conj coll x))
+                        [:ListValue {} [:Printable {} "["]]
+                        (conj (interpose [:Printable {} " "] xs)))
+                      [:Printable {} "]"]))
    :Name (fn [x] [:Name {} x])
    :NegativeSign str
    :NonZeroDigit str
