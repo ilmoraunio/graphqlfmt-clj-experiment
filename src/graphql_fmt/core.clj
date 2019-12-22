@@ -102,6 +102,12 @@
    :NegativeSign str
    :NonZeroDigit str
    :NullValue null-value
+   :ObjectValue (fn [& xs]
+                  (conj (reduce
+                          (fn [coll x] (conj coll x))
+                          [:ListValue {} [:Printable {} "{"]]
+                          (conj (interpose [:Printable {} " "] xs)))
+                        [:Printable {} "}"]))
    :OperationDefinition (fn [x] [:OperationDefinition {} x])
    :Quote (fn [] "\"")
    :Selection selection
