@@ -69,7 +69,8 @@
                 (reduce
                   (fn [coll x] (conj coll x))
                   [:Arguments {}]
-                  (conj (into [[:Printable {} "("]] xs)
+                  (conj (into [[:Printable {} "("]]
+                              (interpose [:Printable {} ","] xs))
                         [:Printable {} ")"])))
    :BlockQuote (fn [] "\"\"\"")
    :BlockStringCharacter str
