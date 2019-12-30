@@ -79,6 +79,14 @@
    :CommentChar str
    :Definition (fn [x] [:Definition {} x])
    :Digit str
+   :Directive (fn [& xs]
+                (reduce (fn [coll x] (conj coll x))
+                        [:Directive {}]
+                        (into [[:Printable {} "@"]] xs)))
+   :Directives (fn [& xs]
+                 (reduce (fn [coll x] (conj coll x))
+                         [:Directives {}]
+                         xs))
    :Document (fn [x] [:Document {} x])
    :EscapedCharacter str
    :EscapedUnicode str
