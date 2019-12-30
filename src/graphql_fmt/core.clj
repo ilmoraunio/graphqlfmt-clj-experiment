@@ -102,6 +102,12 @@
    :NegativeSign str
    :NonZeroDigit str
    :NullValue null-value
+   :ObjectField (fn [x & xs]
+                  (reduce (fn [coll x] (conj coll x))
+                          [:ObjectField {}
+                           x
+                           [:Printable {} ":"]]
+                          xs))
    :ObjectValue (fn [& xs]
                   (conj (reduce
                           (fn [coll x] (conj coll x))

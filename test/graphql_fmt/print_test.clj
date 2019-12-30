@@ -23,10 +23,10 @@
     "{foo(bar:null)}"
     "{foo(bar:[])}"
     "{foo(bar:[1 [1 2 3] $foobar])}"
-    "{foo(bar:{})}"))
+    "{foo(bar:{})}"
+    "{foo(bar:{foobar:1})}"))
 
-["{foo(bar:{foobar:1})}"
- "{foo(bar:{qux:1,baz:2})}"
+["{foo(bar:{qux:1,baz:2})}"
  "{frob(foo:true,bar:false)}"
  "{frob@foo}"
  "{frob@foo@bar}"
