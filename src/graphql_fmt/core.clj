@@ -96,7 +96,7 @@
                 (conj (reduce
                         (fn [coll x] (conj coll x))
                         [:ListValue {} [:Printable {} "["]]
-                        (conj (interpose [:Printable {} " "] xs)))
+                        (conj (interpose [:Printable {} ","] xs)))
                       [:Printable {} "]"]))
    :Name (fn [x] [:Name {} x])
    :NegativeSign str
@@ -112,7 +112,7 @@
                   (conj (reduce
                           (fn [coll x] (conj coll x))
                           [:ListValue {} [:Printable {} "{"]]
-                          (conj (interpose [:Printable {} " "] xs)))
+                          (conj (interpose [:Printable {} ","] xs)))
                         [:Printable {} "}"]))
    :OperationDefinition (fn [x] [:OperationDefinition {} x])
    :Quote (fn [] "\"")
