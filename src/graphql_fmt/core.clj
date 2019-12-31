@@ -93,6 +93,11 @@
                     xs))
    :FloatValue float-value
    :FractionalPart (partial str ".")
+   :FragmentName (fn [s] [:Printable {} s])
+   :FragmentSpread (fn [& xs]
+                     (reduce (fn [coll x] (conj coll x))
+                             [:FragmentSpread {} [:Printable {} "..."]]
+                             xs))
    :IntValue int-value
    :IntegerPart str
    :ListValue (fn [& xs]

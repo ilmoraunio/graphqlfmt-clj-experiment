@@ -35,12 +35,12 @@
     "{foo{bar}}"
     "{foo{bar{foobar}}}"
     "{foo,bar}"
-    "{foo{a},bar{a,b},foobar{a{b}}}"))
+    "{foo{a},bar{a,b},foobar{a{b}}}"
+    "{...frob}"
+    "{...frob@foo}"
+    "{...foo,...bar}"))
 
-["{...frob}"
- "{...frob@foo}"
- "{...foo...bar}"
- "{...{frob}}"
+["{...{frob}}"
  "{...on Foo{...on Bar{foobar}}}"
  "{...on Foo@bar{foobar}}"
  "query{frob}"
