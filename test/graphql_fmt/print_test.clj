@@ -33,11 +33,11 @@
     "{frob@foo(a:1,b:2)}"
     "{frob@foo(a:1)@bar(a:1)}"
     "{foo{bar}}"
-    "{foo{bar{foobar}}}"))
+    "{foo{bar{foobar}}}"
+    "{foo,bar}"
+    "{foo{a},bar{a,b},foobar{a{b}}}"))
 
-["{foo bar}"
- "{foo{a}bar{a b}foobar{a{b}}}"
- "{...frob}"
+["{...frob}"
  "{...frob@foo}"
  "{...foo...bar}"
  "{...{frob}}"

@@ -39,12 +39,6 @@
                   [:Selection {}]
                   xs)))
 
-(defn selection-set [x]
-  [:SelectionSet {}
-   [:Printable {} "{"]
-   x
-   [:Printable {} "}"]])
-
 (defn float-value [x & ys]
   [:FloatValue {} (str x (apply str ys))])
 
@@ -126,7 +120,12 @@
    :OperationDefinition (fn [x] [:OperationDefinition {} x])
    :Quote (fn [] "\"")
    :Selection selection
-   :SelectionSet selection-set
+   :SelectionSet (fn [& xs]
+                   (conj (reduce
+                           (fn [coll x] (conj coll x))
+                           [:SelectionSet {} [:Printable {} "{"]]
+                           (interpose [:Printable {} ","] xs))
+                         [:Printable {} "}"]))
    :Sign str
    :StringCharacter str
    :StringValue string-value
