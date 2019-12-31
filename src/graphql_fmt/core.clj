@@ -69,6 +69,7 @@
    :BlockQuote (fn [] "\"\"\"")
    :BlockStringCharacter str
    :BooleanValue boolean-value
+   :Colon (fn [x] [:Printable {} x])
    :Comment comment
    :CommentChar str
    :Definition (fn [x] [:Definition {} x])
@@ -145,6 +146,10 @@
    :Sign str
    :StringCharacter str
    :StringValue string-value
+   :Type (fn [& xs]
+           (reduce (fn [coll x] (conj coll x))
+                   [:Type {}]
+                   xs))
    :TypeCondition (fn [& xs]
                     (reduce (fn [coll x] (conj coll x))
                             [:TypeCondition {}
@@ -155,7 +160,17 @@
             (reduce (fn [coll x] (conj coll x))
                     [:Value {}]
                     xs))
-   :Variable (fn [x] [:Variable {} [:Printable {} "$"] x])})
+   :Variable (fn [x] [:Variable {} [:Printable {} "$"] x])
+   :VariableDefinition (fn [& xs]
+                         (reduce (fn [coll x] (conj coll x))
+                                 [:VariableDefinition {}]
+                                 xs))
+   :VariableDefinitions (fn [& xs]
+                          (conj (reduce (fn [coll x] (conj coll x))
+                                        [:VariableDefinitions {}
+                                         [:Printable {} "("]]
+                                        xs)
+                                [:Printable {} ")"]))})
 
 (def desired-format
   [:Document {:indentation-level 0}

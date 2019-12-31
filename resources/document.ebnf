@@ -84,7 +84,7 @@ OperationDefinition = (OperationType Ignored* Name? VariableDefinitions? Directi
 FragmentDefinition = <'fragment'> Ignored+ FragmentName Ignored+ TypeCondition Directives? SelectionSet
 OperationType = 'query' | 'mutation' | 'subscription'
 VariableDefinitions = Ignored* <'('> VariableDefinition+ Ignored* <')'>
-VariableDefinition = Ignored* Variable Ignored* <':'> Type DefaultValue?
+VariableDefinition = Ignored* Variable Ignored* Colon Type DefaultValue?
 SelectionSet = Ignored* <'{'> Ignored* Selection+ Ignored* <'}'>
 Selection = Field |
             FragmentSpread |

@@ -802,6 +802,7 @@
         [:VariableDefinitions
          [:VariableDefinition
           [:Variable [:Name "foo"]]
+          [:Colon ":"]
           [:Type [:NamedType [:Name "bar"]]]]]
         [:SelectionSet
          [:Selection [:Field [:Name "a"]]]
@@ -819,9 +820,11 @@
         [:VariableDefinitions
          [:VariableDefinition
           [:Variable [:Name "foo"]]
+          [:Colon ":"]
           [:Type [:NamedType [:Name "bar"]]]]
          [:VariableDefinition
           [:Variable [:Name "qux"]]
+          [:Colon ":"]
           [:Type [:NamedType [:Name "baz"]]]]]
         [:SelectionSet
          [:Selection [:Field [:Name "a"]]]
@@ -839,6 +842,7 @@
         [:VariableDefinitions
          [:VariableDefinition
           [:Variable [:Name "foo"]]
+          [:Colon ":"]
           [:Type [:ListType [:Type [:NamedType [:Name "bar"]]]]]]]
         [:SelectionSet
          [:Selection [:Field [:Name "a"]]]
@@ -856,6 +860,7 @@
         [:VariableDefinitions
          [:VariableDefinition
           [:Variable [:Name "foo"]]
+          [:Colon ":"]
           [:Type [:ListType [:Type [:ListType [:Type [:NamedType [:Name "bar"]]]]]]]]]
         [:SelectionSet
          [:Selection [:Field [:Name "a"]]]
@@ -873,6 +878,7 @@
         [:VariableDefinitions
          [:VariableDefinition
           [:Variable [:Name "foo"]]
+          [:Colon ":"]
           [:Type [:NonNullType [:NamedType [:Name "bar"]]]]]]
         [:SelectionSet
          [:Selection [:Field [:Name "a"]]]
@@ -890,6 +896,7 @@
         [:VariableDefinitions
          [:VariableDefinition
           [:Variable [:Name "foo"]]
+          [:Colon ":"]
           [:Type [:NonNullType [:ListType [:Type [:NamedType [:Name "bar"]]]]]]]]
         [:SelectionSet
          [:Selection [:Field [:Name "a"]]]
@@ -907,6 +914,7 @@
         [:VariableDefinitions
          [:VariableDefinition
           [:Variable [:Name "foo"]]
+          [:Colon ":"]
           [:Type [:ListType [:Type [:NonNullType [:NamedType [:Name "bar"]]]]]]]]
         [:SelectionSet
          [:Selection [:Field [:Name "a"]]]
@@ -924,6 +932,7 @@
         [:VariableDefinitions
          [:VariableDefinition
           [:Variable [:Name "foo"]]
+          [:Colon ":"]
           [:Type
            [:NonNullType
             [:ListType [:Type [:NonNullType [:NamedType [:Name "bar"]]]]]]]]]
@@ -943,6 +952,7 @@
         [:VariableDefinitions
          [:VariableDefinition
           [:Variable [:Name "foo"]]
+          [:Colon ":"]
           [:Type [:NamedType [:Name "bar"]]]
           [:DefaultValue [:Value [:BooleanValue "true"]]]]]
         [:SelectionSet
