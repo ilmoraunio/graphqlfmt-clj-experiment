@@ -39,11 +39,11 @@
     "{...frob}"
     "{...frob@foo}"
     "{...foo,...bar}"
-    "{...{frob}}"))
+    "{...{frob}}"
+    "{...on Foo{...on Bar{foobar}}}"
+    "{...on Foo@bar{foobar}}"))
 
-["{...on Foo{...on Bar{foobar}}}"
- "{...on Foo@bar{foobar}}"
- "query{frob}"
+["query{frob}"
  "mutation{frob}"
  "subscription{frob}"
  "query frobnicator{frob}"

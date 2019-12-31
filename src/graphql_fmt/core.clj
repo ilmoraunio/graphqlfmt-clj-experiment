@@ -111,6 +111,7 @@
                         (conj (interpose [:Printable {} ","] xs)))
                       [:Printable {} "]"]))
    :Name (fn [x] [:Name {} x])
+   :NamedType (fn [x] [:NamedType {} x])
    :NegativeSign str
    :NonZeroDigit str
    :NullValue null-value
@@ -138,6 +139,12 @@
    :Sign str
    :StringCharacter str
    :StringValue string-value
+   :TypeCondition (fn [& xs]
+                    (reduce (fn [coll x] (conj coll x))
+                            [:TypeCondition {}
+                             [:Printable {} "on"]
+                             [:Printable {} " "]]
+                            xs))
    :Value (fn [& xs]
             (reduce (fn [coll x] (conj coll x))
                     [:Value {}]
