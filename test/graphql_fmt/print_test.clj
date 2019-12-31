@@ -41,14 +41,14 @@
     "{...foo,...bar}"
     "{...{frob}}"
     "{...on Foo{...on Bar{foobar}}}"
-    "{...on Foo@bar{foobar}}"))
+    "{...on Foo@bar{foobar}}"
+    "query {frob}"
+    "mutation {frob}"
+    "subscription {frob}"
+    "query frobnicator{frob}"
+    "query frobnicator@foo{frob}"))
 
-["query{frob}"
- "mutation{frob}"
- "subscription{frob}"
- "query frobnicator{frob}"
- "query frobnicator@foo{frob}"
- "query frob($foo:bar){a b}"
+["query frob($foo:bar){a b}"
  "query frob($foo:bar$qux:baz){a b}"
  "query frob($foo:[bar]){a b}"
  "query frob($foo:[[bar]]){a b}"

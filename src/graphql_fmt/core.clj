@@ -127,7 +127,13 @@
                           [:ListValue {} [:Printable {} "{"]]
                           (conj (interpose [:Printable {} ","] xs)))
                         [:Printable {} "}"]))
-   :OperationDefinition (fn [x] [:OperationDefinition {} x])
+   :OperationDefinition (fn [& xs]
+                          (reduce (fn [coll x] (conj coll x))
+                                  [:OperationDefinition {}]
+                                  xs))
+   :OperationType (fn [x] [:OperationType {}
+                           [:Printable {} x]
+                           [:Printable {} " "]])
    :Quote (fn [] "\"")
    :Selection selection
    :SelectionSet (fn [& xs]
