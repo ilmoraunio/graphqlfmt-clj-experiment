@@ -38,10 +38,10 @@
     "{foo{a},bar{a,b},foobar{a{b}}}"
     "{...frob}"
     "{...frob@foo}"
-    "{...foo,...bar}"))
+    "{...foo,...bar}"
+    "{...{frob}}"))
 
-["{...{frob}}"
- "{...on Foo{...on Bar{foobar}}}"
+["{...on Foo{...on Bar{foobar}}}"
  "{...on Foo@bar{foobar}}"
  "query{frob}"
  "mutation{frob}"
