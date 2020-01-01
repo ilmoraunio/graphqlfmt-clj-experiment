@@ -888,7 +888,7 @@
          [:VariableDefinition
           [:Variable [:Name "foo"]]
           [:Colon ":"]
-          [:Type [:NonNullType [:NamedType [:Name "bar"]]]]]]
+          [:Type [:NonNullType [:NamedType [:Name "bar"]] [:ExclamationMark "!"]]]]]
         [:SelectionSet
          [:Selection [:Field [:Name "a"]]]
          [:Selection [:Field [:Name "b"]]]]]]]]
@@ -906,10 +906,12 @@
          [:VariableDefinition
           [:Variable [:Name "foo"]]
           [:Colon ":"]
-          [:Type [:NonNullType [:ListType
-                                [:BracketOpen "["]
-                                [:Type [:NamedType [:Name "bar"]]]
-                                [:BracketClose "]"]]]]]]
+          [:Type [:NonNullType
+                  [:ListType
+                   [:BracketOpen "["]
+                   [:Type [:NamedType [:Name "bar"]]]
+                   [:BracketClose "]"]]
+                  [:ExclamationMark "!"]]]]]
         [:SelectionSet
          [:Selection [:Field [:Name "a"]]]
          [:Selection [:Field [:Name "b"]]]]]]]]
@@ -929,7 +931,9 @@
           [:Colon ":"]
           [:Type [:ListType
                   [:BracketOpen "["]
-                  [:Type [:NonNullType [:NamedType [:Name "bar"]]]]
+                  [:Type [:NonNullType
+                          [:NamedType [:Name "bar"]]
+                          [:ExclamationMark "!"]]]
                   [:BracketClose "]"]]]]]
         [:SelectionSet
          [:Selection [:Field [:Name "a"]]]
@@ -952,8 +956,11 @@
            [:NonNullType
             [:ListType
              [:BracketOpen "["]
-             [:Type [:NonNullType [:NamedType [:Name "bar"]]]]
-             [:BracketClose "]"]]]]]]
+             [:Type [:NonNullType
+                     [:NamedType [:Name "bar"]]
+                     [:ExclamationMark "!"]]]
+             [:BracketClose "]"]]
+            [:ExclamationMark "!"]]]]]
         [:SelectionSet
          [:Selection [:Field [:Name "a"]]]
          [:Selection [:Field [:Name "b"]]]]]]]]

@@ -30,3 +30,4 @@ NullValue = <'null'>
 Colon = ':'
 BracketOpen = '['
 BracketClose = ']'
+ExclamationMark = '!'

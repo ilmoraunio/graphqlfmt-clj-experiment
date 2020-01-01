@@ -87,6 +87,7 @@
    :Document (fn [x] [:Document {} x])
    :EscapedCharacter str
    :EscapedUnicode str
+   :ExclamationMark (fn [x] [:Printable {} x])
    :ExecutableDefinition (fn [x] [:ExecutableDefinition {} x])
    :ExponentIndicator str
    :ExponentPart str
@@ -120,6 +121,10 @@
    :Name (fn [x] [:Name {} x])
    :NamedType (fn [x] [:NamedType {} x])
    :NegativeSign str
+   :NonNullType (fn [& xs]
+                  (reduce (fn [coll x] (conj coll x))
+                          [:NonNullType {}]
+                          xs))
    :NonZeroDigit str
    :NullValue null-value
    :ObjectField (fn [x & xs]
