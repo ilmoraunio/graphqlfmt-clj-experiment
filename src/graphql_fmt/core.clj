@@ -69,6 +69,8 @@
    :BlockQuote (fn [] "\"\"\"")
    :BlockStringCharacter str
    :BooleanValue boolean-value
+   :BracketClose (fn [x] [:Printable {} x])
+   :BracketOpen (fn [x] [:Printable {} x])
    :Colon (fn [x] [:Printable {} x])
    :Comment comment
    :CommentChar str
@@ -105,6 +107,10 @@
                              xs))
    :IntValue int-value
    :IntegerPart str
+   :ListType (fn [& xs]
+               (reduce (fn [coll x] (conj coll x))
+                       [:ListType {}]
+                       xs))
    :ListValue (fn [& xs]
                 (conj (reduce
                         (fn [coll x] (conj coll x))

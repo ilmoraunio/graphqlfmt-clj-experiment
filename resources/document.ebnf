@@ -120,6 +120,6 @@ Type = Ignored* (NamedType |
                  ListType |
                  NonNullType)
 NamedType = Name
-ListType = Ignored* <'['> Type Ignored* <']'>
+ListType = Ignored* BracketOpen Type Ignored* BracketClose
 NonNullType = NamedType Ignored* <'!'> |
               ListType Ignored* <'!'>
