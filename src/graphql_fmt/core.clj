@@ -208,7 +208,7 @@
                  (string? (first rst)) (str s (first rst))))))
 
 (defn -main [& args]
-  (clojure.pprint/pprint
+  (pr-str-ast ""
     (if (first args)
       (document-parser (first args))
       (document-parser
