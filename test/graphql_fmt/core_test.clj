@@ -979,7 +979,9 @@
           [:Variable [:Name "foo"]]
           [:Colon ":"]
           [:Type [:NamedType [:Name "bar"]]]
-          [:DefaultValue [:Value [:BooleanValue "true"]]]]]
+          [:DefaultValue
+           [:Equals "="]
+           [:Value [:BooleanValue "true"]]]]]
         [:SelectionSet
          [:Selection [:Field [:Name "a"]]]
          [:Selection [:Field [:Name "b"]]]]]]]]
@@ -1426,6 +1428,7 @@
            [:Name "foo"]
            [:Type [:NamedType [:Name "String"]]]
            [:DefaultValue
+            [:Equals "="]
             [:Value
              [:StringValue
               [:Quote]
@@ -1445,6 +1448,7 @@
            [:Name "bar"]
            [:Type [:NamedType [:Name "String"]]]
            [:DefaultValue
+            [:Equals "="]
             [:Value
              [:StringValue
               [:Quote]

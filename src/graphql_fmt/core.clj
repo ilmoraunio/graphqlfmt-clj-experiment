@@ -74,6 +74,10 @@
    :Colon (fn [x] [:Printable {} x])
    :Comment comment
    :CommentChar str
+   :DefaultValue (fn [& xs]
+                   (reduce (fn [coll x] (conj coll x))
+                           [:DefaultValue {}]
+                           xs))
    :Definition (fn [x] [:Definition {} x])
    :Digit str
    :Directive (fn [& xs]
@@ -85,6 +89,7 @@
                          [:Directives {}]
                          xs))
    :Document (fn [x] [:Document {} x])
+   :Equals (fn [x] [:Printable {} x])
    :EscapedCharacter str
    :EscapedUnicode str
    :ExclamationMark (fn [x] [:Printable {} x])

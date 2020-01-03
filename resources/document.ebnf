@@ -103,7 +103,7 @@ Value = Ignored* (Variable |
                   ListValue |
                   ObjectValue)
 Variable = <'$'> Ignored* Name
-DefaultValue = Ignored* <'='> Value
+DefaultValue = Ignored* Equals Value
 EnumValue = #"^(?!(true|false|null))[_A-Za-z][_0-9A-Za-z]*"
 ListValue = (<'['> Ignored* <']'>) |
             (<'['> Value+ Ignored* <']'>)
