@@ -1010,12 +1010,15 @@
        [:SchemaDefinition
         [:RootOperationTypeDefinition
          [:OperationType "query"]
+         [:Colon ":"]
          [:NamedType [:Name "Foo"]]]
         [:RootOperationTypeDefinition
          [:OperationType "subscription"]
+         [:Colon ":"]
          [:NamedType [:Name "Bar"]]]
         [:RootOperationTypeDefinition
          [:OperationType "mutation"]
+         [:Colon ":"]
          [:NamedType [:Name "Foobar"]]]]]]]
 
     ["schema@foo{query:Foo}"
@@ -1028,6 +1031,7 @@
         [:Directives [:Directive [:Name "foo"]]]
         [:RootOperationTypeDefinition
          [:OperationType "query"]
+         [:Colon ":"]
          [:NamedType [:Name "Foo"]]]]]]]
 
     ["\"the scalar\"scalar Foo@bar"
@@ -1810,4 +1814,5 @@
        [:SchemaDefinition
         [:RootOperationTypeDefinition
          [:OperationType "query"]
+         [:Colon ":"]
          [:NamedType [:Name "Foo"]]]]]]]))

@@ -31,7 +31,7 @@ TypeSystemDefinition = SchemaDefinition |
                        TypeDefinition |
                        DirectiveDefinition
 SchemaDefinition = <'schema'> Directives? Ignored* <'{'> RootOperationTypeDefinition+ Ignored* <'}'>
-RootOperationTypeDefinition = Ignored* OperationType Ignored* <':'> Ignored* NamedType
+RootOperationTypeDefinition = Ignored* OperationType Ignored* Colon Ignored* NamedType
 TypeDefinition = ScalarTypeDefinition |
                  ObjectTypeDefinition |
                  InterfaceTypeDefinition |

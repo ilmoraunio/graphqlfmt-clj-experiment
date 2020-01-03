@@ -151,13 +151,26 @@
                           (conj (interpose [:Printable {} ","] xs)))
                         [:Printable {} "}"]))
    :OperationDefinition (fn [& xs]
-                          (reduce (fn [coll x] (conj coll x))
+                          (reduce (fn [coll x]
+                                    (if (= (first x) :OperationType)
+                                      (conj coll x [:Printable {} " "])
+                                      (conj coll x)))
                                   [:OperationDefinition {}]
                                   xs))
-   :OperationType (fn [x] [:OperationType {}
-                           [:Printable {} x]
-                           [:Printable {} " "]])
+   :OperationType (fn [x] [:OperationType {} [:Printable {} x]])
    :Quote (fn [] "\"")
+   :RootOperationTypeDefinition (fn [& xs]
+                                  (reduce (fn [coll x] (conj coll x))
+                                          [:RootOperationTypeDefinition {}]
+                                          xs))
+   :SchemaDefinition (fn [& xs]
+                       (conj (reduce (fn [coll x] (conj coll x))
+                                     [:SchemaDefinition {}
+                                      [:Printable {} "schema"]
+                                      [:Printable {} " "]
+                                      [:Printable {} "{"]]
+                                     (interpose [:Printable {} ","] xs))
+                             [:Printable {} "}"]))
    :Selection selection
    :SelectionSet (fn [& xs]
                    (conj (reduce
@@ -178,6 +191,10 @@
                              [:Printable {} "on"]
                              [:Printable {} " "]]
                             xs))
+   :TypeSystemDefinition (fn [& xs]
+                           (reduce (fn [coll x] (conj coll x))
+                                   [:TypeSystemDefinition {}]
+                                   xs))
    :Value (fn [& xs]
             (reduce (fn [coll x] (conj coll x))
                     [:Value {}]
@@ -192,7 +209,8 @@
                                         [:VariableDefinitions {}
                                          [:Printable {} "("]]
                                         xs)
-                                [:Printable {} ")"]))})
+                                [:Printable {} ")"]
+                                [:Printable {} " "]))})
 
 (def desired-format
   [:Document {:indentation-level 0}
