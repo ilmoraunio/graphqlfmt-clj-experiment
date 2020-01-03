@@ -101,6 +101,12 @@
                     [:Field {}]
                     xs))
    :FloatValue float-value
+   :FragmentDefinition (fn [& xs]
+                         (reduce (fn [coll x] (conj coll x))
+                                 [:FragmentDefinition {}
+                                  [:Printable {} "fragment"]
+                                  [:Printable {} " "]]
+                                 (conj (interpose [:Printable {} " "] xs))))
    :FractionalPart (partial str ".")
    :FragmentName (fn [s] [:Printable {} s])
    :FragmentSpread (fn [& xs]
