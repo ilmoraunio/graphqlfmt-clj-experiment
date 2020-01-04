@@ -69,6 +69,8 @@
    :BlockQuote (fn [] "\"\"\"")
    :BlockStringCharacter str
    :BooleanValue boolean-value
+   :BraceClose (fn [x] [:Printable {} x])
+   :BraceOpen (fn [x] [:Printable {} x])
    :BracketClose (fn [x] [:Printable {} x])
    :BracketOpen (fn [x] [:Printable {} x])
    :Colon (fn [x] [:Printable {} x])
@@ -164,13 +166,17 @@
                                           [:RootOperationTypeDefinition {}]
                                           xs))
    :SchemaDefinition (fn [& xs]
-                       (conj (reduce (fn [coll x] (conj coll x))
-                                     [:SchemaDefinition {}
-                                      [:Printable {} "schema"]
-                                      [:Printable {} " "]
-                                      [:Printable {} "{"]]
-                                     (interpose [:Printable {} ","] xs))
-                             [:Printable {} "}"]))
+                       (reduce (fn [coll x]
+                                 (if (and (= (first (last coll))
+                                             :RootOperationTypeDefinition)
+                                          (= (first x)
+                                             :RootOperationTypeDefinition))
+                                   (conj coll [:Printable {} ","] x)
+                                   (conj coll x)))
+                               [:SchemaDefinition {}
+                                [:Printable {} "schema"]
+                                [:Printable {} " "]]
+                               xs))
    :Selection selection
    :SelectionSet (fn [& xs]
                    (conj (reduce

@@ -57,10 +57,10 @@
     "query frob($foo:[bar!]!) {a,b}"
     "query frob($foo:bar=true) {a,b}"
     "fragment foo on Bar @foobar {a,b,c}"
-    "schema {query:Foo,subscription:Bar,mutation:Foobar}"))
+    "schema {query:Foo,subscription:Bar,mutation:Foobar}"
+    "schema @foo{query:Foo}"))
 
-["schema@foo{query:Foo}"
- "\"the scalar\"scalar Foo@bar"
+["\"the scalar\"scalar Foo@bar"
  "\"documents the\"type Foo@bar"
  "type Foo{\"the field definition\"Bar:String@foobar}"
  "type Foo{Bar:String}"

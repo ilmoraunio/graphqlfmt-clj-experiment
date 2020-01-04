@@ -30,7 +30,7 @@ ExecutableDefinition = OperationDefinition |
 TypeSystemDefinition = SchemaDefinition |
                        TypeDefinition |
                        DirectiveDefinition
-SchemaDefinition = <'schema'> Directives? Ignored* <'{'> RootOperationTypeDefinition+ Ignored* <'}'>
+SchemaDefinition = <'schema'> Directives? Ignored* BraceOpen RootOperationTypeDefinition+ Ignored* BraceClose
 RootOperationTypeDefinition = Ignored* OperationType Ignored* Colon Ignored* NamedType
 TypeDefinition = ScalarTypeDefinition |
                  ObjectTypeDefinition |

@@ -1008,6 +1008,7 @@
      [:Definition
       [:TypeSystemDefinition
        [:SchemaDefinition
+        [:BraceOpen "{"]
         [:RootOperationTypeDefinition
          [:OperationType "query"]
          [:Colon ":"]
@@ -1019,7 +1020,8 @@
         [:RootOperationTypeDefinition
          [:OperationType "mutation"]
          [:Colon ":"]
-         [:NamedType [:Name "Foobar"]]]]]]]
+         [:NamedType [:Name "Foobar"]]]
+        [:BraceClose "}"]]]]]
 
     ["schema@foo{query:Foo}"
      "schema @foo { query: Foo }"
@@ -1029,10 +1031,12 @@
       [:TypeSystemDefinition
        [:SchemaDefinition
         [:Directives [:Directive [:Name "foo"]]]
+        [:BraceOpen "{"]
         [:RootOperationTypeDefinition
          [:OperationType "query"]
          [:Colon ":"]
-         [:NamedType [:Name "Foo"]]]]]]]
+         [:NamedType [:Name "Foo"]]]
+        [:BraceClose "}"]]]]]
 
     ["\"the scalar\"scalar Foo@bar"
      "\"the scalar\" scalar Foo @bar"
@@ -1812,7 +1816,9 @@
      [:Definition
       [:TypeSystemDefinition
        [:SchemaDefinition
+        [:BraceOpen "{"]
         [:RootOperationTypeDefinition
          [:OperationType "query"]
          [:Colon ":"]
-         [:NamedType [:Name "Foo"]]]]]]]))
+         [:NamedType [:Name "Foo"]]]
+        [:BraceClose "}"]]]]]))
