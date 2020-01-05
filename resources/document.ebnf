@@ -38,7 +38,8 @@ TypeDefinition = ScalarTypeDefinition |
                  UnionTypeDefinition |
                  EnumTypeDefinition |
                  InputObjectTypeDefinition
-ScalarTypeDefinition = Description? Ignored* <'scalar'> Ignored+ Name Directives?
+ScalarTypeDefinition = Description? Ignored* ScalarKeyword Ignored+ Name Directives?
+ScalarKeyword = 'scalar'
 ObjectTypeDefinition = Description? Ignored* <'type'> Ignored+ Name ImplementsInterfaces? Directives? FieldsDefinition?
 InterfaceTypeDefinition = Description? Ignored* <'interface'> Ignored+ Name Directives? FieldsDefinition?
 UnionTypeDefinition = Description? Ignored* <'union'> Ignored+ Name Directives? UnionMemberTypes?

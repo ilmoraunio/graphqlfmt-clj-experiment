@@ -1060,6 +1060,7 @@
            [:StringCharacter "a"]
            [:StringCharacter "r"]
            [:Quote]]]
+         [:ScalarKeyword "scalar"]
          [:Name "Foo"]
          [:Directives [:Directive [:Name "bar"]]]]]]]]
 

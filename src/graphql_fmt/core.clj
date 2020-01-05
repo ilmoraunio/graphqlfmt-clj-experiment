@@ -81,6 +81,7 @@
                            [:DefaultValue {}]
                            xs))
    :Definition (fn [x] [:Definition {} x])
+   :Description (fn [x] [:Description {} x])
    :Digit str
    :Directive (fn [& xs]
                 (reduce (fn [coll x] (conj coll x))
@@ -165,6 +166,11 @@
                                   (reduce (fn [coll x] (conj coll x))
                                           [:RootOperationTypeDefinition {}]
                                           xs))
+   :ScalarKeyword (fn [x] [:Printable {} x])
+   :ScalarTypeDefinition (fn [& xs]
+                           (reduce (fn [coll x] (conj coll x))
+                                   [:ScalarTypeDefinition {}]
+                                   (interpose [:Printable {} " "] xs)))
    :SchemaDefinition (fn [& xs]
                        (reduce (fn [coll x]
                                  (if (and (= (first (last coll))
@@ -197,6 +203,7 @@
                              [:Printable {} "on"]
                              [:Printable {} " "]]
                             xs))
+   :TypeDefinition (fn [x] [:TypeDefinition {} x])
    :TypeSystemDefinition (fn [& xs]
                            (reduce (fn [coll x] (conj coll x))
                                    [:TypeSystemDefinition {}]
