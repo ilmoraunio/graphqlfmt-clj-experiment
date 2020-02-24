@@ -40,7 +40,8 @@ TypeDefinition = ScalarTypeDefinition |
                  InputObjectTypeDefinition
 ScalarTypeDefinition = Description? Ignored* ScalarKeyword Ignored+ Name Directives?
 ScalarKeyword = 'scalar'
-ObjectTypeDefinition = Description? Ignored* <'type'> Ignored+ Name ImplementsInterfaces? Directives? FieldsDefinition?
+ObjectTypeDefinition = Description? Ignored* ObjectKeyword Ignored+ Name ImplementsInterfaces? Directives? FieldsDefinition?
+ObjectKeyword = 'type'
 InterfaceTypeDefinition = Description? Ignored* <'interface'> Ignored+ Name Directives? FieldsDefinition?
 UnionTypeDefinition = Description? Ignored* <'union'> Ignored+ Name Directives? UnionMemberTypes?
 EnumTypeDefinition = Description? Ignored* <'enum'> Ignored+ Name Directives? EnumValuesDefinition?

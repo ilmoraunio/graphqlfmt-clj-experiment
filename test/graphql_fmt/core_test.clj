@@ -1089,6 +1089,7 @@
            [:StringCharacter "h"]
            [:StringCharacter "e"]
            [:Quote]]]
+         [:ObjectKeyword "type"]
          [:Name "Foo"]
          [:Directives [:Directive [:Name "bar"]]]]]]]]
 
@@ -1100,6 +1101,7 @@
       [:TypeSystemDefinition
        [:TypeDefinition
         [:ObjectTypeDefinition
+         [:ObjectKeyword "type"]
          [:Name "Foo"]
          [:FieldsDefinition
           [:FieldDefinition
@@ -1139,6 +1141,7 @@
       [:TypeSystemDefinition
        [:TypeDefinition
         [:ObjectTypeDefinition
+         [:ObjectKeyword "type"]
          [:Name "Foo"]
          [:FieldsDefinition
           [:FieldDefinition [:Name "Bar"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
@@ -1151,6 +1154,7 @@
       [:TypeSystemDefinition
        [:TypeDefinition
         [:ObjectTypeDefinition
+         [:ObjectKeyword "type"]
          [:Name "Foo"]
          [:FieldsDefinition
           [:FieldDefinition [:Name "Qux"] [:Type [:NamedType [:Name "String"]]]]
@@ -1164,6 +1168,7 @@
       [:TypeSystemDefinition
        [:TypeDefinition
         [:ObjectTypeDefinition
+         [:ObjectKeyword "type"]
          [:Name "Foo"]
          [:ImplementsInterfaces [:NamedType [:Name "Bar"]]]
          [:FieldsDefinition
@@ -1177,6 +1182,7 @@
       [:TypeSystemDefinition
        [:TypeDefinition
         [:ObjectTypeDefinition
+         [:ObjectKeyword "type"]
          [:Name "Foo"]
          [:ImplementsInterfaces [:NamedType [:Name "Bar"]]]
          [:FieldsDefinition
@@ -1190,6 +1196,7 @@
       [:TypeSystemDefinition
        [:TypeDefinition
         [:ObjectTypeDefinition
+         [:ObjectKeyword "type"]
          [:Name "Foo"]
          [:ImplementsInterfaces
           [:ImplementsInterfaces [:NamedType [:Name "Bar"]]]
@@ -1813,7 +1820,7 @@
         [:SelectionSet [:Selection [:Field [:Name "foo"]]]]]]]
      [:Definition
       [:TypeSystemDefinition
-       [:TypeDefinition [:ObjectTypeDefinition [:Name "Foo"]]]]]
+       [:TypeDefinition [:ObjectTypeDefinition [:ObjectKeyword "type"] [:Name "Foo"]]]]]
      [:Definition
       [:TypeSystemDefinition
        [:SchemaDefinition

@@ -147,6 +147,11 @@
                            x
                            [:Printable {} ":"]]
                           xs))
+   :ObjectKeyword (fn [x] [:Printable {} x])
+   :ObjectTypeDefinition (fn [& xs]
+                           (reduce (fn [coll x] (conj coll x))
+                                   [:ObjectTypeDefinition {}]
+                                   (interpose [:Printable {} " "] xs)))
    :ObjectValue (fn [& xs]
                   (conj (reduce
                           (fn [coll x] (conj coll x))
