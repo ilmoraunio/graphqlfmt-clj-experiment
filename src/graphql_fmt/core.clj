@@ -127,12 +127,21 @@
                      (reduce (fn [coll x] (conj coll x))
                              [:FragmentSpread {} [:Printable {} "..."]]
                              xs))
+   :ImplementsInterfaces (fn [& xs]
+                           (reduce (fn [coll x] (conj coll x))
+                                   [:ImplementsInterfaces {}]
+                                   (conj (interpose [:Printable {} "&"] xs))))
    :InlineFragment (fn [& xs]
                      (reduce (fn [coll x] (conj coll x))
                              [:InlineFragment {} [:Printable {} "..."]]
                              xs))
    :IntValue int-value
    :IntegerPart str
+   :InterfaceKeyword (fn [x] [:Printable {} x])
+   :InterfaceTypeDefinition (fn [& xs]
+                              (reduce (fn [coll x] (conj coll x))
+                                      [:InterfaceTypeDefinition {}]
+                                      (conj (interpose [:Printable {} " "] xs))))
    :ListType (fn [& xs]
                (reduce (fn [coll x] (conj coll x))
                        [:ListType {}]
@@ -160,7 +169,13 @@
                           xs))
    :ObjectKeyword (fn [x] [:Printable {} x])
    :ObjectTypeDefinition (fn [& xs]
-                           (reduce (fn [coll x] (conj coll x))
+                           (reduce (fn [coll x]
+                                     (if (= (first x) :ImplementsInterfaces)
+                                       (conj coll
+                                             [:Printable {} "implements"]
+                                             [:Printable {} " "]
+                                             x)
+                                       (conj coll x)))
                                    [:ObjectTypeDefinition {}]
                                    (interpose [:Printable {} " "] xs)))
    :ObjectValue (fn [& xs]

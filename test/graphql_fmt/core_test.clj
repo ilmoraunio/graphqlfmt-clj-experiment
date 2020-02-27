@@ -1231,6 +1231,7 @@
       [:TypeSystemDefinition
        [:TypeDefinition
         [:InterfaceTypeDefinition
+         [:InterfaceKeyword "interface"]
          [:Name "Foo"]
          [:FieldsDefinition
           [:FieldDefinition
@@ -1253,6 +1254,7 @@
            [:StringCharacter "h"]
            [:StringCharacter "e"]
            [:Quote]]]
+         [:InterfaceKeyword "interface"]
          [:Name "Foo"]
          [:Directives [:Directive [:Name "bar"]]]
          [:FieldsDefinition

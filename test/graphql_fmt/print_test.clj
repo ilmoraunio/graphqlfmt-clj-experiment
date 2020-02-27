@@ -6,12 +6,16 @@
             [instaparse.core :as insta]))
 
 (deftest test-unformatted-output
-  (are [graphql] (= graphql
-                    (pr-str-ast
-                      ""
-                      (insta/transform
-                        transform-map
-                        (document-parser graphql))))
+  (are [graphql]
+       (let [is-a-vec? (vector? graphql)
+             expected (if is-a-vec? (second graphql) graphql)
+             input (if is-a-vec? (first graphql) graphql)]
+         (= expected
+            (pr-str-ast
+              ""
+              (insta/transform
+                transform-map
+                (document-parser input)))))
     "{foo}"
     "{foo_alias:foo}"
     "{foo(bar:$foobar)}"
@@ -63,14 +67,17 @@
     "\"documents the\" type Foo @bar"
     "type Foo {\"the field definition\"Bar:String@foobar}"
     "type Foo {Bar:String}"
-    "type Foo {Qux:String Baz:String}"))
+    "type Foo {Qux:String Baz:String}"
+    "type Foo implements Bar {qux:String}"
+    ["type Foo implements&Bar{qux:String}"
+     "type Foo implements Bar {qux:String}"]
+    "type Foo implements Bar&Foobar {qux:String}"
+    "interface Foo {qux:String}"
+    "\"the\" interface Foo @bar {\"the\"qux:String \"the\"baz:String}"
+    ["\"the\"interface Foo@bar{\"the\"qux:String\"the\"baz:String}"
+     "\"the\" interface Foo @bar {\"the\"qux:String \"the\"baz:String}"]))
 
-["type Foo implements Bar{qux:String}"
- "type Foo implements&Bar{qux:String}"
- "type Foo implements Bar&Foobar{qux:String}"
- "interface Foo{qux:String}"
- "\"the\"interface Foo@bar{\"the\"qux:String\"the\"baz:String}"
- "union Foobar"
+["union Foobar"
  "union Foo=Bar"
  "union Foobar=Foo|Bar"
  "\"the\"union Foobar@qux=Foo|Bar"
