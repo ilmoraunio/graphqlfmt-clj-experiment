@@ -60,12 +60,12 @@
     "schema {query:Foo,subscription:Bar,mutation:Foobar}"
     "schema @foo{query:Foo}"
     "\"the scalar\" scalar Foo @bar"
-    "\"documents the\" type Foo @bar"))
+    "\"documents the\" type Foo @bar"
+    "type Foo {\"the field definition\"Bar:String@foobar}"
+    "type Foo {Bar:String}"
+    "type Foo {Qux:String Baz:String}"))
 
-["type Foo{\"the field definition\"Bar:String@foobar}"
- "type Foo{Bar:String}"
- "type Foo{Qux:String Baz:String}"
- "type Foo implements Bar{qux:String}"
+["type Foo implements Bar{qux:String}"
  "type Foo implements&Bar{qux:String}"
  "type Foo implements Bar&Foobar{qux:String}"
  "interface Foo{qux:String}"

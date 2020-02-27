@@ -72,7 +72,8 @@ TypeSystemDirectiveLocation = 'SCHEMA' |
                               'INPUT_FIELD_DEFINITION'
 Description = StringValue
 FieldsDefinition = Ignored* <'{'> FieldDefinition+ Ignored* <'}'>
-FieldDefinition = Ignored* Description? Ignored* Name Ignored* <':'> Type Directives?
+FieldDefinition = Ignored* Description? Ignored* Name Ignored* FieldNameSeparator Type Directives?
+FieldNameSeparator = <':'>
 ImplementsInterfaces = (Ignored* <'implements'> Ignored* <'&'?> Ignored* NamedType) |
                        (ImplementsInterfaces Ignored* <'&'> Ignored* NamedType)
 UnionMemberTypes = (Ignored* <'='> Ignored* <'|'?> Ignored* NamedType) |

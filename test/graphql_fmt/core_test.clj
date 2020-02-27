@@ -1130,6 +1130,7 @@
              [:StringCharacter "n"]
              [:Quote]]]
            [:Name "Bar"]
+           [:FieldNameSeparator]
            [:Type [:NamedType [:Name "String"]]]
            [:Directives [:Directive [:Name "foobar"]]]]]]]]]]
 
@@ -1144,7 +1145,10 @@
          [:ObjectKeyword "type"]
          [:Name "Foo"]
          [:FieldsDefinition
-          [:FieldDefinition [:Name "Bar"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
+          [:FieldDefinition
+           [:Name "Bar"]
+           [:FieldNameSeparator]
+           [:Type [:NamedType [:Name "String"]]]]]]]]]]
 
     ["type Foo{Qux:String Baz:String}"
      "type Foo { Qux: String Baz: String }"
@@ -1157,8 +1161,14 @@
          [:ObjectKeyword "type"]
          [:Name "Foo"]
          [:FieldsDefinition
-          [:FieldDefinition [:Name "Qux"] [:Type [:NamedType [:Name "String"]]]]
-          [:FieldDefinition [:Name "Baz"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
+          [:FieldDefinition
+           [:Name "Qux"]
+           [:FieldNameSeparator]
+           [:Type [:NamedType [:Name "String"]]]]
+          [:FieldDefinition
+           [:Name "Baz"]
+           [:FieldNameSeparator]
+           [:Type [:NamedType [:Name "String"]]]]]]]]]]
 
     ["type Foo implements Bar{qux:String}"
      "type Foo implements Bar { qux: String }"
@@ -1172,7 +1182,10 @@
          [:Name "Foo"]
          [:ImplementsInterfaces [:NamedType [:Name "Bar"]]]
          [:FieldsDefinition
-          [:FieldDefinition [:Name "qux"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
+          [:FieldDefinition
+           [:Name "qux"]
+           [:FieldNameSeparator]
+           [:Type [:NamedType [:Name "String"]]]]]]]]]]
 
     ["type Foo implements&Bar{qux:String}"
      "type Foo implements & Bar { qux: String }"
@@ -1186,7 +1199,10 @@
          [:Name "Foo"]
          [:ImplementsInterfaces [:NamedType [:Name "Bar"]]]
          [:FieldsDefinition
-          [:FieldDefinition [:Name "qux"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
+          [:FieldDefinition
+           [:Name "qux"]
+           [:FieldNameSeparator]
+           [:Type [:NamedType [:Name "String"]]]]]]]]]]
 
     ["type Foo implements Bar&Foobar{qux:String}"
      "type Foo implements Bar & Foobar { qux: String }"
@@ -1202,7 +1218,10 @@
           [:ImplementsInterfaces [:NamedType [:Name "Bar"]]]
           [:NamedType [:Name "Foobar"]]]
          [:FieldsDefinition
-          [:FieldDefinition [:Name "qux"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
+          [:FieldDefinition
+           [:Name "qux"]
+           [:FieldNameSeparator]
+           [:Type [:NamedType [:Name "String"]]]]]]]]]]
 
     ["interface Foo{qux:String}"
      "interface Foo { qux: String }"
@@ -1214,7 +1233,10 @@
         [:InterfaceTypeDefinition
          [:Name "Foo"]
          [:FieldsDefinition
-          [:FieldDefinition [:Name "qux"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
+          [:FieldDefinition
+           [:Name "qux"]
+           [:FieldNameSeparator]
+           [:Type [:NamedType [:Name "String"]]]]]]]]]]
 
     ["\"the\"interface Foo@bar{\"the\"qux:String\"the\"baz:String}"
      "\"the\" interface Foo @bar { \"the\" qux: String \"the\" baz: String }"
@@ -1243,6 +1265,7 @@
              [:StringCharacter "e"]
              [:Quote]]]
            [:Name "qux"]
+           [:FieldNameSeparator]
            [:Type [:NamedType [:Name "String"]]]]
           [:FieldDefinition
            [:Description
@@ -1253,6 +1276,7 @@
              [:StringCharacter "e"]
              [:Quote]]]
            [:Name "baz"]
+           [:FieldNameSeparator]
            [:Type [:NamedType [:Name "String"]]]]]]]]]]
 
     ["union Foobar"
@@ -1622,7 +1646,10 @@
         [:ObjectTypeExtension
          [:Name "Foo"]
          [:FieldsDefinition
-          [:FieldDefinition [:Name "qux"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
+          [:FieldDefinition
+           [:Name "qux"]
+           [:FieldNameSeparator]
+           [:Type [:NamedType [:Name "String"]]]]]]]]]]
 
     ["extend type Foo implements Bar@foobar{\"the\"qux:String@baz}"
      "extend type Foo implements Bar @foobar { \"the\" qux: String @baz }"
@@ -1645,6 +1672,7 @@
              [:StringCharacter "e"]
              [:Quote]]]
            [:Name "qux"]
+           [:FieldNameSeparator]
            [:Type [:NamedType [:Name "String"]]]
            [:Directives [:Directive [:Name "baz"]]]]]]]]]]
 
@@ -1669,8 +1697,14 @@
         [:InterfaceTypeExtension
          [:Name "Foobar"]
          [:FieldsDefinition
-          [:FieldDefinition [:Name "foo"] [:Type [:NamedType [:Name "String"]]]]
-          [:FieldDefinition [:Name "bar"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
+          [:FieldDefinition
+           [:Name "foo"]
+           [:FieldNameSeparator]
+           [:Type [:NamedType [:Name "String"]]]]
+          [:FieldDefinition
+           [:Name "bar"]
+           [:FieldNameSeparator]
+           [:Type [:NamedType [:Name "String"]]]]]]]]]]
 
     ["extend interface Foobar@foo{bar:String}"
      "extend interface Foobar @foo { bar: String }"
@@ -1683,7 +1717,10 @@
          [:Name "Foobar"]
          [:Directives [:Directive [:Name "foo"]]]
          [:FieldsDefinition
-          [:FieldDefinition [:Name "bar"] [:Type [:NamedType [:Name "String"]]]]]]]]]]
+          [:FieldDefinition
+           [:Name "bar"]
+           [:FieldNameSeparator]
+           [:Type [:NamedType [:Name "String"]]]]]]]]]]
 
     ["extend union Foobar@foo@bar"
      "extend union Foobar @foo @bar"
