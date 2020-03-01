@@ -1180,7 +1180,9 @@
         [:ObjectTypeDefinition
          [:ObjectKeyword "type"]
          [:Name "Foo"]
-         [:ImplementsInterfaces [:NamedType [:Name "Bar"]]]
+         [:ImplementsInterfaces
+          [:ImplementsKeyword "implements"]
+          [:NamedType [:Name "Bar"]]]
          [:FieldsDefinition
           [:FieldDefinition
            [:Name "qux"]
@@ -1197,7 +1199,10 @@
         [:ObjectTypeDefinition
          [:ObjectKeyword "type"]
          [:Name "Foo"]
-         [:ImplementsInterfaces [:NamedType [:Name "Bar"]]]
+         [:ImplementsInterfaces
+          [:ImplementsKeyword "implements"]
+          [:ImplementsTypeSeparator "&"]
+          [:NamedType [:Name "Bar"]]]
          [:FieldsDefinition
           [:FieldDefinition
            [:Name "qux"]
@@ -1215,7 +1220,10 @@
          [:ObjectKeyword "type"]
          [:Name "Foo"]
          [:ImplementsInterfaces
-          [:ImplementsInterfaces [:NamedType [:Name "Bar"]]]
+          [:ImplementsInterfaces
+           [:ImplementsKeyword "implements"]
+           [:NamedType [:Name "Bar"]]]
+          [:ImplementsTypeSeparator "&"]
           [:NamedType [:Name "Foobar"]]]
          [:FieldsDefinition
           [:FieldDefinition
@@ -1599,7 +1607,9 @@
        [:TypeExtension
         [:ObjectTypeExtension
          [:Name "Foo"]
-         [:ImplementsInterfaces [:NamedType [:Name "Qux"]]]]]]]]
+         [:ImplementsInterfaces
+          [:ImplementsKeyword "implements"]
+          [:NamedType [:Name "Qux"]]]]]]]]
 
     ["extend type Foo implements Qux&Baz"
      " extend type Foo implements Qux & Baz "]
@@ -1610,7 +1620,10 @@
         [:ObjectTypeExtension
          [:Name "Foo"]
          [:ImplementsInterfaces
-          [:ImplementsInterfaces [:NamedType [:Name "Qux"]]]
+          [:ImplementsInterfaces
+           [:ImplementsKeyword "implements"]
+           [:NamedType [:Name "Qux"]]]
+          [:ImplementsTypeSeparator "&"]
           [:NamedType [:Name "Baz"]]]]]]]]
 
     ["extend type Foo@bar"
@@ -1634,7 +1647,10 @@
         [:ObjectTypeExtension
          [:Name "Foo"]
          [:ImplementsInterfaces
-          [:ImplementsInterfaces [:NamedType [:Name "Qux"]]]
+          [:ImplementsInterfaces
+           [:ImplementsKeyword "implements"]
+           [:NamedType [:Name "Qux"]]]
+          [:ImplementsTypeSeparator "&"]
           [:NamedType [:Name "Baz"]]]
          [:Directives [:Directive [:Name "bar"]]]]]]]]
 
@@ -1662,7 +1678,9 @@
        [:TypeExtension
         [:ObjectTypeExtension
          [:Name "Foo"]
-         [:ImplementsInterfaces [:NamedType [:Name "Bar"]]]
+         [:ImplementsInterfaces
+          [:ImplementsKeyword "implements"]
+          [:NamedType [:Name "Bar"]]]
          [:Directives [:Directive [:Name "foobar"]]]
          [:FieldsDefinition
           [:FieldDefinition

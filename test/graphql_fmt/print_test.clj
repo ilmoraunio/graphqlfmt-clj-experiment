@@ -69,9 +69,8 @@
     "type Foo {Bar:String}"
     "type Foo {Qux:String Baz:String}"
     "type Foo implements Bar {qux:String}"
-    ["type Foo implements&Bar{qux:String}"
-     "type Foo implements Bar {qux:String}"]
-    "type Foo implements Bar&Foobar {qux:String}"
+    "type Foo implements & Bar {qux:String}"
+    "type Foo implements Bar & Foobar {qux:String}"
     "interface Foo {qux:String}"
     "\"the\" interface Foo @bar {\"the\"qux:String \"the\"baz:String}"
     ["\"the\"interface Foo@bar{\"the\"qux:String\"the\"baz:String}"

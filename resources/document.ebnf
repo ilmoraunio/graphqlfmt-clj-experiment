@@ -75,8 +75,10 @@ Description = StringValue
 FieldsDefinition = Ignored* <'{'> FieldDefinition+ Ignored* <'}'>
 FieldDefinition = Ignored* Description? Ignored* Name Ignored* FieldNameSeparator Type Directives?
 FieldNameSeparator = <':'>
-ImplementsInterfaces = (Ignored* <'implements'> Ignored* <'&'?> Ignored* NamedType) |
-                       (ImplementsInterfaces Ignored* <'&'> Ignored* NamedType)
+ImplementsInterfaces = (Ignored* ImplementsKeyword Ignored* ImplementsTypeSeparator? Ignored* NamedType) |
+                       (ImplementsInterfaces Ignored* ImplementsTypeSeparator Ignored* NamedType)
+ImplementsKeyword = 'implements'
+ImplementsTypeSeparator = '&'
 UnionMemberTypes = (Ignored* <'='> Ignored* <'|'?> Ignored* NamedType) |
                    (UnionMemberTypes Ignored* <'|'> Ignored* NamedType)
 EnumValuesDefinition = Ignored* <'{'> EnumValueDefinition+ Ignored* <'}'>

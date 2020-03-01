@@ -130,7 +130,9 @@
    :ImplementsInterfaces (fn [& xs]
                            (reduce (fn [coll x] (conj coll x))
                                    [:ImplementsInterfaces {}]
-                                   (conj (interpose [:Printable {} "&"] xs))))
+                                   (conj (interpose [:Printable {} " "] xs))))
+   :ImplementsKeyword (fn [x] [:Printable {} x])
+   :ImplementsTypeSeparator (fn [x] [:Printable {} x])
    :InlineFragment (fn [& xs]
                      (reduce (fn [coll x] (conj coll x))
                              [:InlineFragment {} [:Printable {} "..."]]
@@ -169,13 +171,7 @@
                           xs))
    :ObjectKeyword (fn [x] [:Printable {} x])
    :ObjectTypeDefinition (fn [& xs]
-                           (reduce (fn [coll x]
-                                     (if (= (first x) :ImplementsInterfaces)
-                                       (conj coll
-                                             [:Printable {} "implements"]
-                                             [:Printable {} " "]
-                                             x)
-                                       (conj coll x)))
+                           (reduce (fn [coll x] (conj coll x))
                                    [:ObjectTypeDefinition {}]
                                    (interpose [:Printable {} " "] xs)))
    :ObjectValue (fn [& xs]
