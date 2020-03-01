@@ -235,6 +235,17 @@
                            (reduce (fn [coll x] (conj coll x))
                                    [:TypeSystemDefinition {}]
                                    xs))
+   :UnionEqualitySeparator (fn [x] [:Printable {} x])
+   :UnionKeyword (fn [x] [:Printable {} x])
+   :UnionMemberTypes (fn [& xs]
+                       (reduce (fn [coll x] (conj coll x))
+                               [:UnionMemberTypes {}]
+                               (interpose [:Printable {} " "] xs)))
+   :UnionTypeDefinition (fn [& xs]
+                          (reduce (fn [coll x] (conj coll x))
+                                  [:UnionTypeDefinition {}]
+                                  (interpose [:Printable {} " "] xs)))
+   :UnionTypeSeparator (fn [x] [:Printable {} x])
    :Value (fn [& xs]
             (reduce (fn [coll x] (conj coll x))
                     [:Value {}]

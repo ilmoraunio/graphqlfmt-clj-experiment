@@ -44,7 +44,8 @@ ObjectTypeDefinition = Description? Ignored* ObjectKeyword Ignored+ Name Impleme
 ObjectKeyword = 'type'
 InterfaceTypeDefinition = Description? Ignored* InterfaceKeyword Ignored+ Name Directives? FieldsDefinition?
 InterfaceKeyword = 'interface'
-UnionTypeDefinition = Description? Ignored* <'union'> Ignored+ Name Directives? UnionMemberTypes?
+UnionTypeDefinition = Description? Ignored* UnionKeyword Ignored+ Name Directives? UnionMemberTypes?
+UnionKeyword = 'union'
 EnumTypeDefinition = Description? Ignored* <'enum'> Ignored+ Name Directives? EnumValuesDefinition?
 InputObjectTypeDefinition = Description? Ignored* <'input'> Ignored+ Name Directives? InputFieldsDefinition?
 DirectiveDefinition = Description? Ignored* <'directive'> Ignored* <'@'> Ignored* Name Ignored* ArgumentsDefinition? Ignored* <'on'> Ignored* DirectiveLocations
@@ -79,8 +80,10 @@ ImplementsInterfaces = (Ignored* ImplementsKeyword Ignored* ImplementsTypeSepara
                        (ImplementsInterfaces Ignored* ImplementsTypeSeparator Ignored* NamedType)
 ImplementsKeyword = 'implements'
 ImplementsTypeSeparator = '&'
-UnionMemberTypes = (Ignored* <'='> Ignored* <'|'?> Ignored* NamedType) |
-                   (UnionMemberTypes Ignored* <'|'> Ignored* NamedType)
+UnionMemberTypes = (Ignored* UnionEqualitySeparator Ignored* UnionTypeSeparator? Ignored* NamedType) |
+                   (UnionMemberTypes Ignored* UnionTypeSeparator Ignored* NamedType)
+UnionEqualitySeparator = '='
+UnionTypeSeparator = '|'
 EnumValuesDefinition = Ignored* <'{'> EnumValueDefinition+ Ignored* <'}'>
 EnumValueDefinition = Ignored* Description? Ignored* EnumValue Directives?
 InputFieldsDefinition = Ignored* <'{'> InputValueDefinition+ Ignored* <'}'>

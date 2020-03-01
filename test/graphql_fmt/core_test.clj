@@ -1294,7 +1294,10 @@
     [:Document
      [:Definition
       [:TypeSystemDefinition
-       [:TypeDefinition [:UnionTypeDefinition [:Name "Foobar"]]]]]]
+       [:TypeDefinition
+        [:UnionTypeDefinition
+         [:UnionKeyword "union"]
+         [:Name "Foobar"]]]]]]
 
     ["union Foo=Bar"
      " union Foo = Bar "]
@@ -1303,8 +1306,11 @@
       [:TypeSystemDefinition
        [:TypeDefinition
         [:UnionTypeDefinition
+         [:UnionKeyword "union"]
          [:Name "Foo"]
-         [:UnionMemberTypes [:NamedType [:Name "Bar"]]]]]]]]
+         [:UnionMemberTypes
+          [:UnionEqualitySeparator "="]
+          [:NamedType [:Name "Bar"]]]]]]]]
 
     ["union Foobar=Foo|Bar"
      " union Foobar = Foo | Bar "]
@@ -1313,9 +1319,13 @@
       [:TypeSystemDefinition
        [:TypeDefinition
         [:UnionTypeDefinition
+         [:UnionKeyword "union"]
          [:Name "Foobar"]
          [:UnionMemberTypes
-          [:UnionMemberTypes [:NamedType [:Name "Foo"]]]
+          [:UnionMemberTypes
+           [:UnionEqualitySeparator "="]
+           [:NamedType [:Name "Foo"]]]
+          [:UnionTypeSeparator "|"]
           [:NamedType [:Name "Bar"]]]]]]]]
 
     ["\"the\"union Foobar@qux=Foo|Bar"
@@ -1333,10 +1343,14 @@
            [:StringCharacter "h"]
            [:StringCharacter "e"]
            [:Quote]]]
+         [:UnionKeyword "union"]
          [:Name "Foobar"]
          [:Directives [:Directive [:Name "qux"]]]
          [:UnionMemberTypes
-          [:UnionMemberTypes [:NamedType [:Name "Foo"]]]
+          [:UnionMemberTypes
+           [:UnionEqualitySeparator "="]
+           [:NamedType [:Name "Foo"]]]
+          [:UnionTypeSeparator "|"]
           [:NamedType [:Name "Bar"]]]]]]]]
 
     ["enum Foobar"
@@ -1762,7 +1776,10 @@
         [:UnionTypeExtension
          [:Name "Foobar"]
          [:UnionMemberTypes
-          [:UnionMemberTypes [:NamedType [:Name "Qux"]]]
+          [:UnionMemberTypes
+           [:UnionEqualitySeparator "="]
+           [:NamedType [:Name "Qux"]]]
+          [:UnionTypeSeparator "|"]
           [:NamedType [:Name "Baz"]]]]]]]]
 
     ["extend union Foobar@qux=Baz"
@@ -1775,7 +1792,9 @@
         [:UnionTypeExtension
          [:Name "Foobar"]
          [:Directives [:Directive [:Name "qux"]]]
-         [:UnionMemberTypes [:NamedType [:Name "Baz"]]]]]]]]
+         [:UnionMemberTypes
+          [:UnionEqualitySeparator "="]
+          [:NamedType [:Name "Baz"]]]]]]]]
 
     ["extend enum Foobar@foo@bar"
      "extend enum Foobar @foo @bar"

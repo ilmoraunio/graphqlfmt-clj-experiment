@@ -74,13 +74,13 @@
     "interface Foo {qux:String}"
     "\"the\" interface Foo @bar {\"the\"qux:String \"the\"baz:String}"
     ["\"the\"interface Foo@bar{\"the\"qux:String\"the\"baz:String}"
-     "\"the\" interface Foo @bar {\"the\"qux:String \"the\"baz:String}"]))
+     "\"the\" interface Foo @bar {\"the\"qux:String \"the\"baz:String}"]
+    "union Foobar"
+    "union Foo = Bar"
+    "union Foobar = Foo | Bar"
+    "\"the\" union Foobar @qux = Foo | Bar"))
 
-["union Foobar"
- "union Foo=Bar"
- "union Foobar=Foo|Bar"
- "\"the\"union Foobar@qux=Foo|Bar"
- "enum Foobar"
+["enum Foobar"
  "enum Foobar{FOO}"
  "enum Foobar{FOO BAR}"
  "\"the\"enum Foobar@qux{\"it foo\"FOO\"it bar\"BAR}"
