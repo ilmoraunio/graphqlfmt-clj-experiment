@@ -48,7 +48,8 @@ UnionTypeDefinition = Description? Ignored* UnionKeyword Ignored+ Name Directive
 UnionKeyword = 'union'
 EnumKeyword = 'enum'
 EnumTypeDefinition = Description? Ignored* EnumKeyword Ignored+ Name Directives? EnumValuesDefinition?
-InputObjectTypeDefinition = Description? Ignored* <'input'> Ignored+ Name Directives? InputFieldsDefinition?
+InputKeyword = 'input'
+InputObjectTypeDefinition = Description? Ignored* InputKeyword Ignored+ Name Directives? InputFieldsDefinition?
 DirectiveDefinition = Description? Ignored* <'directive'> Ignored* <'@'> Ignored* Name Ignored* ArgumentsDefinition? Ignored* <'on'> Ignored* DirectiveLocations
 ArgumentsDefinition = <'('> InputValueDefinition+ Ignored* <')'>
 DirectiveLocations = (<'|'?> Ignored* DirectiveLocation) |
@@ -87,8 +88,8 @@ UnionEqualitySeparator = '='
 UnionTypeSeparator = '|'
 EnumValuesDefinition = Ignored* BraceOpen EnumValueDefinition+ Ignored* BraceClose
 EnumValueDefinition = Ignored* Description? Ignored* EnumValue Directives?
-InputFieldsDefinition = Ignored* <'{'> InputValueDefinition+ Ignored* <'}'>
-InputValueDefinition = Ignored* Description? Ignored* Name Ignored* <':'> Type DefaultValue? Directives?
+InputFieldsDefinition = Ignored* BraceOpen InputValueDefinition+ Ignored* BraceClose
+InputValueDefinition = Ignored* Description? Ignored* Name Ignored* Colon Type DefaultValue? Directives?
 OperationDefinition = (OperationType Ignored* Name? VariableDefinitions? Directives? SelectionSet) |
                       SelectionSet
 FragmentDefinition = <'fragment'> Ignored+ FragmentName Ignored+ TypeCondition Directives? SelectionSet

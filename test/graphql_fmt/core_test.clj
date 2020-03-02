@@ -1443,7 +1443,10 @@
     [:Document
      [:Definition
       [:TypeSystemDefinition
-       [:TypeDefinition [:InputObjectTypeDefinition [:Name "Foobar"]]]]]]
+       [:TypeDefinition
+        [:InputObjectTypeDefinition
+         [:InputKeyword "input"]
+         [:Name "Foobar"]]]]]]
 
     ["input Foobar{foo:String}"
      "input Foobar { foo: String }"
@@ -1453,11 +1456,15 @@
       [:TypeSystemDefinition
        [:TypeDefinition
         [:InputObjectTypeDefinition
+         [:InputKeyword "input"]
          [:Name "Foobar"]
          [:InputFieldsDefinition
+          [:BraceOpen "{"]
           [:InputValueDefinition
            [:Name "foo"]
-           [:Type [:NamedType [:Name "String"]]]]]]]]]]
+           [:Colon ":"]
+           [:Type [:NamedType [:Name "String"]]]]
+          [:BraceClose "}"]]]]]]]
 
     ["input Foobar{foo:String bar:String}"
      "input Foobar { foo: String bar: String}"
@@ -1467,14 +1474,19 @@
       [:TypeSystemDefinition
        [:TypeDefinition
         [:InputObjectTypeDefinition
+         [:InputKeyword "input"]
          [:Name "Foobar"]
          [:InputFieldsDefinition
+          [:BraceOpen "{"]
           [:InputValueDefinition
            [:Name "foo"]
+           [:Colon ":"]
            [:Type [:NamedType [:Name "String"]]]]
           [:InputValueDefinition
            [:Name "bar"]
-           [:Type [:NamedType [:Name "String"]]]]]]]]]]
+           [:Colon ":"]
+           [:Type [:NamedType [:Name "String"]]]]
+          [:BraceClose "}"]]]]]]]
 
     ["\"the\"input Foobar@qux{\"the\"foo:String=\"foo\"@qux\"the\"bar:String=\"bar\"@qux}"
      "\"the\" input Foobar @qux { \"the\" foo: String = \"foo\" @qux \"the\" bar: String = \"bar\" @qux }"
@@ -1491,9 +1503,11 @@
            [:StringCharacter "h"]
            [:StringCharacter "e"]
            [:Quote]]]
+         [:InputKeyword "input"]
          [:Name "Foobar"]
          [:Directives [:Directive [:Name "qux"]]]
          [:InputFieldsDefinition
+          [:BraceOpen "{"]
           [:InputValueDefinition
            [:Description
             [:StringValue
@@ -1503,6 +1517,7 @@
              [:StringCharacter "e"]
              [:Quote]]]
            [:Name "foo"]
+           [:Colon ":"]
            [:Type [:NamedType [:Name "String"]]]
            [:DefaultValue
             [:Equals "="]
@@ -1523,6 +1538,7 @@
              [:StringCharacter "e"]
              [:Quote]]]
            [:Name "bar"]
+           [:Colon ":"]
            [:Type [:NamedType [:Name "String"]]]
            [:DefaultValue
             [:Equals "="]
@@ -1533,7 +1549,8 @@
               [:StringCharacter "a"]
               [:StringCharacter "r"]
               [:Quote]]]]
-           [:Directives [:Directive [:Name "qux"]]]]]]]]]]
+           [:Directives [:Directive [:Name "qux"]]]]
+          [:BraceClose "}"]]]]]]]
 
     ["directive@foo on FIELD"
      "directive @foo on FIELD"
@@ -1572,8 +1589,14 @@
        [:DirectiveDefinition
         [:Name "foo"]
         [:ArgumentsDefinition
-         [:InputValueDefinition [:Name "qux"] [:Type [:NamedType [:Name "String"]]]]
-         [:InputValueDefinition [:Name "baz"] [:Type [:NamedType [:Name "String"]]]]]
+         [:InputValueDefinition
+          [:Name "qux"]
+          [:Colon ":"]
+          [:Type [:NamedType [:Name "String"]]]]
+         [:InputValueDefinition
+          [:Name "baz"]
+          [:Colon ":"]
+          [:Type [:NamedType [:Name "String"]]]]]
         [:DirectiveLocations
          [:DirectiveLocations
           [:DirectiveLocations
@@ -1870,12 +1893,16 @@
         [:InputObjectTypeExtension
          [:Name "Foobar"]
          [:InputFieldsDefinition
+          [:BraceOpen "{"]
           [:InputValueDefinition
            [:Name "qux"]
+           [:Colon ":"]
            [:Type [:NamedType [:Name "String"]]]]
           [:InputValueDefinition
            [:Name "baz"]
-           [:Type [:NamedType [:Name "String"]]]]]]]]]]
+           [:Colon ":"]
+           [:Type [:NamedType [:Name "String"]]]]
+          [:BraceClose "}"]]]]]]]
 
     ["extend input Foobar@qux{baz:String}"
      "extend input Foobar @qux { baz: String }"
@@ -1888,9 +1915,12 @@
          [:Name "Foobar"]
          [:Directives [:Directive [:Name "qux"]]]
          [:InputFieldsDefinition
+          [:BraceOpen "{"]
           [:InputValueDefinition
            [:Name "baz"]
-           [:Type [:NamedType [:Name "String"]]]]]]]]]]
+           [:Colon ":"]
+           [:Type [:NamedType [:Name "String"]]]]
+          [:BraceClose "}"]]]]]]]
 
     ["query{foo}{foo:String}fragment foo on Bar{foo}type Foo schema{query:Foo}"
      "query {foo} { foo : String } fragment foo on Bar {foo} type Foo schema {query:Foo}"

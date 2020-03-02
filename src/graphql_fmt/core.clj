@@ -99,9 +99,9 @@
                                  (conj (interpose [:Printable {} " "] xs))))
    :EnumValue (fn [x] [:EnumValue {} x])
    :EnumValueDefinition (fn [& xs]
-                           (reduce (fn [coll x] (conj coll x))
-                                   [:EnumValueDefinition {}]
-                                   (conj (interpose [:Printable {} " "] xs))))
+                          (reduce (fn [coll x] (conj coll x))
+                                  [:EnumValueDefinition {}]
+                                  (conj (interpose [:Printable {} " "] xs))))
    :EnumValuesDefinition (fn [& xs]
                            (reduce (fn [coll x] (conj coll x))
                                    [:EnumValuesDefinition {}]
@@ -151,6 +151,19 @@
                      (reduce (fn [coll x] (conj coll x))
                              [:InlineFragment {} [:Printable {} "..."]]
                              xs))
+   :InputValueDefinition (fn [& xs]
+                           (reduce (fn [coll x] (conj coll x))
+                                   [:InputValueDefinition {}]
+                                   (conj (interpose [:Printable {} " "] xs))))
+   :InputFieldsDefinition (fn [& xs]
+                            (reduce (fn [coll x] (conj coll x))
+                                    [:InputFieldsDefinition {}]
+                                    (conj (interpose [:Printable {} " "] xs))))
+   :InputKeyword (fn [x] [:Printable {} x])
+   :InputObjectTypeDefinition (fn [& xs]
+                                (reduce (fn [coll x] (conj coll x))
+                                        [:InputObjectTypeDefinition {}]
+                                        (conj (interpose [:Printable {} " "] xs))))
    :IntValue int-value
    :IntegerPart str
    :InterfaceKeyword (fn [x] [:Printable {} x])

@@ -82,13 +82,13 @@
     "enum Foobar"
     "enum Foobar { FOO }"
     "enum Foobar { FOO BAR }"
-    "\"the\" enum Foobar @qux { \"it foo\" FOO \"it bar\" BAR }"))
+    "\"the\" enum Foobar @qux { \"it foo\" FOO \"it bar\" BAR }"
+    "input Foobar"
+    "input Foobar { foo : String }"
+    "input Foobar { foo : String bar : String }"
+    "\"the\" input Foobar @qux { \"the\" foo : String =\"foo\" @qux \"the\" bar : String =\"bar\" @qux }"))
 
-["input Foobar"
- "input Foobar{foo:String}"
- "input Foobar{foo:String bar:String}"
- "\"the\"input Foobar@qux{\"the\"foo:String=\"foo\"@qux\"the\"bar:String=\"bar\"@qux}"
- "directive@foo on FIELD"
+["directive@foo on FIELD"
  "directive@foo on FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT"
  "directive@foo(qux:String baz:String)on FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT"
  "extend schema@foo@bar"
