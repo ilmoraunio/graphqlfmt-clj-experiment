@@ -1358,7 +1358,10 @@
     [:Document
      [:Definition
       [:TypeSystemDefinition
-       [:TypeDefinition [:EnumTypeDefinition [:Name "Foobar"]]]]]]
+       [:TypeDefinition
+        [:EnumTypeDefinition
+         [:EnumKeyword "enum"]
+         [:Name "Foobar"]]]]]]
 
     ["enum Foobar{FOO}"
      " enum Foobar { FOO } "]
@@ -1367,8 +1370,12 @@
       [:TypeSystemDefinition
        [:TypeDefinition
         [:EnumTypeDefinition
+         [:EnumKeyword "enum"]
          [:Name "Foobar"]
-         [:EnumValuesDefinition [:EnumValueDefinition [:EnumValue "FOO"]]]]]]]]
+         [:EnumValuesDefinition
+          [:BraceOpen "{"]
+          [:EnumValueDefinition [:EnumValue "FOO"]]
+          [:BraceClose "}"]]]]]]]
 
     ["enum Foobar{FOO BAR}"
      " enum Foobar { FOO BAR } "]
@@ -1377,10 +1384,13 @@
       [:TypeSystemDefinition
        [:TypeDefinition
         [:EnumTypeDefinition
+         [:EnumKeyword "enum"]
          [:Name "Foobar"]
          [:EnumValuesDefinition
+          [:BraceOpen "{"]
           [:EnumValueDefinition [:EnumValue "FOO"]]
-          [:EnumValueDefinition [:EnumValue "BAR"]]]]]]]]
+          [:EnumValueDefinition [:EnumValue "BAR"]]
+          [:BraceClose "}"]]]]]]]
 
     ["\"the\"enum Foobar@qux{\"it foo\"FOO\"it bar\"BAR}"
      "\"the\" enum Foobar @qux { \"it foo\" FOO \"it bar\" BAR }"
@@ -1397,9 +1407,11 @@
            [:StringCharacter "h"]
            [:StringCharacter "e"]
            [:Quote]]]
+         [:EnumKeyword "enum"]
          [:Name "Foobar"]
          [:Directives [:Directive [:Name "qux"]]]
          [:EnumValuesDefinition
+          [:BraceOpen "{"]
           [:EnumValueDefinition
            [:Description
             [:StringValue
@@ -1423,7 +1435,8 @@
              [:StringCharacter "a"]
              [:StringCharacter "r"]
              [:Quote]]]
-           [:EnumValue "BAR"]]]]]]]]
+           [:EnumValue "BAR"]]
+          [:BraceClose "}"]]]]]]]
 
     ["input Foobar"
      " input Foobar "]
@@ -1816,8 +1829,10 @@
         [:EnumTypeExtension
          [:Name "Foobar"]
          [:EnumValuesDefinition
+          [:BraceOpen "{"]
           [:EnumValueDefinition [:EnumValue "QUX"]]
-          [:EnumValueDefinition [:EnumValue "BAZ"]]]]]]]]
+          [:EnumValueDefinition [:EnumValue "BAZ"]]
+          [:BraceClose "}"]]]]]]]
 
     ["extend enum Foobar@qux{BAZ}"
      "extend enum Foobar @qux { BAZ }"
@@ -1829,7 +1844,10 @@
         [:EnumTypeExtension
          [:Name "Foobar"]
          [:Directives [:Directive [:Name "qux"]]]
-         [:EnumValuesDefinition [:EnumValueDefinition [:EnumValue "BAZ"]]]]]]]]
+         [:EnumValuesDefinition
+          [:BraceOpen "{"]
+          [:EnumValueDefinition [:EnumValue "BAZ"]]
+          [:BraceClose "}"]]]]]]]
 
     ["extend input Foobar@foo@bar"
      "extend input Foobar @foo @bar"

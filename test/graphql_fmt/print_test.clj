@@ -78,13 +78,13 @@
     "union Foobar"
     "union Foo = Bar"
     "union Foobar = Foo | Bar"
-    "\"the\" union Foobar @qux = Foo | Bar"))
+    "\"the\" union Foobar @qux = Foo | Bar"
+    "enum Foobar"
+    "enum Foobar { FOO }"
+    "enum Foobar { FOO BAR }"
+    "\"the\" enum Foobar @qux { \"it foo\" FOO \"it bar\" BAR }"))
 
-["enum Foobar"
- "enum Foobar{FOO}"
- "enum Foobar{FOO BAR}"
- "\"the\"enum Foobar@qux{\"it foo\"FOO\"it bar\"BAR}"
- "input Foobar"
+["input Foobar"
  "input Foobar{foo:String}"
  "input Foobar{foo:String bar:String}"
  "\"the\"input Foobar@qux{\"the\"foo:String=\"foo\"@qux\"the\"bar:String=\"bar\"@qux}"

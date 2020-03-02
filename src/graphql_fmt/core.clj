@@ -92,6 +92,20 @@
                          [:Directives {}]
                          xs))
    :Document (fn [x] [:Document {} x])
+   :EnumKeyword (fn [x] [:Printable {} x])
+   :EnumTypeDefinition (fn [& xs]
+                         (reduce (fn [coll x] (conj coll x))
+                                 [:EnumTypeDefinition {}]
+                                 (conj (interpose [:Printable {} " "] xs))))
+   :EnumValue (fn [x] [:EnumValue {} x])
+   :EnumValueDefinition (fn [& xs]
+                           (reduce (fn [coll x] (conj coll x))
+                                   [:EnumValueDefinition {}]
+                                   (conj (interpose [:Printable {} " "] xs))))
+   :EnumValuesDefinition (fn [& xs]
+                           (reduce (fn [coll x] (conj coll x))
+                                   [:EnumValuesDefinition {}]
+                                   (conj (interpose [:Printable {} " "] xs))))
    :Equals (fn [x] [:Printable {} x])
    :EscapedCharacter str
    :EscapedUnicode str
