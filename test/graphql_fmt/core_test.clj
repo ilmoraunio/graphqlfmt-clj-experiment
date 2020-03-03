@@ -1559,36 +1559,68 @@
      [:Definition
       [:TypeSystemDefinition
        [:DirectiveDefinition
+        [:DirectiveKeyword "directive"]
+        [:DirectivePrefix "@"]
         [:Name "foo"]
+        [:OnKeyword "on"]
         [:DirectiveLocations
          [:DirectiveLocation [:ExecutableDirectiveLocation "FIELD"]]]]]]]
 
     ["directive@foo on FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT"
-     "directive@foo on|FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT"
+     "directive@foo on FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT"
+     "directive @foo on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT"
+     " directive @ foo on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT "]
+    [:Document
+     [:Definition
+      [:TypeSystemDefinition
+       [:DirectiveDefinition
+        [:DirectiveKeyword "directive"]
+        [:DirectivePrefix "@"]
+        [:Name "foo"]
+        [:OnKeyword "on"]
+        [:DirectiveLocations
+         [:DirectiveLocations
+          [:DirectiveLocations
+           [:DirectiveLocation [:ExecutableDirectiveLocation "FIELD"]]]
+          [:PipeCharacter "|"]
+          [:DirectiveLocation [:ExecutableDirectiveLocation "FRAGMENT_SPREAD"]]]
+         [:PipeCharacter "|"]
+         [:DirectiveLocation [:ExecutableDirectiveLocation "INLINE_FRAGMENT"]]]]]]]
+
+    ["directive@foo on|FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT"
      "directive @foo on | FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT"
      " directive @ foo on | FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT "]
     [:Document
      [:Definition
       [:TypeSystemDefinition
        [:DirectiveDefinition
+        [:DirectiveKeyword "directive"]
+        [:DirectivePrefix "@"]
         [:Name "foo"]
+        [:OnKeyword "on"]
         [:DirectiveLocations
          [:DirectiveLocations
           [:DirectiveLocations
+           [:PipeCharacter "|"]
            [:DirectiveLocation [:ExecutableDirectiveLocation "FIELD"]]]
+          [:PipeCharacter "|"]
           [:DirectiveLocation [:ExecutableDirectiveLocation "FRAGMENT_SPREAD"]]]
+         [:PipeCharacter "|"]
          [:DirectiveLocation [:ExecutableDirectiveLocation "INLINE_FRAGMENT"]]]]]]]
 
     ["directive@foo(qux:String baz:String)on FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT"
-     "directive@foo(qux:String baz:String)on|FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT"
-     "directive @foo(qux: String baz: String) on | FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT"
-     " directive @ foo ( qux : String baz : String ) on | FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT "]
+     "directive@foo(qux:String baz:String)on FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT"
+     "directive @foo(qux: String baz: String) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT"
+     " directive @ foo ( qux : String baz : String ) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT "]
     [:Document
      [:Definition
       [:TypeSystemDefinition
        [:DirectiveDefinition
+        [:DirectiveKeyword "directive"]
+        [:DirectivePrefix "@"]
         [:Name "foo"]
         [:ArgumentsDefinition
+         [:ParensOpen "("]
          [:InputValueDefinition
           [:Name "qux"]
           [:Colon ":"]
@@ -1596,12 +1628,49 @@
          [:InputValueDefinition
           [:Name "baz"]
           [:Colon ":"]
-          [:Type [:NamedType [:Name "String"]]]]]
+          [:Type [:NamedType [:Name "String"]]]]
+         [:ParensClose ")"]]
+        [:OnKeyword "on"]
         [:DirectiveLocations
          [:DirectiveLocations
           [:DirectiveLocations
            [:DirectiveLocation [:ExecutableDirectiveLocation "FIELD"]]]
+          [:PipeCharacter "|"]
           [:DirectiveLocation [:ExecutableDirectiveLocation "FRAGMENT_SPREAD"]]]
+         [:PipeCharacter "|"]
+         [:DirectiveLocation [:ExecutableDirectiveLocation "INLINE_FRAGMENT"]]]]]]]
+
+    ["directive@foo(qux:String baz:String)on|FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT"
+     "directive@foo(qux:String baz:String)on |FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT"
+     "directive @foo(qux: String baz: String) on | FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT"
+     " directive @ foo ( qux : String baz : String ) on | FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT "]
+    [:Document
+     [:Definition
+      [:TypeSystemDefinition
+       [:DirectiveDefinition
+        [:DirectiveKeyword "directive"]
+        [:DirectivePrefix "@"]
+        [:Name "foo"]
+        [:ArgumentsDefinition
+         [:ParensOpen "("]
+         [:InputValueDefinition
+          [:Name "qux"]
+          [:Colon ":"]
+          [:Type [:NamedType [:Name "String"]]]]
+         [:InputValueDefinition
+          [:Name "baz"]
+          [:Colon ":"]
+          [:Type [:NamedType [:Name "String"]]]]
+         [:ParensClose ")"]]
+        [:OnKeyword "on"]
+        [:DirectiveLocations
+         [:DirectiveLocations
+          [:DirectiveLocations
+           [:PipeCharacter "|"]
+           [:DirectiveLocation [:ExecutableDirectiveLocation "FIELD"]]]
+          [:PipeCharacter "|"]
+          [:DirectiveLocation [:ExecutableDirectiveLocation "FRAGMENT_SPREAD"]]]
+         [:PipeCharacter "|"]
          [:DirectiveLocation [:ExecutableDirectiveLocation "INLINE_FRAGMENT"]]]]]]]
 
     ["extend schema@foo@bar"

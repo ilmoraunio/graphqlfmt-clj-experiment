@@ -86,12 +86,12 @@
     "input Foobar"
     "input Foobar { foo : String }"
     "input Foobar { foo : String bar : String }"
-    "\"the\" input Foobar @qux { \"the\" foo : String =\"foo\" @qux \"the\" bar : String =\"bar\" @qux }"))
+    "\"the\" input Foobar @qux { \"the\" foo : String =\"foo\" @qux \"the\" bar : String =\"bar\" @qux }"
+    "directive @ foo on FIELD"
+    "directive @ foo on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT"
+    "directive @ foo ( qux : String baz : String ) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT"))
 
-["directive@foo on FIELD"
- "directive@foo on FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT"
- "directive@foo(qux:String baz:String)on FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT"
- "extend schema@foo@bar"
+["extend schema@foo@bar"
  "extend schema{query:frobnicate}"
  "extend schema@foo{query:frobnicate mutation:frobnitz}"
  "extend scalar Foo@bar"

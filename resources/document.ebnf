@@ -50,10 +50,13 @@ EnumKeyword = 'enum'
 EnumTypeDefinition = Description? Ignored* EnumKeyword Ignored+ Name Directives? EnumValuesDefinition?
 InputKeyword = 'input'
 InputObjectTypeDefinition = Description? Ignored* InputKeyword Ignored+ Name Directives? InputFieldsDefinition?
-DirectiveDefinition = Description? Ignored* <'directive'> Ignored* <'@'> Ignored* Name Ignored* ArgumentsDefinition? Ignored* <'on'> Ignored* DirectiveLocations
-ArgumentsDefinition = <'('> InputValueDefinition+ Ignored* <')'>
-DirectiveLocations = (<'|'?> Ignored* DirectiveLocation) |
-                     (DirectiveLocations Ignored* <'|'> Ignored* DirectiveLocation)
+DirectiveDefinition = Description? Ignored* DirectiveKeyword Ignored* DirectivePrefix Ignored* Name Ignored* ArgumentsDefinition? Ignored* OnKeyword Ignored* DirectiveLocations
+DirectiveKeyword = 'directive'
+OnKeyword = 'on'
+DirectivePrefix = '@'
+ArgumentsDefinition = ParensOpen InputValueDefinition+ Ignored* ParensClose
+DirectiveLocations = (PipeCharacter? Ignored* DirectiveLocation) |
+                     (DirectiveLocations Ignored* PipeCharacter Ignored* DirectiveLocation)
 DirectiveLocation = ExecutableDirectiveLocation |
                     TypeSystemDirectiveLocation
 ExecutableDirectiveLocation = 'QUERY' |

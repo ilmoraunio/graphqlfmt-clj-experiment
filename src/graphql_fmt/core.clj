@@ -66,6 +66,10 @@
                   (conj (into [[:Printable {} "("]]
                               (interpose [:Printable {} ","] xs))
                         [:Printable {} ")"])))
+   :ArgumentsDefinition (fn [& xs]
+                          (reduce (fn [coll x] (conj coll x))
+                                  [:ArgumentsDefinition {}]
+                                  (interpose [:Printable {} " "] xs)))
    :BlockQuote (fn [] "\"\"\"")
    :BlockStringCharacter str
    :BooleanValue boolean-value
@@ -87,11 +91,26 @@
                 (reduce (fn [coll x] (conj coll x))
                         [:Directive {}]
                         (into [[:Printable {} "@"]] xs)))
+   :DirectiveDefinition (fn [& xs]
+                          (reduce (fn [coll x] (conj coll x))
+                                  [:DirectiveDefinition {}]
+                                  (conj (interpose [:Printable {} " "] xs))))
+   :DirectiveKeyword (fn [x] [:Printable {} x])
+   :DirectiveLocation (fn [& xs]
+                        (reduce (fn [coll x] (conj coll x))
+                                [:DirectiveLocation {}]
+                                (conj (interpose [:Printable {} " "] xs))))
+   :DirectiveLocations (fn [& xs]
+                         (reduce (fn [coll x] (conj coll x))
+                                 [:DirectiveLocations {}]
+                                 (conj (interpose [:Printable {} " "] xs))))
+   :DirectivePrefix (fn [x] [:Printable {} x])
    :Directives (fn [& xs]
                  (reduce (fn [coll x] (conj coll x))
                          [:Directives {}]
                          xs))
    :Document (fn [x] [:Document {} x])
+   :ExecutableDirectiveLocation (fn [x] [:ExecutableDirectiveLocation {} x])
    :EnumKeyword (fn [x] [:Printable {} x])
    :EnumTypeDefinition (fn [& xs]
                          (reduce (fn [coll x] (conj coll x))
@@ -207,6 +226,7 @@
                           [:ListValue {} [:Printable {} "{"]]
                           (conj (interpose [:Printable {} ","] xs)))
                         [:Printable {} "}"]))
+   :OnKeyword (fn [x] [:Printable {} x])
    :OperationDefinition (fn [& xs]
                           (reduce (fn [coll x]
                                     (if (= (first x) :OperationType)
@@ -215,6 +235,9 @@
                                   [:OperationDefinition {}]
                                   xs))
    :OperationType (fn [x] [:OperationType {} [:Printable {} x]])
+   :ParensOpen (fn [x] [:Printable {} x])
+   :ParensClose (fn [x] [:Printable {} x])
+   :PipeCharacter (fn [x] [:Printable {} x])
    :Quote (fn [] "\"")
    :RootOperationTypeDefinition (fn [& xs]
                                   (reduce (fn [coll x] (conj coll x))
