@@ -1740,6 +1740,8 @@
       [:TypeSystemExtension
        [:TypeExtension
         [:ObjectTypeExtension
+         [:ExtendKeyword "extend"]
+         [:TypeKeyword "type"]
          [:Name "Foo"]
          [:ImplementsInterfaces
           [:ImplementsKeyword "implements"]
@@ -1752,6 +1754,8 @@
       [:TypeSystemExtension
        [:TypeExtension
         [:ObjectTypeExtension
+         [:ExtendKeyword "extend"]
+         [:TypeKeyword "type"]
          [:Name "Foo"]
          [:ImplementsInterfaces
           [:ImplementsInterfaces
@@ -1768,6 +1772,8 @@
       [:TypeSystemExtension
        [:TypeExtension
         [:ObjectTypeExtension
+         [:ExtendKeyword "extend"]
+         [:TypeKeyword "type"]
          [:Name "Foo"]
          [:Directives [:Directive [:Name "bar"]]]]]]]]
 
@@ -1779,6 +1785,8 @@
       [:TypeSystemExtension
        [:TypeExtension
         [:ObjectTypeExtension
+         [:ExtendKeyword "extend"]
+         [:TypeKeyword "type"]
          [:Name "Foo"]
          [:ImplementsInterfaces
           [:ImplementsInterfaces
@@ -1796,6 +1804,8 @@
       [:TypeSystemExtension
        [:TypeExtension
         [:ObjectTypeExtension
+         [:ExtendKeyword "extend"]
+         [:TypeKeyword "type"]
          [:Name "Foo"]
          [:FieldsDefinition
           [:FieldDefinition
@@ -1811,6 +1821,8 @@
       [:TypeSystemExtension
        [:TypeExtension
         [:ObjectTypeExtension
+         [:ExtendKeyword "extend"]
+         [:TypeKeyword "type"]
          [:Name "Foo"]
          [:ImplementsInterfaces
           [:ImplementsKeyword "implements"]

@@ -16,9 +16,10 @@ TypeExtension = ScalarTypeExtension |
                 EnumTypeExtension |
                 InputObjectTypeExtension
 ScalarTypeExtension = ExtendKeyword Ignored* ScalarKeyword Ignored* Name Directives
-ObjectTypeExtension = (<'extend'> Ignored* <'type'> Ignored* Name ImplementsInterfaces? Directives? FieldsDefinition) |
-                      (<'extend'> Ignored* <'type'> Ignored* Name ImplementsInterfaces? Directives) |
-                      (<'extend'> Ignored* <'type'> Ignored* Name ImplementsInterfaces)
+ObjectTypeExtension = (ExtendKeyword Ignored* TypeKeyword Ignored* Name ImplementsInterfaces? Directives? FieldsDefinition) |
+                      (ExtendKeyword Ignored* TypeKeyword Ignored* Name ImplementsInterfaces? Directives) |
+                      (ExtendKeyword Ignored* TypeKeyword Ignored* Name ImplementsInterfaces)
+TypeKeyword = 'type'
 InterfaceTypeExtension = (<'extend'> Ignored* <'interface'> Ignored* Name Directives? FieldsDefinition) |
                          (<'extend'> Ignored* <'interface'> Ignored* Name Directives)
 UnionTypeExtension = (<'extend'> Ignored* <'union'> Ignored* Name Directives? UnionMemberTypes) |

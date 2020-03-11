@@ -221,6 +221,10 @@
                            (reduce (fn [coll x] (conj coll x))
                                    [:ObjectTypeDefinition {}]
                                    (interpose [:Printable {} " "] xs)))
+   :ObjectTypeExtension (fn [& xs]
+                          (reduce (fn [coll x] (conj coll x))
+                                  [:ObjectTypeExtension {}]
+                                  (interpose [:Printable {} " "] xs)))
    :ObjectValue (fn [& xs]
                   (conj (reduce
                           (fn [coll x] (conj coll x))
@@ -299,6 +303,7 @@
                     (reduce (fn [coll x] (conj coll x))
                             [:TypeExtension {}]
                             xs))
+   :TypeKeyword (fn [x] [:Printable {} x])
    :TypeSystemDefinition (fn [& xs]
                            (reduce (fn [coll x] (conj coll x))
                                    [:TypeSystemDefinition {}]

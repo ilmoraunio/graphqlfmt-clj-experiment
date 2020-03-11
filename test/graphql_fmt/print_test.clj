@@ -93,14 +93,14 @@
     "extend schema @foo @bar"
     "extend schema { query : frobnicate }"
     "extend schema @foo { query : frobnicate mutation : frobnitz }"
-    "extend scalar Foo @bar"))
+    "extend scalar Foo @bar"
+    "extend type Foo implements Qux & Baz"
+    "extend type Foo @bar"
+    "extend type Foo implements Qux & Baz @bar"
+    "extend type Foo {qux:String}"
+    "extend type Foo implements Bar @foobar {\"the\"qux:String@baz}"))
 
-["extend type Foo implements Qux&Baz"
- "extend type Foo@bar"
- "extend type Foo implements Qux&Baz@bar"
- "extend type Foo{qux:String}"
- "extend type Foo implements Bar@foobar{\"the\"qux:String@baz}"
- "extend interface Foo@bar"
+["extend interface Foo@bar"
  "extend interface Foobar{foo:String bar:String}"
  "extend interface Foobar@foo{bar:String}"
  "extend union Foobar@foo@bar"
