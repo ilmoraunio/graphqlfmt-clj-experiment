@@ -65,16 +65,16 @@
     "schema @foo{query:Foo}"
     "\"the scalar\" scalar Foo @bar"
     "\"documents the\" type Foo @bar"
-    "type Foo {\"the field definition\"Bar:String@foobar}"
-    "type Foo {Bar:String}"
-    "type Foo {Qux:String Baz:String}"
-    "type Foo implements Bar {qux:String}"
-    "type Foo implements & Bar {qux:String}"
-    "type Foo implements Bar & Foobar {qux:String}"
-    "interface Foo {qux:String}"
-    "\"the\" interface Foo @bar {\"the\"qux:String \"the\"baz:String}"
+    "type Foo { \"the field definition\" Bar : String @foobar }"
+    "type Foo { Bar : String }"
+    "type Foo { Qux : String Baz : String }"
+    "type Foo implements Bar { qux : String }"
+    "type Foo implements & Bar { qux : String }"
+    "type Foo implements Bar & Foobar { qux : String }"
+    "interface Foo { qux : String }"
+    "\"the\" interface Foo @bar { \"the\" qux : String \"the\" baz : String }"
     ["\"the\"interface Foo@bar{\"the\"qux:String\"the\"baz:String}"
-     "\"the\" interface Foo @bar {\"the\"qux:String \"the\"baz:String}"]
+     "\"the\" interface Foo @bar { \"the\" qux : String \"the\" baz : String }"]
     "union Foobar"
     "union Foo = Bar"
     "union Foobar = Foo | Bar"
@@ -97,8 +97,8 @@
     "extend type Foo implements Qux & Baz"
     "extend type Foo @bar"
     "extend type Foo implements Qux & Baz @bar"
-    "extend type Foo {qux:String}"
-    "extend type Foo implements Bar @foobar {\"the\"qux:String@baz}"))
+    "extend type Foo { qux : String }"
+    "extend type Foo implements Bar @foobar { \"the\" qux : String @baz }"))
 
 ["extend interface Foo@bar"
  "extend interface Foobar{foo:String bar:String}"

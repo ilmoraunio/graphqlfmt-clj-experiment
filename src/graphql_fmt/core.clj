@@ -140,14 +140,12 @@
    :FieldDefinition (fn [& xs]
                       (reduce (fn [coll x] (conj coll x))
                               [:FieldDefinition {}]
-                              xs))
+                              (interpose [:Printable {} " "] xs)))
    :FieldNameSeparator (fn [] [:Printable {} ":"])
    :FieldsDefinition (fn [& xs]
                        (conj (reduce (fn [coll x] (conj coll x))
-                                     [:FieldsDefinition {}
-                                      [:Printable {} "{"]]
-                                     (conj (interpose [:Printable {} " "] xs)))
-                             [:Printable {} "}"]))
+                                     [:FieldsDefinition {}]
+                                     (interpose [:Printable {} " "] xs))))
    :FloatValue float-value
    :FragmentDefinition (fn [& xs]
                          (reduce (fn [coll x] (conj coll x))
