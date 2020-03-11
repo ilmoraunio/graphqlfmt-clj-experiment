@@ -92,10 +92,10 @@
     "directive @ foo ( qux : String baz : String ) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT"
     "extend schema @foo @bar"
     "extend schema { query : frobnicate }"
-    "extend schema @foo { query : frobnicate mutation : frobnitz }"))
+    "extend schema @foo { query : frobnicate mutation : frobnitz }"
+    "extend scalar Foo @bar"))
 
-["extend scalar Foo@bar"
- "extend type Foo implements Qux&Baz"
+["extend type Foo implements Qux&Baz"
  "extend type Foo@bar"
  "extend type Foo implements Qux&Baz@bar"
  "extend type Foo{qux:String}"

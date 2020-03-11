@@ -258,6 +258,10 @@
                            (reduce (fn [coll x] (conj coll x))
                                    [:ScalarTypeDefinition {}]
                                    (interpose [:Printable {} " "] xs)))
+   :ScalarTypeExtension (fn [& xs]
+                          (reduce (fn [coll x] (conj coll x))
+                                  [:ScalarTypeExtension {}]
+                                  (interpose [:Printable {} " "] xs)))
    :SchemaDefinition (fn [& xs]
                        (reduce (fn [coll x]
                                  (if (and (= (first (last coll))
@@ -291,6 +295,10 @@
                              [:Printable {} " "]]
                             xs))
    :TypeDefinition (fn [x] [:TypeDefinition {} x])
+   :TypeExtension (fn [& xs]
+                    (reduce (fn [coll x] (conj coll x))
+                            [:TypeExtension {}]
+                            xs))
    :TypeSystemDefinition (fn [& xs]
                            (reduce (fn [coll x] (conj coll x))
                                    [:TypeSystemDefinition {}]

@@ -1729,6 +1729,8 @@
       [:TypeSystemExtension
        [:TypeExtension
         [:ScalarTypeExtension
+         [:ExtendKeyword "extend"]
+         [:ScalarKeyword "scalar"]
          [:Name "Foo"]
          [:Directives [:Directive [:Name "bar"]]]]]]]]
 
