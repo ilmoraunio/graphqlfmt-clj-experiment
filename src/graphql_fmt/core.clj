@@ -108,7 +108,7 @@
    :Directives (fn [& xs]
                  (reduce (fn [coll x] (conj coll x))
                          [:Directives {}]
-                         xs))
+                         (conj (interpose [:Printable {} " "] xs))))
    :Document (fn [x] [:Document {} x])
    :ExecutableDirectiveLocation (fn [x] [:ExecutableDirectiveLocation {} x])
    :EnumKeyword (fn [x] [:Printable {} x])
@@ -132,6 +132,7 @@
    :ExecutableDefinition (fn [x] [:ExecutableDefinition {} x])
    :ExponentIndicator str
    :ExponentPart str
+   :ExtendKeyword (fn [x] [:Printable {} x])
    :Field (fn [& xs]
             (reduce (fn [coll x] (conj coll x))
                     [:Field {}]
@@ -235,6 +236,10 @@
                                   [:OperationDefinition {}]
                                   xs))
    :OperationType (fn [x] [:OperationType {} [:Printable {} x]])
+   :OperationTypeDefinition (fn [& xs]
+                              (reduce (fn [coll x] (conj coll x))
+                                      [:OperationTypeDefinition {}]
+                                      (interpose [:Printable {} " "] xs)))
    :ParensOpen (fn [x] [:Printable {} x])
    :ParensClose (fn [x] [:Printable {} x])
    :PipeCharacter (fn [x] [:Printable {} x])
@@ -243,6 +248,11 @@
                                   (reduce (fn [coll x] (conj coll x))
                                           [:RootOperationTypeDefinition {}]
                                           xs))
+   :SchemaExtension (fn [& xs]
+                      (reduce (fn [coll x] (conj coll x))
+                              [:SchemaExtension {}]
+                              (conj (interpose [:Printable {} " "] xs))))
+   :SchemaKeyword (fn [x] [:Printable {} x])
    :ScalarKeyword (fn [x] [:Printable {} x])
    :ScalarTypeDefinition (fn [& xs]
                            (reduce (fn [coll x] (conj coll x))
@@ -285,6 +295,10 @@
                            (reduce (fn [coll x] (conj coll x))
                                    [:TypeSystemDefinition {}]
                                    xs))
+   :TypeSystemExtension (fn [& xs]
+                          (reduce (fn [coll x] (conj coll x))
+                                  [:TypeSystemExtension {}]
+                                  xs))
    :UnionEqualitySeparator (fn [x] [:Printable {} x])
    :UnionKeyword (fn [x] [:Printable {} x])
    :UnionMemberTypes (fn [& xs]

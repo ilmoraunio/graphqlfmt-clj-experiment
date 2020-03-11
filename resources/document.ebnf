@@ -4,9 +4,11 @@ Definition = Ignored* (TypeSystemExtension /
                        ExecutableDefinition)
 TypeSystemExtension = SchemaExtension |
                       TypeExtension
-SchemaExtension = (<'extend'> Ignored* <'schema'> Directives? Ignored* <'{'> OperationTypeDefinition+ Ignored* <'}'>) |
-                  (<'extend'> Ignored* <'schema'> Directives)
-OperationTypeDefinition = Ignored* OperationType Ignored* <':'> Ignored* NamedType
+SchemaExtension = (ExtendKeyword Ignored* SchemaKeyword Directives? Ignored* BraceOpen OperationTypeDefinition+ Ignored* BraceClose) |
+                  (ExtendKeyword Ignored* SchemaKeyword Directives)
+ExtendKeyword = 'extend'
+SchemaKeyword = 'schema'
+OperationTypeDefinition = Ignored* OperationType Ignored* Colon Ignored* NamedType
 TypeExtension = ScalarTypeExtension |
                 ObjectTypeExtension |
                 InterfaceTypeExtension |

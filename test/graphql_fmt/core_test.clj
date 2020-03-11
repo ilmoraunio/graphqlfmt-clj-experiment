@@ -1680,6 +1680,8 @@
      [:Definition
       [:TypeSystemExtension
        [:SchemaExtension
+        [:ExtendKeyword "extend"]
+        [:SchemaKeyword "schema"]
         [:Directives [:Directive [:Name "foo"]] [:Directive [:Name "bar"]]]]]]]
 
     ["extend schema{query:frobnicate}"
@@ -1689,9 +1691,14 @@
      [:Definition
       [:TypeSystemExtension
        [:SchemaExtension
+        [:ExtendKeyword "extend"]
+        [:SchemaKeyword "schema"]
+        [:BraceOpen "{"]
         [:OperationTypeDefinition
          [:OperationType "query"]
-         [:NamedType [:Name "frobnicate"]]]]]]]
+         [:Colon ":"]
+         [:NamedType [:Name "frobnicate"]]]
+        [:BraceClose "}"]]]]]
 
     ["extend schema@foo{query:frobnicate mutation:frobnitz}"
      "extend schema @foo { query: frobnicate mutation: frobnitz }"
@@ -1700,13 +1707,19 @@
      [:Definition
       [:TypeSystemExtension
        [:SchemaExtension
+        [:ExtendKeyword "extend"]
+        [:SchemaKeyword "schema"]
         [:Directives [:Directive [:Name "foo"]]]
+        [:BraceOpen "{"]
         [:OperationTypeDefinition
          [:OperationType "query"]
+         [:Colon ":"]
          [:NamedType [:Name "frobnicate"]]]
         [:OperationTypeDefinition
          [:OperationType "mutation"]
-         [:NamedType [:Name "frobnitz"]]]]]]]
+         [:Colon ":"]
+         [:NamedType [:Name "frobnitz"]]]
+        [:BraceClose "}"]]]]]
 
     ["extend scalar Foo@bar"
      "extend scalar Foo @bar"
