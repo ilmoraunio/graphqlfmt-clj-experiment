@@ -189,6 +189,10 @@
                               (reduce (fn [coll x] (conj coll x))
                                       [:InterfaceTypeDefinition {}]
                                       (conj (interpose [:Printable {} " "] xs))))
+   :InterfaceTypeExtension (fn [& xs]
+                             (reduce (fn [coll x] (conj coll x))
+                                     [:InterfaceTypeExtension {}]
+                                     (conj (interpose [:Printable {} " "] xs))))
    :ListType (fn [& xs]
                (reduce (fn [coll x] (conj coll x))
                        [:ListType {}]

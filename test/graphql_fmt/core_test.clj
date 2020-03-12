@@ -1870,6 +1870,8 @@
       [:TypeSystemExtension
        [:TypeExtension
         [:InterfaceTypeExtension
+         [:ExtendKeyword "extend"]
+         [:InterfaceKeyword "interface"]
          [:Name "Foo"]
          [:Directives [:Directive [:Name "bar"]]]]]]]]
 
@@ -1881,6 +1883,8 @@
       [:TypeSystemExtension
        [:TypeExtension
         [:InterfaceTypeExtension
+         [:ExtendKeyword "extend"]
+         [:InterfaceKeyword "interface"]
          [:Name "Foobar"]
          [:FieldsDefinition
           [:BraceOpen "{"]
@@ -1902,6 +1906,8 @@
       [:TypeSystemExtension
        [:TypeExtension
         [:InterfaceTypeExtension
+         [:ExtendKeyword "extend"]
+         [:InterfaceKeyword "interface"]
          [:Name "Foobar"]
          [:Directives [:Directive [:Name "foo"]]]
          [:FieldsDefinition
