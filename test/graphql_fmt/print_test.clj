@@ -101,12 +101,12 @@
     "extend type Foo implements Bar @foobar { \"the\" qux : String @baz }"
     "extend interface Foo @bar"
     "extend interface Foobar { foo : String bar : String }"
-    "extend interface Foobar @foo { bar : String }"))
+    "extend interface Foobar @foo { bar : String }"
+    "extend union Foobar @foo @bar"
+    "extend union Foobar = Qux | Baz"
+    "extend union Foobar @qux = Baz"))
 
-["extend union Foobar@foo@bar"
- "extend union Foobar=Qux|Baz"
- "extend union Foobar@qux=Baz"
- "extend enum Foobar@foo@bar"
+["extend enum Foobar@foo@bar"
  "extend enum Foobar{QUX BAZ}"
  "extend enum Foobar@qux{BAZ}"
  "extend input Foobar@foo@bar"

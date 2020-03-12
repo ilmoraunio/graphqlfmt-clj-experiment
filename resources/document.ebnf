@@ -22,8 +22,8 @@ ObjectTypeExtension = (ExtendKeyword Ignored* TypeKeyword Ignored* Name Implemen
 TypeKeyword = 'type'
 InterfaceTypeExtension = (ExtendKeyword Ignored* InterfaceKeyword Ignored* Name Directives? FieldsDefinition) |
                          (ExtendKeyword Ignored* InterfaceKeyword Ignored* Name Directives)
-UnionTypeExtension = (<'extend'> Ignored* <'union'> Ignored* Name Directives? UnionMemberTypes) |
-                     (<'extend'> Ignored* <'union'> Ignored* Name Directives)
+UnionTypeExtension = (ExtendKeyword Ignored* UnionKeyword Ignored* Name Directives? UnionMemberTypes) |
+                     (ExtendKeyword Ignored* UnionKeyword Ignored* Name Directives)
 EnumTypeExtension = (<'extend'> Ignored* <'enum'> Ignored* Name Directives? EnumValuesDefinition) |
                     (<'extend'> Ignored* <'enum'> Ignored* Name Directives)
 InputObjectTypeExtension = (<'extend'> Ignored* <'input'> Ignored* Name Directives? InputFieldsDefinition) |

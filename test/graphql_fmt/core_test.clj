@@ -1926,6 +1926,8 @@
       [:TypeSystemExtension
        [:TypeExtension
         [:UnionTypeExtension
+         [:ExtendKeyword "extend"]
+         [:UnionKeyword "union"]
          [:Name "Foobar"]
          [:Directives [:Directive [:Name "foo"]] [:Directive [:Name "bar"]]]]]]]]
 
@@ -1936,6 +1938,8 @@
       [:TypeSystemExtension
        [:TypeExtension
         [:UnionTypeExtension
+         [:ExtendKeyword "extend"]
+         [:UnionKeyword "union"]
          [:Name "Foobar"]
          [:UnionMemberTypes
           [:UnionMemberTypes
@@ -1952,6 +1956,8 @@
       [:TypeSystemExtension
        [:TypeExtension
         [:UnionTypeExtension
+         [:ExtendKeyword "extend"]
+         [:UnionKeyword "union"]
          [:Name "Foobar"]
          [:Directives [:Directive [:Name "qux"]]]
          [:UnionMemberTypes

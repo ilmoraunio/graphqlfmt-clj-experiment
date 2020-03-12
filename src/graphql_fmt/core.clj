@@ -324,6 +324,10 @@
                           (reduce (fn [coll x] (conj coll x))
                                   [:UnionTypeDefinition {}]
                                   (interpose [:Printable {} " "] xs)))
+   :UnionTypeExtension (fn [& xs]
+                         (reduce (fn [coll x] (conj coll x))
+                                 [:UnionTypeExtension {}]
+                                 (interpose [:Printable {} " "] xs)))
    :UnionTypeSeparator (fn [x] [:Printable {} x])
    :Value (fn [& xs]
             (reduce (fn [coll x] (conj coll x))
