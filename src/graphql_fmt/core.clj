@@ -3,7 +3,8 @@
   (:require [clojure.java.io :as io]
             [clojure.pprint]
             [clojure.string :as str]
-            [instaparse.core :as insta])
+            [instaparse.core :as insta]
+            [instaparse.transform :as insta-transform])
   (:gen-class))
 
 (defn ebnf [& names]
@@ -382,8 +383,11 @@
                  (string? (first rst)) (str s (first rst))))))
 
 (defn -main [& args]
-  (pr-str-ast ""
-    (if (first args)
-      (document-parser (first args))
-      (document-parser
-        (str/join "\n" (line-seq (java.io.BufferedReader. *in*)))))))
+  (let [args (or (first args) (line-seq (java.io.BufferedReader. *in*)))
+        ast (delay (document-parser args))
+        transformation (delay (insta-transform/transform transform-map @ast))
+        output (delay (pr-str-ast "" @transformation))]
+    (prn ::ast @ast)
+    (prn ::transformation @transformation)
+    (prn ::output @output)
+    (println @output)))
