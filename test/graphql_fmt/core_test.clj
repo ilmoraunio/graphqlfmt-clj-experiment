@@ -1972,6 +1972,8 @@
       [:TypeSystemExtension
        [:TypeExtension
         [:EnumTypeExtension
+         [:ExtendKeyword "extend"]
+         [:EnumKeyword "enum"]
          [:Name "Foobar"]
          [:Directives [:Directive [:Name "foo"]] [:Directive [:Name "bar"]]]]]]]]
 
@@ -1982,6 +1984,8 @@
       [:TypeSystemExtension
        [:TypeExtension
         [:EnumTypeExtension
+         [:ExtendKeyword "extend"]
+         [:EnumKeyword "enum"]
          [:Name "Foobar"]
          [:EnumValuesDefinition
           [:BraceOpen "{"]
@@ -1997,6 +2001,8 @@
       [:TypeSystemExtension
        [:TypeExtension
         [:EnumTypeExtension
+         [:ExtendKeyword "extend"]
+         [:EnumKeyword "enum"]
          [:Name "Foobar"]
          [:Directives [:Directive [:Name "qux"]]]
          [:EnumValuesDefinition

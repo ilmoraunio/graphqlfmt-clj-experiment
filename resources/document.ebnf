@@ -24,8 +24,8 @@ InterfaceTypeExtension = (ExtendKeyword Ignored* InterfaceKeyword Ignored* Name 
                          (ExtendKeyword Ignored* InterfaceKeyword Ignored* Name Directives)
 UnionTypeExtension = (ExtendKeyword Ignored* UnionKeyword Ignored* Name Directives? UnionMemberTypes) |
                      (ExtendKeyword Ignored* UnionKeyword Ignored* Name Directives)
-EnumTypeExtension = (<'extend'> Ignored* <'enum'> Ignored* Name Directives? EnumValuesDefinition) |
-                    (<'extend'> Ignored* <'enum'> Ignored* Name Directives)
+EnumTypeExtension = (ExtendKeyword Ignored* EnumKeyword Ignored* Name Directives? EnumValuesDefinition) |
+                    (ExtendKeyword Ignored* EnumKeyword Ignored* Name Directives)
 InputObjectTypeExtension = (<'extend'> Ignored* <'input'> Ignored* Name Directives? InputFieldsDefinition) |
                            (<'extend'> Ignored* <'input'> Ignored* Name Directives)
 ExecutableDefinition = OperationDefinition |

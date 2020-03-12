@@ -116,6 +116,10 @@
                          (reduce (fn [coll x] (conj coll x))
                                  [:EnumTypeDefinition {}]
                                  (conj (interpose [:Printable {} " "] xs))))
+   :EnumTypeExtension (fn [& xs]
+                        (reduce (fn [coll x] (conj coll x))
+                                [:EnumTypeExtension {}]
+                                (conj (interpose [:Printable {} " "] xs))))
    :EnumValue (fn [x] [:EnumValue {} x])
    :EnumValueDefinition (fn [& xs]
                           (reduce (fn [coll x] (conj coll x))
