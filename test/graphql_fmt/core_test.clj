@@ -2018,6 +2018,8 @@
       [:TypeSystemExtension
        [:TypeExtension
         [:InputObjectTypeExtension
+         [:ExtendKeyword "extend"]
+         [:InputKeyword "input"]
          [:Name "Foobar"]
          [:Directives [:Directive [:Name "foo"]] [:Directive [:Name "bar"]]]]]]]]
 
@@ -2029,6 +2031,8 @@
       [:TypeSystemExtension
        [:TypeExtension
         [:InputObjectTypeExtension
+         [:ExtendKeyword "extend"]
+         [:InputKeyword "input"]
          [:Name "Foobar"]
          [:InputFieldsDefinition
           [:BraceOpen "{"]
@@ -2050,6 +2054,8 @@
       [:TypeSystemExtension
        [:TypeExtension
         [:InputObjectTypeExtension
+         [:ExtendKeyword "extend"]
+         [:InputKeyword "input"]
          [:Name "Foobar"]
          [:Directives [:Directive [:Name "qux"]]]
          [:InputFieldsDefinition

@@ -26,8 +26,8 @@ UnionTypeExtension = (ExtendKeyword Ignored* UnionKeyword Ignored* Name Directiv
                      (ExtendKeyword Ignored* UnionKeyword Ignored* Name Directives)
 EnumTypeExtension = (ExtendKeyword Ignored* EnumKeyword Ignored* Name Directives? EnumValuesDefinition) |
                     (ExtendKeyword Ignored* EnumKeyword Ignored* Name Directives)
-InputObjectTypeExtension = (<'extend'> Ignored* <'input'> Ignored* Name Directives? InputFieldsDefinition) |
-                           (<'extend'> Ignored* <'input'> Ignored* Name Directives)
+InputObjectTypeExtension = (ExtendKeyword Ignored* InputKeyword Ignored* Name Directives? InputFieldsDefinition) |
+                           (ExtendKeyword Ignored* InputKeyword Ignored* Name Directives)
 ExecutableDefinition = OperationDefinition |
                        FragmentDefinition
 TypeSystemDefinition = SchemaDefinition |

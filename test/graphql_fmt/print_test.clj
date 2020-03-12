@@ -107,11 +107,11 @@
     "extend union Foobar @qux = Baz"
     "extend enum Foobar @foo @bar"
     "extend enum Foobar { QUX BAZ }"
-    "extend enum Foobar @qux { BAZ }"))
+    "extend enum Foobar @qux { BAZ }"
+    "extend input Foobar @foo @bar"
+    "extend input Foobar { qux : String baz : String }"
+    "extend input Foobar @qux { baz : String }"))
 
-["extend input Foobar@foo@bar"
- "extend input Foobar{qux:String baz:String}"
- "extend input Foobar@qux{baz:String}"
- "query{foo}{foo:String}fragment foo on Bar{foo}type Foo schema{query:Foo}"]
+["query{foo}{foo:String}fragment foo on Bar{foo}type Foo schema{query:Foo}"]
 
 

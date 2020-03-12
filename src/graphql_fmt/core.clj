@@ -186,6 +186,10 @@
                                 (reduce (fn [coll x] (conj coll x))
                                         [:InputObjectTypeDefinition {}]
                                         (conj (interpose [:Printable {} " "] xs))))
+   :InputObjectTypeExtension (fn [& xs]
+                               (reduce (fn [coll x] (conj coll x))
+                                       [:InputObjectTypeExtension {}]
+                                       (conj (interpose [:Printable {} " "] xs))))
    :IntValue int-value
    :IntegerPart str
    :InterfaceKeyword (fn [x] [:Printable {} x])
