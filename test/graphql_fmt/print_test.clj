@@ -110,8 +110,7 @@
     "extend enum Foobar @qux { BAZ }"
     "extend input Foobar @foo @bar"
     "extend input Foobar { qux : String baz : String }"
-    "extend input Foobar @qux { baz : String }"))
-
-["query{foo}{foo:String}fragment foo on Bar{foo}type Foo schema{query:Foo}"]
+    "extend input Foobar @qux { baz : String }"
+    "query {foo} {foo:String} fragment foo on Bar {foo} type Foo schema {query:Foo}"))
 
 

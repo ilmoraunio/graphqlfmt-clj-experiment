@@ -109,7 +109,10 @@
                  (reduce (fn [coll x] (conj coll x))
                          [:Directives {}]
                          (conj (interpose [:Printable {} " "] xs))))
-   :Document (fn [x] [:Document {} x])
+   :Document (fn [& xs]
+               (reduce (fn [coll x] (conj coll x))
+                       [:Document {}]
+                       (conj (interpose [:Printable {} " "] xs))))
    :ExecutableDirectiveLocation (fn [x] [:ExecutableDirectiveLocation {} x])
    :EnumKeyword (fn [x] [:Printable {} x])
    :EnumTypeDefinition (fn [& xs]
