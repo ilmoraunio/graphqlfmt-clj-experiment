@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -eu
+
+docker run -it \
+    -v "${PWD}/target:/target" \
+    "${1?Pass docker image as first parameter}" \
+    -jar graphql-fmt.jar \
+    "--static" \
+    "-H:Name=graphql-fmt" \
+    "-H:+ReportExceptionStackTraces" \
+    "--initialize-at-build-time" \
+    "--report-unsupported-elements-at-runtime" \
+    "--verbose" \
+    "--no-fallback" \
+    "--no-server" \
+    "-J-Xmx4g"

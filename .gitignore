@@ -4,3 +4,5 @@ graphql-fmt
 .lein-failures
 .nrepl-port
 graphql-fmt.iml
+.graalvm-ce-java8-darwin/
+graalvm-darwin.tar.gz

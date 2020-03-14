@@ -1,0 +1,4 @@
+FROM oracle/graalvm-ce:19.3.0-java8
+RUN gu install native-image
+WORKDIR /target
+ENTRYPOINT ["native-image"]
