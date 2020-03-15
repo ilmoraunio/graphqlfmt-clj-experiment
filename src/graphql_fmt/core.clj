@@ -358,6 +358,23 @@
                                 [:Printable {} ")"]
                                 [:Printable {} " "]))})
 
+(def template
+  [:Document {}
+   [:Definition {}
+    [:ExecutableDefinition {}
+     [:OperationDefinition {}
+      [:SelectionSet {}
+       [:Printable {} "{"]
+       [:Selection {}
+        [:Field {}
+         [:Name {
+                 :newline? true} "foo"]]]
+       [:Printable {} "}"]]]]]
+   [:Definition {}
+    [:Printable {} "{"]
+    [:Printable {} "bar"]
+    [:Printable {} "}"]]])
+
 (def desired-format
   [:Document {:indentation-level 0}
    [:Definition {:indentation-level 0}
@@ -381,6 +398,22 @@
     (apply str (cond
                  (vector? (first rst)) (map (partial pr-str-ast s) rst)
                  (string? (first rst)) (str s (first rst))))))
+
+(defn amend-indendation-level
+  [indent-level ast]
+  (let [[node opts & rst] ast]
+    (into [node (if (or (vector? (first rst))
+                        (string? (first rst)))
+                  (into opts {:indentation-level indent-level})
+                  (throw (ex-info {} (str "Unrecognized type: " (type (first rst))))))]
+          (cond
+            (vector? (first rst)) (map (partial amend-indendation-level
+                                                (let [[[next-node & _]] rst]
+                                                  (condp = next-node
+                                                    :Definition indent-level
+                                                    (inc indent-level))))
+                                       rst)
+            (string? (first rst)) rst))))
 
 (defn -main [& args]
   (let [args (or (first args) (line-seq (java.io.BufferedReader. *in*)))
