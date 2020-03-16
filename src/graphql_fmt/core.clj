@@ -411,8 +411,25 @@
                                                 (let [[[next-node & _]] rst]
                                                   (condp = next-node
                                                     :Definition indent-level
+                                                    :ExecutableDefinition indent-level
+                                                    :OperationDefinition indent-level
+                                                    :Printable indent-level
+                                                    :SelectionSet indent-level
                                                     (inc indent-level))))
                                        rst)
+            (string? (first rst)) rst))))
+
+(defn amend-newline-opts
+  [ast]
+  (let [[node opts & rst] ast]
+    (into [node (if (or (vector? (first rst))
+                        (string? (first rst)))
+                  (into opts {:newline? (condp = node
+                                          :Selection true
+                                          false)})
+                  (throw (ex-info {} (str "Unrecognized type: " (type (first rst))))))]
+          (cond
+            (vector? (first rst)) (map amend-newline-opts rst)
             (string? (first rst)) rst))))
 
 (defn -main [& args]

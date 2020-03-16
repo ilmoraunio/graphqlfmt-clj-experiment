@@ -1,6 +1,7 @@
 (ns graphql-fmt.print-test
   (:require [clojure.test :refer [are deftest is testing]]
             [graphql-fmt.core :refer [amend-indendation-level
+                                      amend-newline-opts
                                       document-parser
                                       transform-map
                                       pr-str-ast]]
@@ -17,10 +18,12 @@
               (insta/transform
                 transform-map
                 (document-parser input))))
-         (amend-indendation-level 0
-                                  (insta/transform
-                                    transform-map
-                                    (document-parser input))))
+         (amend-newline-opts
+           (amend-indendation-level
+             0
+             (insta/transform
+               transform-map
+               (document-parser input)))))
     "{foo}"
     "{foo_alias:foo}"
     "{foo(bar:$foobar)}"
