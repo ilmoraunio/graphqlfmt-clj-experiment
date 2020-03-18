@@ -461,7 +461,7 @@
     (clojure.core/format "%s\n")))
 
 (defn -main [& args]
-  (let [graphql (or (first args) (line-seq (java.io.BufferedReader. *in*)))
+  (let [graphql (or (first args) (apply str (line-seq (java.io.BufferedReader. *in*))))
         output (format graphql)]
     (print output)
     (flush)))
