@@ -461,11 +461,7 @@
     (clojure.core/format "%s\n")))
 
 (defn -main [& args]
-  (let [args (or (first args) (line-seq (java.io.BufferedReader. *in*)))
-        ast (delay (document-parser args))
-        transformation (delay (insta-transform/transform transform-map @ast))
-        output (delay (pr-str-ast "" @transformation))]
-    (prn ::ast @ast)
-    (prn ::transformation @transformation)
-    (prn ::output @output)
-    (println @output)))
+  (let [graphql (or (first args) (line-seq (java.io.BufferedReader. *in*)))
+        output (format graphql)]
+    (print output)
+    (flush)))
