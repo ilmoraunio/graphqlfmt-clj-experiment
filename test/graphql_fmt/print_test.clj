@@ -2,10 +2,10 @@
   (:require [clojure.test :refer [are deftest is testing]]
             [graphql-fmt.core :refer [amend-indentation-level
                                       amend-newline-opts
-                                      amend-newline-printable
+                                      amend-spacing
                                       document-parser
                                       transform-map
-                                      pr-str-ast]]
+                                      pr-str-ast] :as graphqlfmt]
             [instaparse.core :as insta]))
 
 #_(deftest test-unformatted-output
@@ -15,7 +15,7 @@
              input (if is-a-vec? (first graphql) graphql)]
          (amend-indentation-level
            0
-           (amend-newline-printable
+           (amend-spacing
              (amend-newline-opts
                (insta/transform
                  transform-map
@@ -127,21 +127,17 @@
   (->> (clojure.java.io/file "test-resources/graphql")
     (file-seq)
     (filter #(.isFile %))
-    (mapv slurp)))
+    (map (juxt #(.getName %) slurp))
+    (mapv (fn [[filename graphql]] {:filename filename
+                                    :graphql graphql}))))
 
 (defmacro run-tests
   []
-  `(do (clojure.template/do-template [x]
-                                     (let [output# (pr-str-ast
-                                                    ""
-                                                    (amend-indentation-level
-                                                      0
-                                                      (amend-newline-printable
-                                                        (amend-newline-opts
-                                                          (insta/transform
-                                                            transform-map
-                                                            (document-parser x))))))]
-                                       (is (= output# x)))
-                                     ~@graphql-statements)))
+  `(do (clojure.template/do-template
+         [graphql-statement]
+         (let [graphql# (:graphql graphql-statement)]
+           (is (= (graphqlfmt/format graphql#) graphql#)
+               (:filename graphql-statement)))
+         ~@graphql-statements)))
 
 (deftest test-formatted-output (run-tests))

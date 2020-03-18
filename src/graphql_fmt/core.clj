@@ -432,17 +432,33 @@
             (vector? (first rst)) (map amend-newline-opts rst)
             (string? (first rst)) rst))))
 
-(defn amend-newline-printable
+(defn amend-spacing
   [ast]
   (let [[node opts & rst] ast]
     (into (if (:newline? opts)
-            [node opts [:Printable {} "\n"]]
+            (cond-> [node opts [:Printable {} "\n"]]
+              (= :Selection node) (into [[:Printable {}
+                                          (->> " "
+                                            (repeat
+                                              (* 2 (:indentation-level opts)))
+                                            (apply str))]]))
             [node opts])
           (cond
-            (vector? (first rst)) (map amend-newline-printable rst)
+            (vector? (first rst)) (map amend-spacing rst)
             (string? (first rst)) (if (:newline? opts)
                                     [[:Printable {} (first rst)]]
                                     rst)))))
+
+(defn format
+  [s]
+  (->> s
+    document-parser
+    (insta/transform transform-map)
+    amend-newline-opts
+    (amend-indentation-level 0)
+    amend-spacing
+    (pr-str-ast "")
+    (clojure.core/format "%s\n")))
 
 (defn -main [& args]
   (let [args (or (first args) (line-seq (java.io.BufferedReader. *in*)))
