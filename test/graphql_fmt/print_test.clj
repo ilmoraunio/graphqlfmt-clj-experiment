@@ -1,29 +1,31 @@
 (ns graphql-fmt.print-test
   (:require [clojure.test :refer [are deftest is testing]]
-            [graphql-fmt.core :refer [amend-indendation-level
+            [graphql-fmt.core :refer [amend-indentation-level
                                       amend-newline-opts
+                                      amend-newline-printable
                                       document-parser
                                       transform-map
                                       pr-str-ast]]
             [instaparse.core :as insta]))
 
-(deftest test-unformatted-output
+#_(deftest test-unformatted-output
   (are [graphql]
        (let [is-a-vec? (vector? graphql)
              expected (if is-a-vec? (second graphql) graphql)
              input (if is-a-vec? (first graphql) graphql)]
+         (amend-indentation-level
+           0
+           (amend-newline-printable
+             (amend-newline-opts
+               (insta/transform
+                 transform-map
+                 (document-parser input)))))
          (= expected
             (pr-str-ast
               ""
               (insta/transform
                 transform-map
-                (document-parser input))))
-         (amend-newline-opts
-           (amend-indendation-level
-             0
-             (insta/transform
-               transform-map
-               (document-parser input)))))
+                (document-parser input)))))
     "{foo}"
     "{foo_alias:foo}"
     "{foo(bar:$foobar)}"
@@ -121,4 +123,25 @@
     "extend input Foobar @qux { baz : String }"
     "query {foo} {foo:String} fragment foo on Bar {foo} type Foo schema {query:Foo}"))
 
+(def graphql-statements
+  (->> (clojure.java.io/file "test-resources/graphql")
+    (file-seq)
+    (filter #(.isFile %))
+    (mapv slurp)))
 
+(defmacro run-tests
+  []
+  `(do (clojure.template/do-template [x]
+                                     (let [output# (pr-str-ast
+                                                    ""
+                                                    (amend-indentation-level
+                                                      0
+                                                      (amend-newline-printable
+                                                        (amend-newline-opts
+                                                          (insta/transform
+                                                            transform-map
+                                                            (document-parser x))))))]
+                                       (is (= output# x)))
+                                     ~@graphql-statements)))
+
+(deftest test-formatted-output (run-tests))

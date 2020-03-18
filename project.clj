@@ -4,4 +4,5 @@
   :main graphql-fmt.core
   :aot :all
   :resource-paths ["resources"]
-  :test-paths ["test"])
+  :test-paths ["test" "test/resources"]
+  :profiles {:dev {:resource-paths ["test/resources"]}})

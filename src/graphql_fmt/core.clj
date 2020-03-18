@@ -398,7 +398,7 @@
                  (vector? (first rst)) (map (partial pr-str-ast s) rst)
                  (string? (first rst)) (str s (first rst))))))
 
-(defn amend-indendation-level
+(defn amend-indentation-level
   [indent-level ast]
   (let [[node opts & rst] ast]
     (into [node (if (or (vector? (first rst))
@@ -406,7 +406,7 @@
                   (into opts {:indentation-level indent-level})
                   (throw (ex-info {} (str "Unrecognized type: " (type (first rst))))))]
           (cond
-            (vector? (first rst)) (map (partial amend-indendation-level
+            (vector? (first rst)) (map (partial amend-indentation-level
                                                 (let [[[next-node & _]] rst]
                                                   (condp = next-node
                                                     :Definition indent-level
