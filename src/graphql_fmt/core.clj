@@ -74,8 +74,8 @@
    :BlockQuote (fn [] "\"\"\"")
    :BlockStringCharacter str
    :BooleanValue boolean-value
-   :BraceClose (fn [x] [:Printable {} x])
-   :BraceOpen (fn [x] [:Printable {} x])
+   :BraceClose (fn [x] [:BraceClose {} x])
+   :BraceOpen (fn [x] [:BraceOpen {} x])
    :BracketClose (fn [x] [:Printable {} x])
    :BracketOpen (fn [x] [:Printable {} x])
    :Colon (fn [x] [:Printable {} x])
@@ -294,11 +294,10 @@
                                xs))
    :Selection selection
    :SelectionSet (fn [& xs]
-                   (conj (reduce
-                           (fn [coll x] (conj coll x))
-                           [:SelectionSet {} [:Printable {} "{"]]
-                           (interpose [:Printable {} ","] xs))
-                         [:Printable {} "}"]))
+                   (reduce
+                     (fn [coll x] (conj coll x))
+                     [:SelectionSet {}]
+                     xs))
    :Sign str
    :StringCharacter str
    :StringValue string-value
@@ -426,11 +425,24 @@
                         (string? (first rst)))
                   (into opts {:newline? (condp = node
                                           :Selection true
+                                          :BraceClose true
                                           false)})
                   (throw (ex-info {} (str "Unrecognized type: " (type (first rst))))))]
           (cond
             (vector? (first rst)) (map amend-newline-opts rst)
             (string? (first rst)) rst))))
+
+(defn amend-newline-printable
+  [ast]
+  (let [[node opts & rst] ast]
+    (into (if (:newline? opts)
+            [node opts [:Printable {} "\n"]]
+            [node opts])
+          (cond
+            (vector? (first rst)) (map amend-newline-printable rst)
+            (string? (first rst)) (if (:newline? opts)
+                                    [[:Printable {} (first rst)]]
+                                    rst)))))
 
 (defn -main [& args]
   (let [args (or (first args) (line-seq (java.io.BufferedReader. *in*)))

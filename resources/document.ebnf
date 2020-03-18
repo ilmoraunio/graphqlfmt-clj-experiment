@@ -102,7 +102,7 @@ FragmentDefinition = <'fragment'> Ignored+ FragmentName Ignored+ TypeCondition D
 OperationType = 'query' | 'mutation' | 'subscription'
 VariableDefinitions = Ignored* <'('> VariableDefinition+ Ignored* <')'>
 VariableDefinition = Ignored* Variable Ignored* Colon Type DefaultValue?
-SelectionSet = Ignored* <'{'> Ignored* Selection+ Ignored* <'}'>
+SelectionSet = Ignored* BraceOpen Ignored* Selection+ Ignored* BraceClose
 Selection = Field |
             FragmentSpread |
             InlineFragment

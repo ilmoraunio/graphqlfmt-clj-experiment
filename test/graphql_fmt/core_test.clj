@@ -260,7 +260,11 @@
     [:Document
      [:Definition
       [:ExecutableDefinition
-       [:OperationDefinition [:SelectionSet [:Selection [:Field [:Name "foo"]]]]]]]]
+       [:OperationDefinition
+        [:SelectionSet
+         [:BraceOpen "{"]
+         [:Selection [:Field [:Name "foo"]]]
+         [:BraceClose "}"]]]]]]
 
     ["{foo_alias:foo}"
      "{ foo_alias: foo }"
@@ -271,7 +275,9 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
-         [:Selection [:Field [:Alias [:Name "foo_alias"]] [:Name "foo"]]]]]]]]
+         [:BraceOpen "{"]
+         [:Selection [:Field [:Alias [:Name "foo_alias"]] [:Name "foo"]]]
+         [:BraceClose "}"]]]]]]
 
     ["{foo(bar:$foobar)}"
      "{ foo(bar: $foobar) }"
@@ -283,11 +289,13 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection
           [:Field
            [:Name "foo"]
            [:Arguments
-            [:Argument [:Name "bar"] [:Value [:Variable [:Name "foobar"]]]]]]]]]]]]
+            [:Argument [:Name "bar"] [:Value [:Variable [:Name "foobar"]]]]]]]
+         [:BraceClose "}"]]]]]]
 
     ["{foo(bar:1)}"
      "{ foo(bar: 1) }"
@@ -298,13 +306,15 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection
           [:Field
            [:Name "foo"]
            [:Arguments
             [:Argument
              [:Name "bar"]
-             [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]]]]]]]]]
+             [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]]]]
+         [:BraceClose "}"]]]]]]
 
     ["{foo(bar:1.0)}"
      "{ foo(bar: 1.0) }"
@@ -314,6 +324,7 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection
           [:Field
            [:Name "foo"]
@@ -323,7 +334,8 @@
              [:Value
               [:FloatValue
                [:IntegerPart [:NonZeroDigit "1"]]
-               [:FractionalPart [:Digit "0"]]]]]]]]]]]]]
+               [:FractionalPart [:Digit "0"]]]]]]]]
+         [:BraceClose "}"]]]]]]
 
     ["{foo(bar:\"foobar\")}"
      "{ foo(bar: \"foobar\") }"
@@ -333,6 +345,7 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection
           [:Field
            [:Name "foo"]
@@ -348,7 +361,8 @@
                [:StringCharacter "b"]
                [:StringCharacter "a"]
                [:StringCharacter "r"]
-               [:Quote]]]]]]]]]]]]
+               [:Quote]]]]]]]
+         [:BraceClose "}"]]]]]]
 
     ["{foo(bar:\"\"\"foobar\"\"\")}"
      "{ foo(bar: \"\"\"foobar\"\"\") }"
@@ -358,6 +372,7 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection
           [:Field
            [:Name "foo"]
@@ -373,7 +388,8 @@
                [:BlockStringCharacter "b"]
                [:BlockStringCharacter "a"]
                [:BlockStringCharacter "r"]
-               [:BlockQuote]]]]]]]]]]]]
+               [:BlockQuote]]]]]]]
+         [:BraceClose "}"]]]]]]
 
     ["{foo(bar:true)}"
      "{ foo(bar: true) }"
@@ -383,10 +399,12 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection
           [:Field
            [:Name "foo"]
-           [:Arguments [:Argument [:Name "bar"] [:Value [:BooleanValue "true"]]]]]]]]]]]
+           [:Arguments [:Argument [:Name "bar"] [:Value [:BooleanValue "true"]]]]]]
+         [:BraceClose "}"]]]]]]
 
     ["{foo(bar:null)}"
      "{ foo(bar: null) }"
@@ -396,10 +414,12 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection
           [:Field
            [:Name "foo"]
-           [:Arguments [:Argument [:Name "bar"] [:Value [:NullValue]]]]]]]]]]]
+           [:Arguments [:Argument [:Name "bar"] [:Value [:NullValue]]]]]]
+         [:BraceClose "}"]]]]]]
 
     ["{foo(bar:[])}"
      "{ foo(bar: []) }"
@@ -409,10 +429,12 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection
           [:Field
            [:Name "foo"]
-           [:Arguments [:Argument [:Name "bar"] [:Value [:ListValue]]]]]]]]]]]
+           [:Arguments [:Argument [:Name "bar"] [:Value [:ListValue]]]]]]
+         [:BraceClose "}"]]]]]]
 
     ["{foo(bar:[1[1 2 3]$foobar])}"
      "{ foo(bar: [1 [1 2 3] $foobar]) }"
@@ -422,6 +444,7 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection
           [:Field
            [:Name "foo"]
@@ -436,7 +459,8 @@
                  [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]
                  [:Value [:IntValue [:IntegerPart [:NonZeroDigit "2"]]]]
                  [:Value [:IntValue [:IntegerPart [:NonZeroDigit "3"]]]]]]
-               [:Value [:Variable [:Name "foobar"]]]]]]]]]]]]]]
+               [:Value [:Variable [:Name "foobar"]]]]]]]]]
+         [:BraceClose "}"]]]]]]
 
     ["{foo(bar:{})}"
      "{ foo(bar: {}) }"
@@ -446,10 +470,12 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection
           [:Field
            [:Name "foo"]
-           [:Arguments [:Argument [:Name "bar"] [:Value [:ObjectValue]]]]]]]]]]]
+           [:Arguments [:Argument [:Name "bar"] [:Value [:ObjectValue]]]]]]
+         [:BraceClose "}"]]]]]]
 
     ["{foo(bar:{foobar:1})}"
      "{ foo(bar: {foobar:1}) }"
@@ -459,6 +485,7 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection
           [:Field
            [:Name "foo"]
@@ -469,7 +496,8 @@
               [:ObjectValue
                [:ObjectField
                 [:Name "foobar"]
-                [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]]]]]]]]]]]]
+                [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]]]]]]]
+         [:BraceClose "}"]]]]]]
 
     ["{foo(bar:{qux:1,baz:2})}"
      "{ foo(bar: { qux: 1, baz: 2 }) }"
@@ -479,6 +507,7 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection
           [:Field
            [:Name "foo"]
@@ -492,7 +521,8 @@
                 [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]
                [:ObjectField
                 [:Name "baz"]
-                [:Value [:IntValue [:IntegerPart [:NonZeroDigit "2"]]]]]]]]]]]]]]]]
+                [:Value [:IntValue [:IntegerPart [:NonZeroDigit "2"]]]]]]]]]]]
+         [:BraceClose "}"]]]]]]
 
     ["{frob(foo:true,bar:false)}"
      "{ frob(foo: true, bar: false) }"
@@ -503,12 +533,14 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection
           [:Field
            [:Name "frob"]
            [:Arguments
             [:Argument [:Name "foo"] [:Value [:BooleanValue "true"]]]
-            [:Argument [:Name "bar"] [:Value [:BooleanValue "false"]]]]]]]]]]]
+            [:Argument [:Name "bar"] [:Value [:BooleanValue "false"]]]]]]
+         [:BraceClose "}"]]]]]]
 
     ["{frob@foo}"
      "{frob @foo}"
@@ -519,8 +551,10 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection
-          [:Field [:Name "frob"] [:Directives [:Directive [:Name "foo"]]]]]]]]]]
+          [:Field [:Name "frob"] [:Directives [:Directive [:Name "foo"]]]]]
+         [:BraceClose "}"]]]]]]
 
     ["{frob@foo@bar}"
      "{ frob @foo @bar }"
@@ -530,10 +564,12 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection
           [:Field
            [:Name "frob"]
-           [:Directives [:Directive [:Name "foo"]] [:Directive [:Name "bar"]]]]]]]]]]
+           [:Directives [:Directive [:Name "foo"]] [:Directive [:Name "bar"]]]]]
+         [:BraceClose "}"]]]]]]
 
     ["{frob@foo(bar:true)}"
      "{ frob @foo(bar: true) }"
@@ -543,13 +579,15 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection
           [:Field
            [:Name "frob"]
            [:Directives
             [:Directive
              [:Name "foo"]
-             [:Arguments [:Argument [:Name "bar"] [:Value [:BooleanValue "true"]]]]]]]]]]]]]
+             [:Arguments [:Argument [:Name "bar"] [:Value [:BooleanValue "true"]]]]]]]]
+         [:BraceClose "}"]]]]]]
 
     ["{frob@foo(a:1,b:2)}"
      "{ frob @foo(a:1, b:2) }"
@@ -560,6 +598,7 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection
           [:Field
            [:Name "frob"]
@@ -572,7 +611,8 @@
                [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]
               [:Argument
                [:Name "b"]
-               [:Value [:IntValue [:IntegerPart [:NonZeroDigit "2"]]]]]]]]]]]]]]]
+               [:Value [:IntValue [:IntegerPart [:NonZeroDigit "2"]]]]]]]]]]
+         [:BraceClose "}"]]]]]]
 
     ["{frob@foo(a:1)@bar(a:1)}"
      "{ frob @foo(a: 1) @bar(a: 1) }"
@@ -582,6 +622,7 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection
           [:Field
            [:Name "frob"]
@@ -597,7 +638,8 @@
              [:Arguments
               [:Argument
                [:Name "a"]
-               [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]]]]]]]]]]]
+               [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]]]]]]
+         [:BraceClose "}"]]]]]]
 
     ["{foo{bar}}"
      "{ foo { bar } }"
@@ -607,8 +649,14 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection
-          [:Field [:Name "foo"] [:SelectionSet [:Selection [:Field [:Name "bar"]]]]]]]]]]]
+          [:Field [:Name "foo"]
+           [:SelectionSet
+            [:BraceOpen "{"]
+            [:Selection [:Field [:Name "bar"]]]
+            [:BraceClose "}"]]]]
+         [:BraceClose "}"]]]]]]
 
     ["{foo{bar{foobar}}}"
      "{ foo { bar { foobar } } }"
@@ -618,14 +666,21 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection
           [:Field
            [:Name "foo"]
            [:SelectionSet
+            [:BraceOpen "{"]
             [:Selection
              [:Field
               [:Name "bar"]
-              [:SelectionSet [:Selection [:Field [:Name "foobar"]]]]]]]]]]]]]]
+              [:SelectionSet
+               [:BraceOpen "{"]
+               [:Selection [:Field [:Name "foobar"]]]
+               [:BraceClose "}"]]]]
+            [:BraceClose "}"]]]]
+         [:BraceClose "}"]]]]]]
 
     ;; TODO: Handle foo,bar in compact case
     ["{foo bar}"
@@ -636,8 +691,10 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection [:Field [:Name "foo"]]]
-         [:Selection [:Field [:Name "bar"]]]]]]]]
+         [:Selection [:Field [:Name "bar"]]]
+         [:BraceClose "}"]]]]]]
 
     ["{foo{a}bar{a b}foobar{a{b}}}"
      "{ foo { a } bar { a b } foobar { a { b } } }"
@@ -647,20 +704,34 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection
-          [:Field [:Name "foo"] [:SelectionSet [:Selection [:Field [:Name "a"]]]]]]
+          [:Field [:Name "foo"]
+           [:SelectionSet
+            [:BraceOpen "{"]
+            [:Selection [:Field [:Name "a"]]]
+            [:BraceClose "}"]]]]
          [:Selection
           [:Field
            [:Name "bar"]
            [:SelectionSet
+            [:BraceOpen "{"]
             [:Selection [:Field [:Name "a"]]]
-            [:Selection [:Field [:Name "b"]]]]]]
+            [:Selection [:Field [:Name "b"]]]
+            [:BraceClose "}"]]]]
          [:Selection
           [:Field
            [:Name "foobar"]
            [:SelectionSet
+            [:BraceOpen "{"]
             [:Selection
-             [:Field [:Name "a"] [:SelectionSet [:Selection [:Field [:Name "b"]]]]]]]]]]]]]]
+             [:Field [:Name "a"]
+              [:SelectionSet
+               [:BraceOpen "{"]
+               [:Selection [:Field [:Name "b"]]]
+               [:BraceClose "}"]]]]
+            [:BraceClose "}"]]]]
+         [:BraceClose "}"]]]]]]
 
     ["{...frob}"
      "{ ...frob }"
@@ -669,7 +740,10 @@
      [:Definition
       [:ExecutableDefinition
        [:OperationDefinition
-        [:SelectionSet [:Selection [:FragmentSpread [:FragmentName "frob"]]]]]]]]
+        [:SelectionSet
+         [:BraceOpen "{"]
+         [:Selection [:FragmentSpread [:FragmentName "frob"]]]
+         [:BraceClose "}"]]]]]]
 
     ["{...frob@foo}"
      "{ ...frob @foo }"
@@ -679,10 +753,12 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection
           [:FragmentSpread
            [:FragmentName "frob"]
-           [:Directives [:Directive [:Name "foo"]]]]]]]]]]
+           [:Directives [:Directive [:Name "foo"]]]]]
+         [:BraceClose "}"]]]]]]
 
     ["{...foo...bar}"
      "{ ...foo ...bar }"
@@ -692,8 +768,10 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection [:FragmentSpread [:FragmentName "foo"]]]
-         [:Selection [:FragmentSpread [:FragmentName "bar"]]]]]]]]
+         [:Selection [:FragmentSpread [:FragmentName "bar"]]]
+         [:BraceClose "}"]]]]]]
 
     ["{...{frob}}"
      "{ ... { frob } }"
@@ -703,8 +781,14 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection
-          [:InlineFragment [:SelectionSet [:Selection [:Field [:Name "frob"]]]]]]]]]]]
+          [:InlineFragment
+           [:SelectionSet
+            [:BraceOpen "{"]
+            [:Selection [:Field [:Name "frob"]]]
+            [:BraceClose "}"]]]]
+         [:BraceClose "}"]]]]]]
 
     ["{...on Foo{...on Bar{foobar}}}"
      "{ ... on Foo { ... on Bar { foobar } } }"
@@ -714,14 +798,21 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection
           [:InlineFragment
            [:TypeCondition [:NamedType [:Name "Foo"]]]
            [:SelectionSet
+            [:BraceOpen "{"]
             [:Selection
              [:InlineFragment
               [:TypeCondition [:NamedType [:Name "Bar"]]]
-              [:SelectionSet [:Selection [:Field [:Name "foobar"]]]]]]]]]]]]]]
+              [:SelectionSet
+               [:BraceOpen "{"]
+               [:Selection [:Field [:Name "foobar"]]]
+               [:BraceClose "}"]]]]
+            [:BraceClose "}"]]]]
+         [:BraceClose "}"]]]]]]
 
     ["{...on Foo@bar{foobar}}"
      "{ ... on Foo @bar { foobar } }"
@@ -731,11 +822,16 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection
           [:InlineFragment
            [:TypeCondition [:NamedType [:Name "Foo"]]]
            [:Directives [:Directive [:Name "bar"]]]
-           [:SelectionSet [:Selection [:Field [:Name "foobar"]]]]]]]]]]]
+           [:SelectionSet
+            [:BraceOpen "{"]
+            [:Selection [:Field [:Name "foobar"]]]
+            [:BraceClose "}"]]]]
+         [:BraceClose "}"]]]]]]
 
     ["query{frob}"
      "query { frob }"
@@ -745,7 +841,10 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:OperationType "query"]
-        [:SelectionSet [:Selection [:Field [:Name "frob"]]]]]]]]
+        [:SelectionSet
+         [:BraceOpen "{"]
+         [:Selection [:Field [:Name "frob"]]]
+         [:BraceClose "}"]]]]]]
 
     ["mutation{frob}"
      "mutation { frob }"
@@ -755,7 +854,10 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:OperationType "mutation"]
-        [:SelectionSet [:Selection [:Field [:Name "frob"]]]]]]]]
+        [:SelectionSet
+         [:BraceOpen "{"]
+         [:Selection [:Field [:Name "frob"]]]
+         [:BraceClose "}"]]]]]]
 
     ["subscription{frob}"
      "subscription { frob }"
@@ -765,7 +867,10 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:OperationType "subscription"]
-        [:SelectionSet [:Selection [:Field [:Name "frob"]]]]]]]]
+        [:SelectionSet
+         [:BraceOpen "{"]
+         [:Selection [:Field [:Name "frob"]]]
+         [:BraceClose "}"]]]]]]
 
     ["query frobnicator{frob}"
      "query frobnicator { frob }"
@@ -776,7 +881,10 @@
        [:OperationDefinition
         [:OperationType "query"]
         [:Name "frobnicator"]
-        [:SelectionSet [:Selection [:Field [:Name "frob"]]]]]]]]
+        [:SelectionSet
+         [:BraceOpen "{"]
+         [:Selection [:Field [:Name "frob"]]]
+         [:BraceClose "}"]]]]]]
 
     ["query frobnicator@foo{frob}"
      "query frobnicator @foo { frob }"
@@ -788,7 +896,10 @@
         [:OperationType "query"]
         [:Name "frobnicator"]
         [:Directives [:Directive [:Name "foo"]]]
-        [:SelectionSet [:Selection [:Field [:Name "frob"]]]]]]]]
+        [:SelectionSet
+         [:BraceOpen "{"]
+         [:Selection [:Field [:Name "frob"]]]
+         [:BraceClose "}"]]]]]]
 
     ["query frob($foo:bar){a b}"
      "query frob($foo: bar) { a b }"
@@ -805,8 +916,10 @@
           [:Colon ":"]
           [:Type [:NamedType [:Name "bar"]]]]]
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection [:Field [:Name "a"]]]
-         [:Selection [:Field [:Name "b"]]]]]]]]
+         [:Selection [:Field [:Name "b"]]]
+         [:BraceClose "}"]]]]]]
 
     ["query frob($foo:bar$qux:baz){a b}"
      "query frob($foo: bar $qux: baz) { a b }"
@@ -827,8 +940,10 @@
           [:Colon ":"]
           [:Type [:NamedType [:Name "baz"]]]]]
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection [:Field [:Name "a"]]]
-         [:Selection [:Field [:Name "b"]]]]]]]]
+         [:Selection [:Field [:Name "b"]]]
+         [:BraceClose "}"]]]]]]
 
     ["query frob($foo:[bar]){a b}"
      "query frob($foo: [bar]) { a b }"
@@ -848,8 +963,10 @@
                   [:Type [:NamedType [:Name "bar"]]]
                   [:BracketClose "]"]]]]]
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection [:Field [:Name "a"]]]
-         [:Selection [:Field [:Name "b"]]]]]]]]
+         [:Selection [:Field [:Name "b"]]]
+         [:BraceClose "}"]]]]]]
 
     ["query frob($foo:[[bar]]){a b}"
      "query frob($foo: [[bar]]) { a b }"
@@ -872,8 +989,10 @@
                           [:BracketClose "]"]]]
                   [:BracketClose "]"]]]]]
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection [:Field [:Name "a"]]]
-         [:Selection [:Field [:Name "b"]]]]]]]]
+         [:Selection [:Field [:Name "b"]]]
+         [:BraceClose "}"]]]]]]
 
     ["query frob($foo:bar!){a b}"
      "query frob($foo: bar!) { a b }"
@@ -890,8 +1009,10 @@
           [:Colon ":"]
           [:Type [:NonNullType [:NamedType [:Name "bar"]] [:ExclamationMark "!"]]]]]
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection [:Field [:Name "a"]]]
-         [:Selection [:Field [:Name "b"]]]]]]]]
+         [:Selection [:Field [:Name "b"]]]
+         [:BraceClose "}"]]]]]]
 
     ["query frob($foo:[bar]!){a b}"
      "query frob($foo: [bar]!) { a b }"
@@ -913,8 +1034,10 @@
                    [:BracketClose "]"]]
                   [:ExclamationMark "!"]]]]]
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection [:Field [:Name "a"]]]
-         [:Selection [:Field [:Name "b"]]]]]]]]
+         [:Selection [:Field [:Name "b"]]]
+         [:BraceClose "}"]]]]]]
 
     ["query frob($foo:[bar!]){a b}"
      "query frob($foo: [bar!]) { a b }"
@@ -936,8 +1059,10 @@
                           [:ExclamationMark "!"]]]
                   [:BracketClose "]"]]]]]
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection [:Field [:Name "a"]]]
-         [:Selection [:Field [:Name "b"]]]]]]]]
+         [:Selection [:Field [:Name "b"]]]
+         [:BraceClose "}"]]]]]]
 
     ["query frob($foo:[bar!]!){a b}"
      "query frob($foo: [bar!]!) { a b }"
@@ -962,8 +1087,10 @@
              [:BracketClose "]"]]
             [:ExclamationMark "!"]]]]]
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection [:Field [:Name "a"]]]
-         [:Selection [:Field [:Name "b"]]]]]]]]
+         [:Selection [:Field [:Name "b"]]]
+         [:BraceClose "}"]]]]]]
 
     ["query frob($foo:bar=true){a b}"
      "query frob($foo: bar = true) { a b }"
@@ -983,8 +1110,10 @@
            [:Equals "="]
            [:Value [:BooleanValue "true"]]]]]
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection [:Field [:Name "a"]]]
-         [:Selection [:Field [:Name "b"]]]]]]]]
+         [:Selection [:Field [:Name "b"]]]
+         [:BraceClose "}"]]]]]]
 
     ["fragment foo on Bar@foobar{a b c}"
      "fragment foo on Bar @foobar { a b c }"
@@ -997,9 +1126,11 @@
         [:TypeCondition [:NamedType [:Name "Bar"]]]
         [:Directives [:Directive [:Name "foobar"]]]
         [:SelectionSet
+         [:BraceOpen "{"]
          [:Selection [:Field [:Name "a"]]]
          [:Selection [:Field [:Name "b"]]]
-         [:Selection [:Field [:Name "c"]]]]]]]]
+         [:Selection [:Field [:Name "c"]]]
+         [:BraceClose "}"]]]]]]
 
     ["schema{query:Foo subscription:Bar mutation:Foobar}"
      "schema { query: Foo subscription: Bar mutation: Foobar }"
@@ -2074,18 +2205,26 @@
       [:ExecutableDefinition
        [:OperationDefinition
         [:OperationType "query"]
-        [:SelectionSet [:Selection [:Field [:Name "foo"]]]]]]]
+        [:SelectionSet
+         [:BraceOpen "{"]
+         [:Selection [:Field [:Name "foo"]]]
+         [:BraceClose "}"]]]]]
      [:Definition
       [:ExecutableDefinition
        [:OperationDefinition
         [:SelectionSet
-         [:Selection [:Field [:Alias [:Name "foo"]] [:Name "String"]]]]]]]
+         [:BraceOpen "{"]
+         [:Selection [:Field [:Alias [:Name "foo"]] [:Name "String"]]]
+         [:BraceClose "}"]]]]]
      [:Definition
       [:ExecutableDefinition
        [:FragmentDefinition
         [:FragmentName "foo"]
         [:TypeCondition [:NamedType [:Name "Bar"]]]
-        [:SelectionSet [:Selection [:Field [:Name "foo"]]]]]]]
+        [:SelectionSet
+         [:BraceOpen "{"]
+         [:Selection [:Field [:Name "foo"]]]
+         [:BraceClose "}"]]]]]
      [:Definition
       [:TypeSystemDefinition
        [:TypeDefinition [:ObjectTypeDefinition [:ObjectKeyword "type"] [:Name "Foo"]]]]]
