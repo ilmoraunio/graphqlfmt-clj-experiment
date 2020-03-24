@@ -53,7 +53,10 @@
   [:StringValue {} (apply str xs)])
 
 (def transform-map
-  {:Alias (fn [x] [:Alias {} x [:Printable {} ":"]])
+  {:Alias (fn [& xs]
+            (reduce (fn [coll x] (conj coll x))
+                    [:Alias {}]
+                    xs))
    :Argument (fn [& xs] (reduce (fn [coll x]
                                   (if (= (first x) :Value)
                                     (conj coll [:Printable {} ":"] x)
@@ -78,7 +81,7 @@
    :BraceOpen (fn [x] [:BraceOpen {} x])
    :BracketClose (fn [x] [:Printable {} x])
    :BracketOpen (fn [x] [:Printable {} x])
-   :Colon (fn [x] [:Printable {} x])
+   :Colon (fn [x] [:Colon {} x])
    :Comment comment
    :CommentChar str
    :DefaultValue (fn [& xs]
@@ -142,7 +145,10 @@
    :ExponentPart str
    :ExtendKeyword (fn [x] [:Printable {} x])
    :Field (fn [& xs]
-            (reduce (fn [coll x] (conj coll x))
+            (reduce (fn [coll x]
+                      (conj coll (case (first x)
+                                   :Alias (conj x [:Printable {} " "])
+                                   x)))
                     [:Field {}]
                     xs))
    :FieldDefinition (fn [& xs]
@@ -398,13 +404,25 @@
                  (vector? (first rst)) (map (partial pr-str-ast s) rst)
                  (string? (first rst)) (str s (first rst))))))
 
+;; validate ast fns
+
+(defn validate-ast-form
+  [ast]
+  (let [[node opts & rst] ast]
+    (when (and (not (vector? (first rst)))
+               (not (string? (first rst))))
+      (throw (ex-info {} (str "Unrecognized type: " (type (first rst))))))
+    (into [node opts]
+          (cond
+            (vector? (first rst)) (map validate-ast-form rst)
+            (string? (first rst)) rst))))
+
+;; enrich ast opts fns
+
 (defn amend-indentation-level
   [indent-level ast]
   (let [[node opts & rst] ast]
-    (into [node (if (or (vector? (first rst))
-                        (string? (first rst)))
-                  (into opts {:indentation-level indent-level})
-                  (throw (ex-info {} (str "Unrecognized type: " (type (first rst))))))]
+    (into [node (into opts {:indentation-level indent-level})]
           (cond
             (vector? (first rst)) (map (partial amend-indentation-level
                                                 (let [[[next-node & _]] rst]
@@ -421,18 +439,31 @@
 (defn amend-newline-opts
   [ast]
   (let [[node opts & rst] ast]
-    (into [node (if (or (vector? (first rst))
-                        (string? (first rst)))
-                  (into opts {:newline? (condp = node
-                                          :Selection true
-                                          :BraceClose true
-                                          false)})
-                  (throw (ex-info {} (str "Unrecognized type: " (type (first rst))))))]
+    (into [node (if (condp = node
+                      :Selection true
+                      :BraceClose true
+                      false)
+                  (into opts {:newline? true})
+                  opts)]
           (cond
             (vector? (first rst)) (map amend-newline-opts rst)
             (string? (first rst)) rst))))
 
-(defn amend-spacing
+(defn amend-horizontal-spacing-opts
+  [ast]
+  (let [[node opts & rst] ast]
+    (into [node (if (condp = node
+                      :Alias true
+                      false)
+                  (into opts {:append-whitespace? true})
+                  opts)]
+          (cond
+            (vector? (first rst)) (map amend-horizontal-spacing-opts rst)
+            (string? (first rst)) rst))))
+
+;; enrich-ast fns
+
+(defn amend-newline-spacing
   [ast]
   (let [[node opts & rst] ast]
     (into (if (:newline? opts)
@@ -444,19 +475,47 @@
                                             (apply str))]]))
             [node opts])
           (cond
-            (vector? (first rst)) (map amend-spacing rst)
+            (vector? (first rst)) (map amend-newline-spacing rst)
             (string? (first rst)) (if (:newline? opts)
                                     [[:Printable {} (first rst)]]
                                     rst)))))
 
-(defn format
+(defn amend-horizontal-spacing
+  [ast]
+  (let [[node opts & rst] ast]
+    (into (if (:append-whitespace? opts)
+            (cond-> [node opts]
+              (= :Alias node) (into [[:Printable {} " "]]))
+            [node opts])
+          (cond
+            (vector? (first rst)) (map amend-horizontal-spacing rst)
+            (string? (first rst)) rst))))
+
+(defn ast
   [s]
   (->> s
     document-parser
-    (insta/transform transform-map)
+    (insta/transform transform-map)))
+
+(defn enrich-ast-opts
+  [ast]
+  (->> ast
     amend-newline-opts
     (amend-indentation-level 0)
-    amend-spacing
+    (amend-horizontal-spacing-opts)))
+
+(defn enrich-ast
+  [ast]
+  (->> ast
+    (amend-newline-spacing)))
+
+(defn format
+  [s]
+  (->> s
+    ast
+    validate-ast-form
+    enrich-ast-opts
+    enrich-ast
     (pr-str-ast "")
     (clojure.core/format "%s\n")))
 

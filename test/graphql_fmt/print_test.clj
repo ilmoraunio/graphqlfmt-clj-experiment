@@ -2,7 +2,7 @@
   (:require [clojure.test :refer [are deftest is testing]]
             [graphql-fmt.core :refer [amend-indentation-level
                                       amend-newline-opts
-                                      amend-spacing
+                                      amend-newline-spacing
                                       document-parser
                                       transform-map
                                       pr-str-ast] :as graphqlfmt]
@@ -15,7 +15,7 @@
              input (if is-a-vec? (first graphql) graphql)]
          (amend-indentation-level
            0
-           (amend-spacing
+           (amend-newline-spacing
              (amend-newline-opts
                (insta/transform
                  transform-map
@@ -26,8 +26,6 @@
               (insta/transform
                 transform-map
                 (document-parser input)))))
-    "{foo}"
-    "{foo_alias:foo}"
     "{foo(bar:$foobar)}"
     "{foo(bar:1)}"
     "{foo(bar:1.0)}"

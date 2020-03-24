@@ -107,7 +107,7 @@ Selection = Field |
             FragmentSpread |
             InlineFragment
 Field = Ignored* Alias? Ignored* Name Arguments? Directives? SelectionSet?
-Alias = Ignored* Name Ignored* <':'>
+Alias = Ignored* Name Ignored* Colon
 Arguments = Ignored* <'('> Argument+ Ignored* <')'>
 Argument = Ignored* Name Ignored* <':'> Value Ignored* <Comma*>
 Value = Ignored* (Variable |
