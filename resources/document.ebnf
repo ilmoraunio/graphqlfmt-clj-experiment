@@ -82,7 +82,7 @@ TypeSystemDirectiveLocation = 'SCHEMA' |
                               'INPUT_FIELD_DEFINITION'
 Description = StringValue
 FieldsDefinition = Ignored* BraceOpen FieldDefinition+ Ignored* BraceClose
-FieldDefinition = Ignored* Description? Ignored* Name Ignored* FieldNameSeparator Type Directives?
+FieldDefinition = Ignored* Description? Ignored* Name Ignored* ArgumentsDefinition? Ignored* FieldNameSeparator Type Directives?
 FieldNameSeparator = <':'>
 ImplementsInterfaces = (Ignored* ImplementsKeyword Ignored* ImplementsTypeSeparator? Ignored* NamedType) |
                        (ImplementsInterfaces Ignored* ImplementsTypeSeparator Ignored* NamedType)

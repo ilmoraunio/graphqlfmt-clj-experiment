@@ -1307,6 +1307,37 @@
            [:Type [:NamedType [:Name "String"]]]]
           [:BraceClose "}"]]]]]]]
 
+    ["type Foo {Qux: String! Baz(fooArg: String!): String!}"
+     "type Foo { Qux : String ! Baz ( fooArg : String ! ) : String ! }"]
+    [:Document
+     [:Definition
+      [:TypeSystemDefinition
+       [:TypeDefinition
+        [:ObjectTypeDefinition
+         [:ObjectKeyword "type"]
+         [:Name "Foo"]
+         [:FieldsDefinition
+          [:BraceOpen "{"]
+          [:FieldDefinition
+           [:Name "Qux"]
+           [:FieldNameSeparator]
+           [:Type
+            [:NonNullType [:NamedType [:Name "String"]] [:ExclamationMark "!"]]]]
+          [:FieldDefinition
+           [:Name "Baz"]
+           [:ArgumentsDefinition
+            [:ParensOpen "("]
+            [:InputValueDefinition
+             [:Name "fooArg"]
+             [:Colon ":"]
+             [:Type
+              [:NonNullType [:NamedType [:Name "String"]] [:ExclamationMark "!"]]]]
+            [:ParensClose ")"]]
+           [:FieldNameSeparator]
+           [:Type
+            [:NonNullType [:NamedType [:Name "String"]] [:ExclamationMark "!"]]]]
+          [:BraceClose "}"]]]]]]]
+
     ["type Foo implements Bar{qux:String}"
      "type Foo implements Bar { qux: String }"
      " type Foo implements Bar { qux : String } "]

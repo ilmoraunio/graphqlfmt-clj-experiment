@@ -78,6 +78,7 @@
     "type Foo { \"the field definition\" Bar : String @foobar }"
     "type Foo { Bar : String }"
     "type Foo { Qux : String Baz : String }"
+    "type Foo {Qux: String! Baz(fooArg: String!): String!}"
     "type Foo implements Bar { qux : String }"
     "type Foo implements & Bar { qux : String }"
     "type Foo implements Bar & Foobar { qux : String }"
