@@ -136,7 +136,7 @@
          [graphql-statement]
          (let [graphql# (:graphql graphql-statement)]
            (prn (format "testing: %s" (:filename graphql-statement)))
-           (is (= (graphqlfmt/format graphql#) graphql#)
+           (is (= graphql# (graphqlfmt/format graphql#))
                (:filename graphql-statement)))
          ~@graphql-statements)))
 
