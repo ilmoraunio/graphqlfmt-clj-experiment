@@ -276,7 +276,9 @@
        [:OperationDefinition
         [:SelectionSet
          [:BraceOpen "{"]
-         [:Selection [:Field [:Alias [:Name "foo_alias"]] [:Name "foo"]]]
+         [:Selection [:Field
+                      [:Alias [:Name "foo_alias"] [:Colon ":"]]
+                      [:Name "foo"]]]
          [:BraceClose "}"]]]]]]
 
     ["{foo(bar:$foobar)}"
@@ -2245,7 +2247,9 @@
        [:OperationDefinition
         [:SelectionSet
          [:BraceOpen "{"]
-         [:Selection [:Field [:Alias [:Name "foo"]] [:Name "String"]]]
+         [:Selection [:Field
+                      [:Alias [:Name "foo"] [:Colon ":"]]
+                      [:Name "String"]]]
          [:BraceClose "}"]]]]]
      [:Definition
       [:ExecutableDefinition
