@@ -58,9 +58,9 @@
                     [:Alias {}]
                     xs))
    :Argument (fn [& xs] (reduce (fn [coll x]
-                                  (if (= (first x) :Value)
-                                    (conj coll [:Printable {} ":"] x)
-                                    (conj coll x)))
+                                  (cond-> coll
+                                    true (conj x)
+                                    (= :Colon (first x)) (conj [:Printable {} " "])))
                                 [:Argument {}]
                                 xs))
    :Arguments (fn [& xs]

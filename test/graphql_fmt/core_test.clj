@@ -296,7 +296,10 @@
           [:Field
            [:Name "foo"]
            [:Arguments
-            [:Argument [:Name "bar"] [:Value [:Variable [:Name "foobar"]]]]]]]
+            [:Argument
+             [:Name "bar"]
+             [:Colon ":"]
+             [:Value [:Variable [:Name "foobar"]]]]]]]
          [:BraceClose "}"]]]]]]
 
     ["{foo(bar:1)}"
@@ -315,6 +318,7 @@
            [:Arguments
             [:Argument
              [:Name "bar"]
+             [:Colon ":"]
              [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]]]]
          [:BraceClose "}"]]]]]]
 
@@ -333,6 +337,7 @@
            [:Arguments
             [:Argument
              [:Name "bar"]
+             [:Colon ":"]
              [:Value
               [:FloatValue
                [:IntegerPart [:NonZeroDigit "1"]]
@@ -354,6 +359,7 @@
            [:Arguments
             [:Argument
              [:Name "bar"]
+             [:Colon ":"]
              [:Value
               [:StringValue
                [:Quote]
@@ -381,6 +387,7 @@
            [:Arguments
             [:Argument
              [:Name "bar"]
+             [:Colon ":"]
              [:Value
               [:StringValue
                [:BlockQuote]
@@ -405,7 +412,10 @@
          [:Selection
           [:Field
            [:Name "foo"]
-           [:Arguments [:Argument [:Name "bar"] [:Value [:BooleanValue "true"]]]]]]
+           [:Arguments [:Argument
+                        [:Name "bar"]
+                        [:Colon ":"]
+                        [:Value [:BooleanValue "true"]]]]]]
          [:BraceClose "}"]]]]]]
 
     ["{foo(bar:null)}"
@@ -420,7 +430,10 @@
          [:Selection
           [:Field
            [:Name "foo"]
-           [:Arguments [:Argument [:Name "bar"] [:Value [:NullValue]]]]]]
+           [:Arguments [:Argument
+                        [:Name "bar"]
+                        [:Colon ":"]
+                        [:Value [:NullValue]]]]]]
          [:BraceClose "}"]]]]]]
 
     ["{foo(bar:[])}"
@@ -435,7 +448,10 @@
          [:Selection
           [:Field
            [:Name "foo"]
-           [:Arguments [:Argument [:Name "bar"] [:Value [:ListValue]]]]]]
+           [:Arguments [:Argument
+                        [:Name "bar"]
+                        [:Colon ":"]
+                        [:Value [:ListValue]]]]]]
          [:BraceClose "}"]]]]]]
 
     ["{foo(bar:[1[1 2 3]$foobar])}"
@@ -453,6 +469,7 @@
            [:Arguments
             [:Argument
              [:Name "bar"]
+             [:Colon ":"]
              [:Value
               [:ListValue
                [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]
@@ -476,7 +493,10 @@
          [:Selection
           [:Field
            [:Name "foo"]
-           [:Arguments [:Argument [:Name "bar"] [:Value [:ObjectValue]]]]]]
+           [:Arguments [:Argument
+                        [:Name "bar"]
+                        [:Colon ":"]
+                        [:Value [:ObjectValue]]]]]]
          [:BraceClose "}"]]]]]]
 
     ["{foo(bar:{foobar:1})}"
@@ -494,6 +514,7 @@
            [:Arguments
             [:Argument
              [:Name "bar"]
+             [:Colon ":"]
              [:Value
               [:ObjectValue
                [:ObjectField
@@ -516,6 +537,7 @@
            [:Arguments
             [:Argument
              [:Name "bar"]
+             [:Colon ":"]
              [:Value
               [:ObjectValue
                [:ObjectField
@@ -540,8 +562,14 @@
           [:Field
            [:Name "frob"]
            [:Arguments
-            [:Argument [:Name "foo"] [:Value [:BooleanValue "true"]]]
-            [:Argument [:Name "bar"] [:Value [:BooleanValue "false"]]]]]]
+            [:Argument
+             [:Name "foo"]
+             [:Colon ":"]
+             [:Value [:BooleanValue "true"]]]
+            [:Argument
+             [:Name "bar"]
+             [:Colon ":"]
+             [:Value [:BooleanValue "false"]]]]]]
          [:BraceClose "}"]]]]]]
 
     ["{frob@foo}"
@@ -588,7 +616,10 @@
            [:Directives
             [:Directive
              [:Name "foo"]
-             [:Arguments [:Argument [:Name "bar"] [:Value [:BooleanValue "true"]]]]]]]]
+             [:Arguments [:Argument
+                          [:Name "bar"]
+                          [:Colon ":"]
+                          [:Value [:BooleanValue "true"]]]]]]]]
          [:BraceClose "}"]]]]]]
 
     ["{frob@foo(a:1,b:2)}"
@@ -610,9 +641,11 @@
              [:Arguments
               [:Argument
                [:Name "a"]
+               [:Colon ":"]
                [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]
               [:Argument
                [:Name "b"]
+               [:Colon ":"]
                [:Value [:IntValue [:IntegerPart [:NonZeroDigit "2"]]]]]]]]]]
          [:BraceClose "}"]]]]]]
 
@@ -634,12 +667,14 @@
              [:Arguments
               [:Argument
                [:Name "a"]
+               [:Colon ":"]
                [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]]]
             [:Directive
              [:Name "bar"]
              [:Arguments
               [:Argument
                [:Name "a"]
+               [:Colon ":"]
                [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]]]]]]
          [:BraceClose "}"]]]]]]
 

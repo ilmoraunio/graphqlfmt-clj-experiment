@@ -109,7 +109,7 @@ Selection = Field |
 Field = Ignored* Alias? Ignored* Name Arguments? Directives? SelectionSet?
 Alias = Ignored* Name Ignored* Colon
 Arguments = Ignored* <'('> Argument+ Ignored* <')'>
-Argument = Ignored* Name Ignored* <':'> Value Ignored* <Comma*>
+Argument = Ignored* Name Ignored* Colon Value Ignored* <Comma*>
 Value = Ignored* (Variable |
                   IntValue |
                   FloatValue |
