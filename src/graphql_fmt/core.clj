@@ -461,12 +461,12 @@
   [ast]
   (let [[node opts & rst] ast]
     (into (if (:newline? opts)
-            (cond-> [node opts [:Printable {} "\n"]]
-              (= :Selection node) (into [[:Printable {}
-                                          (->> " "
-                                            (repeat
-                                              (* 2 (:indentation-level opts)))
-                                            (apply str))]]))
+            (into [node opts [:Printable {} "\n"]]
+                  [[:Printable {}
+                    (->> " "
+                      (repeat
+                        (* 2 (:indentation-level opts)))
+                      (apply str))]])
             [node opts])
           (cond
             (vector? (first rst)) (map amend-newline-spacing rst)
