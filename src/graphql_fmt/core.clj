@@ -426,13 +426,9 @@
           (cond
             (vector? (first rst)) (map (partial amend-indentation-level
                                                 (let [[[next-node & _]] rst]
-                                                  (condp = next-node
-                                                    :Definition indent-level
-                                                    :ExecutableDefinition indent-level
-                                                    :OperationDefinition indent-level
-                                                    :Printable indent-level
-                                                    :SelectionSet indent-level
-                                                    (inc indent-level))))
+                                                  (case next-node
+                                                    (:SelectionSet) (inc indent-level)
+                                                    indent-level)))
                                        rst)
             (string? (first rst)) rst))))
 
