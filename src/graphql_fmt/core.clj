@@ -423,7 +423,7 @@
   [indent-level ast]
   (let [[node opts & rst] ast]
     (let [indent-level (case node
-                         :Selection (inc indent-level)
+                         (:Selection :Arguments) (inc indent-level)
                          indent-level)]
       (into [node (into opts {:indentation-level indent-level})]
             (cond
