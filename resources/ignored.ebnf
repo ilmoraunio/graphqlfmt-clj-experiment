@@ -11,4 +11,5 @@ NewLine = #"[\u000A]" |
           #"[\u000D]" #"[\u000A]"
 Comment = <'#'> CommentChar* !CommentChar
 CommentChar = #"[\u0009\u0020-\uFFFF]"
+Commas = Comma*
 Comma = <','>

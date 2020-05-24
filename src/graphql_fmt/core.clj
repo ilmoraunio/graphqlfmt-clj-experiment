@@ -67,9 +67,7 @@
                 (reduce
                   (fn [coll x] (conj coll x))
                   [:Arguments {}]
-                  (conj (into [[:Printable {} "("]]
-                              (interpose [:Printable {} ","] xs))
-                        [:Printable {} ")"])))
+                  xs))
    :ArgumentsDefinition (fn [& xs]
                           (reduce (fn [coll x] (conj coll x))
                                   [:ArgumentsDefinition {}]
@@ -82,6 +80,9 @@
    :BracketClose (fn [x] [:Printable {} x])
    :BracketOpen (fn [x] [:Printable {} x])
    :Colon (fn [x] [:Colon {} x])
+   :Commas (fn
+             ([] [:Comma {} ","])
+             ([_] [:Comma {} ","]))
    :Comment comment
    :CommentChar str
    :DefaultValue (fn [& xs]
@@ -264,8 +265,8 @@
                               (reduce (fn [coll x] (conj coll x))
                                       [:OperationTypeDefinition {}]
                                       (interpose [:Printable {} " "] xs)))
-   :ParensOpen (fn [x] [:Printable {} x])
-   :ParensClose (fn [x] [:Printable {} x])
+   :ParensOpen (fn [x] [:ParensOpen {} x])
+   :ParensClose (fn [x] [:ParensClose {} x])
    :PipeCharacter (fn [x] [:Printable {} x])
    :Quote (fn [] "\"")
    :RootOperationTypeDefinition (fn [& xs]
@@ -424,6 +425,7 @@
   (let [[node opts & rst] ast]
     (let [indent-level (case node
                          (:Selection :Arguments) (inc indent-level)
+                         (:ParensClose :BraceClose) (max (dec indent-level) 0)
                          indent-level)]
       (into [node (into opts {:indentation-level indent-level})]
             (cond
@@ -437,6 +439,7 @@
                       :Selection true
                       :BraceClose true
                       :Argument true
+                      :ParensClose true
                       false)
                   (into opts {:newline? true})
                   opts)]
