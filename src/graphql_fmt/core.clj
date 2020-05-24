@@ -436,6 +436,7 @@
     (into [node (if (condp = node
                       :Selection true
                       :BraceClose true
+                      :Argument true
                       false)
                   (into opts {:newline? true})
                   opts)]
