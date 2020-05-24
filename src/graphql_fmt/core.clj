@@ -49,8 +49,49 @@
 (defn null-value []
   [:NullValue {} "null"])
 
-(defn string-value [& xs]
-  [:StringValue {} (apply str xs)])
+(defn block-string-value
+  [s]
+  (let [lines (clojure.string/split s #"[\u000A]|[\u000D](?![\u000A])|[\u000D][\u000A]")
+        common-indent (reduce
+                        (fn [common-indent line]
+                          (let [length (count line)
+                                indent (count (re-find #"^[\u0009\u0020]*" line))]
+                            (if (and (< indent length)
+                                     (or (nil? common-indent)
+                                         (< indent common-indent)))
+                              indent
+                              common-indent)))
+                        nil
+                        (rest lines))
+        lines' (if (some? common-indent)
+                 (reduce
+                   (fn [acc line]
+                     (if (empty? acc)
+                       (conj acc line)
+                       (conj acc (str/replace line
+                                              (re-pattern (clojure.core/format "^{%d}" common-indent))
+                                              ""))))
+                   []
+                   lines)
+                 lines)
+        lines'' (reduce
+                  (fn [acc line]
+                    (if (and (empty? acc)
+                             (re-find #"^[\u0009\u0020]*$" line))
+                      acc
+                      (conj acc line)))
+                  []
+                  lines')
+        lines''' (if-let [last-line (peek lines'')]
+                   (if (re-find #"^[\u0009\u0020]*$" last-line)
+                     (pop lines'')
+                     lines'')
+                   lines'')
+        formatted (reduce
+                    (fn [formatted s] (str formatted "\n" s))
+                    (or (first lines''') "")
+                    (rest lines'''))]
+    formatted))
 
 (def transform-map
   {:Alias (fn [& xs]
@@ -72,8 +113,20 @@
                           (reduce (fn [coll x] (conj coll x))
                                   [:ArgumentsDefinition {}]
                                   (interpose [:Printable {} " "] xs)))
-   :BlockQuote (fn [] "\"\"\"")
-   :BlockStringCharacter str
+   :BlockQuote (fn [] [:BlockQuote {} "\"\"\""])
+   :BlockQuoteOpen (fn [] [:BlockQuoteOpen {} "\"\"\""])
+   :BlockQuoteClose (fn [] [:BlockQuoteClose {} "\"\"\""])
+   :BlockStringCharacter (fn [s] [:BlockStringCharacter {} s])
+   :BlockStringCharacters (fn [& xs]
+                            [:BlockStringCharacters {}
+                             (apply str (reduce
+                                          (fn [coll [_node-name _opts s]]
+                                            ;; XXX(ilmoraunio): Guaranteed to
+                                            ;; be BlockStringCharacter at this
+                                            ;; point.
+                                            (conj coll s))
+                                          []
+                                          xs))])
    :BooleanValue boolean-value
    :BraceClose (fn [x] [:BraceClose {} x])
    :BraceOpen (fn [x] [:BraceOpen {} x])
@@ -268,7 +321,7 @@
    :ParensOpen (fn [x] [:ParensOpen {} x])
    :ParensClose (fn [x] [:ParensClose {} x])
    :PipeCharacter (fn [x] [:Printable {} x])
-   :Quote (fn [] "\"")
+   :Quote (fn [] [:Quote {} "\""])
    :RootOperationTypeDefinition (fn [& xs]
                                   (reduce (fn [coll x] (conj coll x))
                                           [:RootOperationTypeDefinition {}]
@@ -306,8 +359,21 @@
                      [:SelectionSet {}]
                      xs))
    :Sign str
-   :StringCharacter str
-   :StringValue string-value
+   :StringCharacter (fn [s] [:StringCharacter {} s])
+   :StringCharacters (fn [& xs]
+                       [:StringCharacters {}
+                        (apply str (reduce
+                                     (fn [coll [_node-name _opts s]]
+                                       (conj coll s))
+                                     []
+                                     xs))])
+   :StringValue (fn [& xs]
+                  (reduce (fn [coll x]
+                            (case (first x)
+                              (:BlockQuote :BlockStringCharacters) (conj coll x [:Printable {} "\n"])
+                              (conj coll x)))
+                          [:StringValue {}]
+                          xs))
    :Type (fn [& xs]
            (reduce (fn [coll x] (conj coll x))
                    [:Type {}]
@@ -440,6 +506,7 @@
                       :BraceClose true
                       :Argument true
                       :ParensClose true
+                      :BlockQuoteClose true
                       false)
                   (into opts {:newline? true})
                   opts)]
@@ -507,6 +574,23 @@
   (->> ast
     (amend-newline-spacing)))
 
+;; re-transformation fns
+
+(defn format-block-string-values
+  [ast]
+  (let [[node opts & rst] ast]
+    (into [node opts]
+          (cond
+            (vector? (first rst)) (map format-block-string-values rst)
+            (string? (first rst)) (case node
+                                    :BlockStringCharacters [(block-string-value (first rst))]
+                                    rst)))))
+
+(defn re-transform
+  [ast]
+  (-> ast
+    (format-block-string-values)))
+
 (defn format
   [s]
   (->> s
@@ -514,6 +598,7 @@
     validate-ast-form
     enrich-ast-opts
     enrich-ast
+    re-transform
     (pr-str-ast "")
     (clojure.core/format "%s\n")))
 
