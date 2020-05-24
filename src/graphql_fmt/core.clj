@@ -422,15 +422,13 @@
 (defn amend-indentation-level
   [indent-level ast]
   (let [[node opts & rst] ast]
-    (into [node (into opts {:indentation-level indent-level})]
-          (cond
-            (vector? (first rst)) (map (partial amend-indentation-level
-                                                (let [[[next-node & _]] rst]
-                                                  (case next-node
-                                                    (:SelectionSet) (inc indent-level)
-                                                    indent-level)))
-                                       rst)
-            (string? (first rst)) rst))))
+    (let [indent-level (case node
+                         :Selection (inc indent-level)
+                         indent-level)]
+      (into [node (into opts {:indentation-level indent-level})]
+            (cond
+              (vector? (first rst)) (map (partial amend-indentation-level indent-level) rst)
+              (string? (first rst)) rst)))))
 
 (defn amend-newline-opts
   [ast]
