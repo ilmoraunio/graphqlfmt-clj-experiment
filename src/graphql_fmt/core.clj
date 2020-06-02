@@ -553,7 +553,7 @@
             (vector? (first rst)) (map amend-horizontal-spacing rst)
             (string? (first rst)) rst))))
 
-(defn mark-argument-block-string-valueness
+(defn mark-structural-mode
   [ast]
   (letfn [(check [[node _opts & rst]]
             (cond
@@ -570,7 +570,7 @@
                     (and (= :Field node)
                          (check ast)) (assoc :structural-mode? true))]
             (cond
-              (vector? (first rst)) (map mark-argument-block-string-valueness rst)
+              (vector? (first rst)) (map mark-structural-mode rst)
               (string? (first rst)) rst)))))
 
 (defn ast
@@ -585,7 +585,7 @@
     amend-newline-opts
     (amend-indentation-level 0)
     (amend-horizontal-spacing-opts)
-    mark-argument-block-string-valueness
+    mark-structural-mode
     ;; TODO: mark all sub-entities for "structural formatting" (likewise "anti-mark" rest to be formatted "normally"...)
     ))
 
