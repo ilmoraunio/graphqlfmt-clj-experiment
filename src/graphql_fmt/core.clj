@@ -88,7 +88,7 @@
                      lines'')
                    lines'')
         formatted (reduce
-                    (fn [formatted s] (str formatted "\n" s))
+                    (fn [formatted line] (str formatted "\n" line))
                     (or (first lines''') "")
                     (rest lines'''))]
     formatted))
@@ -368,10 +368,7 @@
                                      []
                                      xs))])
    :StringValue (fn [& xs]
-                  (reduce (fn [coll x]
-                            (case (first x)
-                              (:BlockQuote :BlockStringCharacters) (conj coll x [:Printable {} "\n"])
-                              (conj coll x)))
+                  (reduce (fn [coll x] (conj coll x))
                           [:StringValue {}]
                           xs))
    :Type (fn [& xs]
@@ -501,15 +498,14 @@
 (defn amend-newline-opts
   [ast]
   (let [[node opts & rst] ast]
-    (into [node (if (condp = node
-                      :Selection true
-                      :BraceClose true
-                      :Argument true
-                      :ParensClose true
-                      :BlockQuoteClose true
-                      false)
-                  (into opts {:newline? true})
-                  opts)]
+    (into [node (cond-> opts
+                  (#{:Selection
+                     :BraceClose
+                     :Argument
+                     :ParensClose
+                     :BlockQuoteClose} node) (assoc :newline? true
+                                                    :indent? true)
+                  (#{:BlockStringCharacters} node) (assoc :newline? true))]
           (cond
             (vector? (first rst)) (map amend-newline-opts rst)
             (string? (first rst)) rst))))
@@ -533,11 +529,12 @@
   (let [[node opts & rst] ast]
     (into (if (:newline? opts)
             (into [node opts [:Printable {} "\n"]]
-                  [[:Printable {}
-                    (->> " "
-                      (repeat
-                        (* 2 (:indentation-level opts)))
-                      (apply str))]])
+                  (cond-> []
+                    (:indent? opts) (conj [:Printable {}
+                                           (->> " "
+                                             (repeat
+                                               (* 2 (:indentation-level opts)))
+                                             (apply str))])))
             [node opts])
           (cond
             (vector? (first rst)) (map amend-newline-spacing rst)
@@ -556,6 +553,26 @@
             (vector? (first rst)) (map amend-horizontal-spacing rst)
             (string? (first rst)) rst))))
 
+(defn mark-argument-block-string-valueness
+  [ast]
+  (letfn [(check [[node _opts & rst]]
+            (cond
+              (= :BlockStringCharacters node) true
+              (vector? (first rst)) (reduce
+                                      (fn [_ node]
+                                        (when (check node)
+                                          (reduced true)))
+                                      false
+                                      rst)
+              :else false))]
+    (let [[node opts & rst] ast]
+      (into [node (cond-> opts
+                    (and (= :Field node)
+                         (check ast)) (assoc :structural-mode? true))]
+            (cond
+              (vector? (first rst)) (map mark-argument-block-string-valueness rst)
+              (string? (first rst)) rst)))))
+
 (defn ast
   [s]
   (->> s
@@ -567,7 +584,10 @@
   (->> ast
     amend-newline-opts
     (amend-indentation-level 0)
-    (amend-horizontal-spacing-opts)))
+    (amend-horizontal-spacing-opts)
+    mark-argument-block-string-valueness
+    ;; TODO: mark all sub-entities for "structural formatting" (likewise "anti-mark" rest to be formatted "normally"...)
+    ))
 
 (defn enrich-ast
   [ast]
@@ -597,8 +617,8 @@
     ast
     validate-ast-form
     enrich-ast-opts
-    enrich-ast
     re-transform
+    enrich-ast
     (pr-str-ast "")
     (clojure.core/format "%s\n")))
 
