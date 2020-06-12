@@ -124,8 +124,8 @@ DefaultValue = Ignored* Equals Value
 EnumValue = #"^(?!(true|false|null))[_A-Za-z][_0-9A-Za-z]*"
 ListValue = (<'['> Ignored* <']'>) |
             (<'['> Value+ Ignored* <']'>)
-ObjectValue = (<'{'> Ignored* <'}'>) |
-              (<'{'> ObjectField+ Ignored* <'}'>)
+ObjectValue = (BraceOpen Ignored* BraceClose) |
+              (BraceOpen ObjectField+ Ignored* BraceClose)
 ObjectField = Ignored* Name Ignored* <':'> Ignored* Value
 Directives = Directive+
 Directive = Ignored* <'@'> Ignored* Name Arguments?

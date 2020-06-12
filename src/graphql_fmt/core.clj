@@ -273,7 +273,7 @@
                 (conj (reduce
                         (fn [coll x] (conj coll x))
                         [:ListValue {} [:Printable {} "["]]
-                        (conj (interpose [:Printable {} ","] xs)))
+                        (interpose [:Comma {} ","] xs))
                       [:Printable {} "]"]))
    :Name (fn [x] [:Name {} x])
    :NamedType (fn [x] [:NamedType {} x])
@@ -300,11 +300,10 @@
                                   [:ObjectTypeExtension {}]
                                   (interpose [:Printable {} " "] xs)))
    :ObjectValue (fn [& xs]
-                  (conj (reduce
-                          (fn [coll x] (conj coll x))
-                          [:ListValue {} [:Printable {} "{"]]
-                          (conj (interpose [:Printable {} ","] xs)))
-                        [:Printable {} "}"]))
+                  (reduce
+                    (fn [coll x] (conj coll x))
+                    [:ObjectValue {}]
+                    (interpose [:Comma {} ","] xs)))
    :OnKeyword (fn [x] [:Printable {} x])
    :OperationDefinition (fn [& xs]
                           (reduce (fn [coll x]
@@ -346,7 +345,7 @@
                                              :RootOperationTypeDefinition)
                                           (= (first x)
                                              :RootOperationTypeDefinition))
-                                   (conj coll [:Printable {} ","] x)
+                                   (conj coll [:Comma {} ","] x)
                                    (conj coll x)))
                                [:SchemaDefinition {}
                                 [:Printable {} "schema"]
@@ -487,7 +486,7 @@
   [indent-level ast]
   (let [[node opts & rst] ast]
     (let [indent-level (case node
-                         (:Selection :Arguments) (inc indent-level)
+                         (:SelectionSet :Arguments :Value) (inc indent-level)
                          (:ParensClose :BraceClose) (max (dec indent-level) 0)
                          indent-level)]
       (into [node (into opts {:indentation-level indent-level})]
@@ -499,13 +498,8 @@
   [ast]
   (let [[node opts & rst] ast]
     (into [node (cond-> opts
-                  (#{:Selection
-                     :BraceClose
-                     :Argument
-                     :ParensClose
-                     :BlockQuoteClose} node) (assoc :newline? true
-                                                    :indent? true)
-                  (#{:BlockStringCharacters} node) (assoc :newline? true))]
+                  (#{:BraceClose
+                     :Selection} node) (assoc :newline? true :indent? true))]
           (cond
             (vector? (first rst)) (map amend-newline-opts rst)
             (string? (first rst)) rst))))
@@ -553,7 +547,7 @@
             (vector? (first rst)) (map amend-horizontal-spacing rst)
             (string? (first rst)) rst))))
 
-(defn mark-structural-mode
+(defn amend-structured-tree
   [ast]
   (letfn [(check [[node _opts & rst]]
             (cond
@@ -567,11 +561,35 @@
               :else false))]
     (let [[node opts & rst] ast]
       (into [node (cond-> opts
-                    (and (= :Field node)
-                         (check ast)) (assoc :structural-mode? true))]
+                    (and (= node :Field)
+                         (check ast)) (assoc :structured-tree? true))]
             (cond
-              (vector? (first rst)) (map mark-structural-mode rst)
+              (vector? (first rst)) (map amend-structured-tree rst)
               (string? (first rst)) rst)))))
+
+(defn amend-newline-to-structure-tree
+  ([ast]
+   (let [[_node {:keys [structured-tree?] :as _opts} & _rst] ast]
+     (amend-newline-to-structure-tree structured-tree? ast)))
+  ([structured? ast]
+   (let [[node {:keys [structured-tree?] :as opts} & rst] ast
+         within-structured-subtree? (or structured? structured-tree?)]
+     (into [node (cond-> opts
+                   (and within-structured-subtree?
+                        (#{:Argument
+                           :BlockQuoteClose
+                           :Field
+                           :ObjectField
+                           :ParensClose} node)) (assoc :newline? true
+                                                     :indent? true)
+                   (and within-structured-subtree?
+                        (= node :BlockStringCharacters)) (assoc :newline? true))]
+           (cond
+             (vector?
+               (first rst)) (map (partial amend-newline-to-structure-tree
+                                          (or structured? structured-tree?))
+                                 rst)
+             (string? (first rst)) rst)))))
 
 (defn ast
   [s]
@@ -584,10 +602,9 @@
   (->> ast
     amend-newline-opts
     (amend-indentation-level 0)
-    (amend-horizontal-spacing-opts)
-    mark-structural-mode
-    ;; TODO: mark all sub-entities for "structural formatting" (likewise "anti-mark" rest to be formatted "normally"...)
-    ))
+    amend-horizontal-spacing-opts
+    amend-structured-tree
+    amend-newline-to-structure-tree))
 
 (defn enrich-ast
   [ast]
@@ -596,6 +613,7 @@
 
 ;; re-transformation fns
 
+;; TODO: indent-aware formatting outside of static function block-string-value.
 (defn format-block-string-values
   [ast]
   (let [[node opts & rst] ast]
@@ -609,7 +627,9 @@
 (defn re-transform
   [ast]
   (-> ast
-    (format-block-string-values)))
+    (format-block-string-values)
+    ;; TODO: remove all Comma elements from under structured-tree? (except from under ListValues)
+    ))
 
 (defn format
   [s]
