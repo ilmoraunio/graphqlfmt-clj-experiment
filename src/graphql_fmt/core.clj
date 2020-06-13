@@ -49,6 +49,19 @@
 (defn null-value []
   [:NullValue {} "null"])
 
+(def +indentation-unit+ " ")
+(def +indentation-depth+ 2)
+(defn indent-s
+  [{:keys [indentation-level]}]
+  (->> +indentation-unit+
+    (repeat (* +indentation-depth+ indentation-level))
+    (apply str)))
+
+(defn remove-n-chars
+  "Safely removes the first n characters from s."
+  [s n]
+  (subs s (min (count s) n) (count s)))
+
 (defn block-string-value
   [s]
   (let [lines (clojure.string/split s #"[\u000A]|[\u000D](?![\u000A])|[\u000D][\u000A]")
@@ -68,9 +81,7 @@
                    (fn [acc line]
                      (if (empty? acc)
                        (conj acc line)
-                       (conj acc (str/replace line
-                                              (re-pattern (clojure.core/format "^{%d}" common-indent))
-                                              ""))))
+                       (conj acc (remove-n-chars line common-indent))))
                    []
                    lines)
                  lines)
@@ -487,7 +498,7 @@
   (let [[node opts & rst] ast]
     (let [indent-level (case node
                          (:SelectionSet :Arguments :Value) (inc indent-level)
-                         (:ParensClose :BraceClose :BlockQuoteClose) (max (dec indent-level) 0)
+                         (:ParensClose :BraceClose :BlockQuoteClose :BlockStringCharacters) (max (dec indent-level) 0)
                          indent-level)]
       (into [node (into opts {:indentation-level indent-level})]
             (cond
@@ -524,11 +535,7 @@
     (into (if (:newline? opts)
             (into [node opts [:Printable {} "\n"]]
                   (cond-> []
-                    (:indent? opts) (conj [:Printable {}
-                                           (->> " "
-                                             (repeat
-                                               (* 2 (:indentation-level opts)))
-                                             (apply str))])))
+                    (:indent? opts) (conj [:Printable {} (indent-s opts)])))
             [node opts])
           (cond
             (vector? (first rst)) (map amend-newline-spacing rst)
@@ -612,7 +619,21 @@
 
 ;; re-transformation fns
 
-;; TODO: indent-aware formatting outside of static function block-string-value.
+(defn block-string-characters
+  [s opts]
+  (letfn [(empty-line? [line] (re-find #"^[\u0009\u0020]*$" line))]
+    (let [lines (clojure.string/split (block-string-value s) #"\n")]
+      (reduce
+        (fn [formatted line]
+          (if (empty-line? line)
+            (str formatted "\n" line)
+            (str formatted "\n" (indent-s opts) line)))
+        (or (if (empty-line? (first lines))
+              (str (first lines))
+              (str (indent-s opts) (first lines)))
+            "")
+        (rest lines)))))
+
 (defn format-block-string-values
   [ast]
   (let [[node opts & rst] ast]
@@ -620,7 +641,9 @@
           (cond
             (vector? (first rst)) (map format-block-string-values rst)
             (string? (first rst)) (case node
-                                    :BlockStringCharacters [(block-string-value (first rst))]
+                                    :BlockStringCharacters [(block-string-characters
+                                                              (first rst)
+                                                              opts)]
                                     rst)))))
 
 (defn re-transform
