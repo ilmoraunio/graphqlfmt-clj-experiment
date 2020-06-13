@@ -664,6 +664,7 @@
     (pr-str-ast "")
     (clojure.core/format "%s\n")))
 
+;; TODO: Figure out why multi-line block string values are not printed out correctly in CLI.
 (defn -main [& args]
   (let [graphql (or (first args) (apply str (line-seq (java.io.BufferedReader. *in*))))
         output (format graphql)]
