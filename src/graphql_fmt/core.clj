@@ -487,7 +487,7 @@
   (let [[node opts & rst] ast]
     (let [indent-level (case node
                          (:SelectionSet :Arguments :Value) (inc indent-level)
-                         (:ParensClose :BraceClose) (max (dec indent-level) 0)
+                         (:ParensClose :BraceClose :BlockQuoteClose) (max (dec indent-level) 0)
                          indent-level)]
       (into [node (into opts {:indentation-level indent-level})]
             (cond
@@ -578,10 +578,9 @@
                    (and within-structured-subtree?
                         (#{:Argument
                            :BlockQuoteClose
-                           :Field
                            :ObjectField
                            :ParensClose} node)) (assoc :newline? true
-                                                     :indent? true)
+                                                       :indent? true)
                    (and within-structured-subtree?
                         (= node :BlockStringCharacters)) (assoc :newline? true))]
            (cond
