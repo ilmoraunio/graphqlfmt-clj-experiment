@@ -172,71 +172,78 @@
             [:Digit "3"]]
            [:ExponentPart [:ExponentIndicator "e"] [:Sign "-"] [:Digit "2"] [:Digit "3"]]]]
          (token-parser "-6.0221413e-23")))
-  (is (= [:Token [:StringValue [:Quote] [:Quote]]] (token-parser "\"\"")))
-  (is (= [:Token [:StringValue [:Quote] [:StringCharacter "*"] [:Quote]]]
+  (is (= [:Token [:StringValue [:Quote] [:StringCharacters] [:Quote]]] (token-parser "\"\"")))
+  (is (= [:Token [:StringValue [:Quote] [:StringCharacters
+                                         [:StringCharacter "*"]] [:Quote]]]
          (token-parser "\"*\"")))
   (is (= [:Token
           [:StringValue
            [:Quote]
-           [:StringCharacter "f"]
-           [:StringCharacter "r"]
-           [:StringCharacter "o"]
-           [:StringCharacter "b"]
+           [:StringCharacters
+            [:StringCharacter "f"]
+            [:StringCharacter "r"]
+            [:StringCharacter "o"]
+            [:StringCharacter "b"]]
            [:Quote]]]
          (token-parser "\"frob\"")))
   (is (= [:Token
           [:StringValue
            [:Quote]
-           [:StringCharacter "\\u" [:EscapedUnicode "0000"]]
+           [:StringCharacters
+            [:StringCharacter "\\u"
+             [:EscapedUnicode "0000"]]]
            [:Quote]]]
          (token-parser "\"\\u0000\"")))
   (is (= [:Token
           [:StringValue
            [:Quote]
-           [:StringCharacter "\\" [:EscapedCharacter "r"]]
-           [:StringCharacter "\\" [:EscapedCharacter "n"]]
+           [:StringCharacters
+            [:StringCharacter "\\" [:EscapedCharacter "r"]]
+            [:StringCharacter "\\" [:EscapedCharacter "n"]]]
            [:Quote]]]
          (token-parser "\"\\r\\n\"")))
   (is (= [:Token
           [:StringValue
-           [:BlockQuote]
-           [:BlockStringCharacter " "]
-           [:BlockStringCharacter "f"]
-           [:BlockStringCharacter "r"]
-           [:BlockStringCharacter "o"]
-           [:BlockStringCharacter "b"]
-           [:BlockStringCharacter "\""]
-           [:BlockStringCharacter "f"]
-           [:BlockStringCharacter "r"]
-           [:BlockStringCharacter "o"]
-           [:BlockStringCharacter "b"]
-           [:BlockStringCharacter "n"]
-           [:BlockStringCharacter "i"]
-           [:BlockStringCharacter "t"]
-           [:BlockStringCharacter "z"]
-           [:BlockStringCharacter "\"\""]
-           [:BlockStringCharacter "f"]
-           [:BlockStringCharacter "r"]
-           [:BlockStringCharacter "o"]
-           [:BlockStringCharacter "b"]
-           [:BlockStringCharacter "n"]
-           [:BlockStringCharacter "i"]
-           [:BlockStringCharacter "c"]
-           [:BlockStringCharacter "a"]
-           [:BlockStringCharacter "t"]
-           [:BlockStringCharacter "e"]
-           [:BlockStringCharacter " "]
-           [:BlockQuote]]]
+           [:BlockQuoteOpen]
+           [:BlockStringCharacters
+            [:BlockStringCharacter " "]
+            [:BlockStringCharacter "f"]
+            [:BlockStringCharacter "r"]
+            [:BlockStringCharacter "o"]
+            [:BlockStringCharacter "b"]
+            [:BlockStringCharacter "\""]
+            [:BlockStringCharacter "f"]
+            [:BlockStringCharacter "r"]
+            [:BlockStringCharacter "o"]
+            [:BlockStringCharacter "b"]
+            [:BlockStringCharacter "n"]
+            [:BlockStringCharacter "i"]
+            [:BlockStringCharacter "t"]
+            [:BlockStringCharacter "z"]
+            [:BlockStringCharacter "\"\""]
+            [:BlockStringCharacter "f"]
+            [:BlockStringCharacter "r"]
+            [:BlockStringCharacter "o"]
+            [:BlockStringCharacter "b"]
+            [:BlockStringCharacter "n"]
+            [:BlockStringCharacter "i"]
+            [:BlockStringCharacter "c"]
+            [:BlockStringCharacter "a"]
+            [:BlockStringCharacter "t"]
+            [:BlockStringCharacter "e"]
+            [:BlockStringCharacter " "]]
+           [:BlockQuoteClose]]]
          (token-parser "\"\"\" frob\"frobnitz\"\"frobnicate \"\"\"")))
   (is (instance? instaparse.gll.Failure
                  (token-parser "\"\"\" \"\"\" \"\"\"")))
   (is (= [:Token
           [:StringValue
-           [:BlockQuote]
-           [:BlockStringCharacter " "]
-           [:BlockStringCharacter "\"\"\""]
-           [:BlockStringCharacter " "]
-           [:BlockQuote]]]
+           [:BlockQuoteOpen]
+           [:BlockStringCharacters
+            [:BlockStringCharacter " "]
+            [:BlockStringCharacter "\"\"\""]
+            [:BlockStringCharacter " "]]
+           [:BlockQuoteClose]]]
          (token-parser "\"\"\" \\\"\"\" \"\"\"")))
   (is (= [:Token [:BooleanValue "true"]]
         (token-parser "true")))
@@ -296,10 +303,12 @@
           [:Field
            [:Name "foo"]
            [:Arguments
+            [:ParensOpen "("]
             [:Argument
              [:Name "bar"]
              [:Colon ":"]
-             [:Value [:Variable [:Name "foobar"]]]]]]]
+             [:Value [:Variable [:Name "foobar"]]]]
+            [:ParensClose ")"]]]]
          [:BraceClose "}"]]]]]]
 
     ["{foo(bar:1)}"
@@ -316,10 +325,12 @@
           [:Field
            [:Name "foo"]
            [:Arguments
+            [:ParensOpen "("]
             [:Argument
              [:Name "bar"]
              [:Colon ":"]
-             [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]]]]
+             [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]
+            [:ParensClose ")"]]]]
          [:BraceClose "}"]]]]]]
 
     ["{foo(bar:1.0)}"
@@ -335,13 +346,15 @@
           [:Field
            [:Name "foo"]
            [:Arguments
+            [:ParensOpen "("]
             [:Argument
              [:Name "bar"]
              [:Colon ":"]
              [:Value
               [:FloatValue
                [:IntegerPart [:NonZeroDigit "1"]]
-               [:FractionalPart [:Digit "0"]]]]]]]]
+               [:FractionalPart [:Digit "0"]]]]]
+            [:ParensClose ")"]]]]
          [:BraceClose "}"]]]]]]
 
     ["{foo(bar:\"foobar\")}"
@@ -357,19 +370,22 @@
           [:Field
            [:Name "foo"]
            [:Arguments
+            [:ParensOpen "("]
             [:Argument
              [:Name "bar"]
              [:Colon ":"]
              [:Value
               [:StringValue
                [:Quote]
-               [:StringCharacter "f"]
-               [:StringCharacter "o"]
-               [:StringCharacter "o"]
-               [:StringCharacter "b"]
-               [:StringCharacter "a"]
-               [:StringCharacter "r"]
-               [:Quote]]]]]]]
+               [:StringCharacters
+                [:StringCharacter "f"]
+                [:StringCharacter "o"]
+                [:StringCharacter "o"]
+                [:StringCharacter "b"]
+                [:StringCharacter "a"]
+                [:StringCharacter "r"]]
+               [:Quote]]]]
+            [:ParensClose ")"]]]]
          [:BraceClose "}"]]]]]]
 
     ["{foo(bar:\"\"\"foobar\"\"\")}"
@@ -385,19 +401,22 @@
           [:Field
            [:Name "foo"]
            [:Arguments
+            [:ParensOpen "("]
             [:Argument
              [:Name "bar"]
              [:Colon ":"]
              [:Value
               [:StringValue
-               [:BlockQuote]
-               [:BlockStringCharacter "f"]
-               [:BlockStringCharacter "o"]
-               [:BlockStringCharacter "o"]
-               [:BlockStringCharacter "b"]
-               [:BlockStringCharacter "a"]
-               [:BlockStringCharacter "r"]
-               [:BlockQuote]]]]]]]
+               [:BlockQuoteOpen]
+               [:BlockStringCharacters
+                [:BlockStringCharacter "f"]
+                [:BlockStringCharacter "o"]
+                [:BlockStringCharacter "o"]
+                [:BlockStringCharacter "b"]
+                [:BlockStringCharacter "a"]
+                [:BlockStringCharacter "r"]]
+               [:BlockQuoteClose]]]]
+            [:ParensClose ")"]]]]
          [:BraceClose "}"]]]]]]
 
     ["{foo(bar:true)}"
@@ -412,10 +431,13 @@
          [:Selection
           [:Field
            [:Name "foo"]
-           [:Arguments [:Argument
-                        [:Name "bar"]
-                        [:Colon ":"]
-                        [:Value [:BooleanValue "true"]]]]]]
+           [:Arguments
+            [:ParensOpen "("]
+            [:Argument
+             [:Name "bar"]
+             [:Colon ":"]
+             [:Value [:BooleanValue "true"]]]
+            [:ParensClose ")"]]]]
          [:BraceClose "}"]]]]]]
 
     ["{foo(bar:null)}"
@@ -430,10 +452,13 @@
          [:Selection
           [:Field
            [:Name "foo"]
-           [:Arguments [:Argument
-                        [:Name "bar"]
-                        [:Colon ":"]
-                        [:Value [:NullValue]]]]]]
+           [:Arguments
+            [:ParensOpen "("]
+            [:Argument
+             [:Name "bar"]
+             [:Colon ":"]
+             [:Value [:NullValue]]]
+            [:ParensClose ")"]]]]
          [:BraceClose "}"]]]]]]
 
     ["{foo(bar:[])}"
@@ -448,10 +473,13 @@
          [:Selection
           [:Field
            [:Name "foo"]
-           [:Arguments [:Argument
-                        [:Name "bar"]
-                        [:Colon ":"]
-                        [:Value [:ListValue]]]]]]
+           [:Arguments
+            [:ParensOpen "("]
+            [:Argument
+             [:Name "bar"]
+             [:Colon ":"]
+             [:Value [:ListValue]]]
+            [:ParensClose ")"]]]]
          [:BraceClose "}"]]]]]]
 
     ["{foo(bar:[1[1 2 3]$foobar])}"
@@ -467,6 +495,7 @@
           [:Field
            [:Name "foo"]
            [:Arguments
+            [:ParensOpen "("]
             [:Argument
              [:Name "bar"]
              [:Colon ":"]
@@ -478,7 +507,8 @@
                  [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]
                  [:Value [:IntValue [:IntegerPart [:NonZeroDigit "2"]]]]
                  [:Value [:IntValue [:IntegerPart [:NonZeroDigit "3"]]]]]]
-               [:Value [:Variable [:Name "foobar"]]]]]]]]]
+               [:Value [:Variable [:Name "foobar"]]]]]]
+            [:ParensClose ")"]]]]
          [:BraceClose "}"]]]]]]
 
     ["{foo(bar:{})}"
@@ -493,10 +523,13 @@
          [:Selection
           [:Field
            [:Name "foo"]
-           [:Arguments [:Argument
-                        [:Name "bar"]
-                        [:Colon ":"]
-                        [:Value [:ObjectValue]]]]]]
+           [:Arguments
+            [:ParensOpen "("]
+            [:Argument
+             [:Name "bar"]
+             [:Colon ":"]
+             [:Value [:ObjectValue [:BraceOpen "{"] [:BraceClose "}"]]]]
+            [:ParensClose ")"]]]]
          [:BraceClose "}"]]]]]]
 
     ["{foo(bar:{foobar:1})}"
@@ -512,14 +545,18 @@
           [:Field
            [:Name "foo"]
            [:Arguments
+            [:ParensOpen "("]
             [:Argument
              [:Name "bar"]
              [:Colon ":"]
              [:Value
               [:ObjectValue
+               [:BraceOpen "{"]
                [:ObjectField
                 [:Name "foobar"]
-                [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]]]]]]]
+                [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]
+               [:BraceClose "}"]]]]
+            [:ParensClose ")"]]]]
          [:BraceClose "}"]]]]]]
 
     ["{foo(bar:{qux:1,baz:2})}"
@@ -535,23 +572,26 @@
           [:Field
            [:Name "foo"]
            [:Arguments
+            [:ParensOpen "("]
             [:Argument
              [:Name "bar"]
              [:Colon ":"]
              [:Value
               [:ObjectValue
+               [:BraceOpen "{"]
                [:ObjectField
                 [:Name "qux"]
                 [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]
                [:ObjectField
                 [:Name "baz"]
-                [:Value [:IntValue [:IntegerPart [:NonZeroDigit "2"]]]]]]]]]]]
+                [:Value [:IntValue [:IntegerPart [:NonZeroDigit "2"]]]]]
+               [:BraceClose "}"]]]]
+            [:ParensClose ")"]]]]
          [:BraceClose "}"]]]]]]
 
     ["{frob(foo:true,bar:false)}"
      "{ frob(foo: true, bar: false) }"
-     " { frob ( foo : true , bar: false ) } "
-     " { frob ( foo : true bar: false ) } "]
+     " { frob ( foo : true , bar: false ) } "]
     [:Document
      [:Definition
       [:ExecutableDefinition
@@ -562,6 +602,31 @@
           [:Field
            [:Name "frob"]
            [:Arguments
+            [:ParensOpen "("]
+            [:Argument
+             [:Name "foo"]
+             [:Colon ":"]
+             [:Value [:BooleanValue "true"]]
+             [:Commas [:Comma]]]
+            [:Argument
+             [:Name "bar"]
+             [:Colon ":"]
+             [:Value [:BooleanValue "false"]]]
+            [:ParensClose ")"]]]]
+         [:BraceClose "}"]]]]]]
+
+    [" { frob ( foo : true bar: false ) } "]
+    [:Document
+     [:Definition
+      [:ExecutableDefinition
+       [:OperationDefinition
+        [:SelectionSet
+         [:BraceOpen "{"]
+         [:Selection
+          [:Field
+           [:Name "frob"]
+           [:Arguments
+            [:ParensOpen "("]
             [:Argument
              [:Name "foo"]
              [:Colon ":"]
@@ -569,7 +634,8 @@
             [:Argument
              [:Name "bar"]
              [:Colon ":"]
-             [:Value [:BooleanValue "false"]]]]]]
+             [:Value [:BooleanValue "false"]]]
+            [:ParensClose ")"]]]]
          [:BraceClose "}"]]]]]]
 
     ["{frob@foo}"
@@ -616,16 +682,18 @@
            [:Directives
             [:Directive
              [:Name "foo"]
-             [:Arguments [:Argument
-                          [:Name "bar"]
-                          [:Colon ":"]
-                          [:Value [:BooleanValue "true"]]]]]]]]
+             [:Arguments
+              [:ParensOpen "("]
+              [:Argument
+               [:Name "bar"]
+               [:Colon ":"]
+               [:Value [:BooleanValue "true"]]]
+              [:ParensClose ")"]]]]]]
          [:BraceClose "}"]]]]]]
 
     ["{frob@foo(a:1,b:2)}"
      "{ frob @foo(a:1, b:2) }"
-     " { frob @foo ( a : 1 , b : 2 ) } "
-     " { frob @ foo ( a : 1 b : 2 ) } "]
+     " { frob @foo ( a : 1 , b : 2 ) } "]
     [:Document
      [:Definition
       [:ExecutableDefinition
@@ -639,6 +707,34 @@
             [:Directive
              [:Name "foo"]
              [:Arguments
+              [:ParensOpen "("]
+              [:Argument
+               [:Name "a"]
+               [:Colon ":"]
+               [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]
+               [:Commas [:Comma]]]
+              [:Argument
+               [:Name "b"]
+               [:Colon ":"]
+               [:Value [:IntValue [:IntegerPart [:NonZeroDigit "2"]]]]]
+              [:ParensClose ")"]]]]]]
+         [:BraceClose "}"]]]]]]
+
+    [" { frob @ foo ( a : 1 b : 2 ) } "]
+    [:Document
+     [:Definition
+      [:ExecutableDefinition
+       [:OperationDefinition
+        [:SelectionSet
+         [:BraceOpen "{"]
+         [:Selection
+          [:Field
+           [:Name "frob"]
+           [:Directives
+            [:Directive
+             [:Name "foo"]
+             [:Arguments
+              [:ParensOpen "("]
               [:Argument
                [:Name "a"]
                [:Colon ":"]
@@ -646,7 +742,8 @@
               [:Argument
                [:Name "b"]
                [:Colon ":"]
-               [:Value [:IntValue [:IntegerPart [:NonZeroDigit "2"]]]]]]]]]]
+               [:Value [:IntValue [:IntegerPart [:NonZeroDigit "2"]]]]]
+              [:ParensClose ")"]]]]]]
          [:BraceClose "}"]]]]]]
 
     ["{frob@foo(a:1)@bar(a:1)}"
@@ -665,17 +762,21 @@
             [:Directive
              [:Name "foo"]
              [:Arguments
+              [:ParensOpen "("]
               [:Argument
                [:Name "a"]
                [:Colon ":"]
-               [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]]]
+               [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]
+              [:ParensClose ")"]]]
             [:Directive
              [:Name "bar"]
              [:Arguments
+              [:ParensOpen "("]
               [:Argument
                [:Name "a"]
                [:Colon ":"]
-               [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]]]]]]
+               [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]
+              [:ParensClose ")"]]]]]]
          [:BraceClose "}"]]]]]]
 
     ["{foo{bar}}"
@@ -1217,16 +1318,17 @@
          [:Description
           [:StringValue
            [:Quote]
-           [:StringCharacter "t"]
-           [:StringCharacter "h"]
-           [:StringCharacter "e"]
-           [:StringCharacter " "]
-           [:StringCharacter "s"]
-           [:StringCharacter "c"]
-           [:StringCharacter "a"]
-           [:StringCharacter "l"]
-           [:StringCharacter "a"]
-           [:StringCharacter "r"]
+           [:StringCharacters
+            [:StringCharacter "t"]
+            [:StringCharacter "h"]
+            [:StringCharacter "e"]
+            [:StringCharacter " "]
+            [:StringCharacter "s"]
+            [:StringCharacter "c"]
+            [:StringCharacter "a"]
+            [:StringCharacter "l"]
+            [:StringCharacter "a"]
+            [:StringCharacter "r"]]
            [:Quote]]]
          [:ScalarKeyword "scalar"]
          [:Name "Foo"]
@@ -1243,19 +1345,20 @@
          [:Description
           [:StringValue
            [:Quote]
-           [:StringCharacter "d"]
-           [:StringCharacter "o"]
-           [:StringCharacter "c"]
-           [:StringCharacter "u"]
-           [:StringCharacter "m"]
-           [:StringCharacter "e"]
-           [:StringCharacter "n"]
-           [:StringCharacter "t"]
-           [:StringCharacter "s"]
-           [:StringCharacter " "]
-           [:StringCharacter "t"]
-           [:StringCharacter "h"]
-           [:StringCharacter "e"]
+           [:StringCharacters
+            [:StringCharacter "d"]
+            [:StringCharacter "o"]
+            [:StringCharacter "c"]
+            [:StringCharacter "u"]
+            [:StringCharacter "m"]
+            [:StringCharacter "e"]
+            [:StringCharacter "n"]
+            [:StringCharacter "t"]
+            [:StringCharacter "s"]
+            [:StringCharacter " "]
+            [:StringCharacter "t"]
+            [:StringCharacter "h"]
+            [:StringCharacter "e"]]
            [:Quote]]]
          [:ObjectKeyword "type"]
          [:Name "Foo"]
@@ -1277,26 +1380,27 @@
            [:Description
             [:StringValue
              [:Quote]
-             [:StringCharacter "t"]
-             [:StringCharacter "h"]
-             [:StringCharacter "e"]
-             [:StringCharacter " "]
-             [:StringCharacter "f"]
-             [:StringCharacter "i"]
-             [:StringCharacter "e"]
-             [:StringCharacter "l"]
-             [:StringCharacter "d"]
-             [:StringCharacter " "]
-             [:StringCharacter "d"]
-             [:StringCharacter "e"]
-             [:StringCharacter "f"]
-             [:StringCharacter "i"]
-             [:StringCharacter "n"]
-             [:StringCharacter "i"]
-             [:StringCharacter "t"]
-             [:StringCharacter "i"]
-             [:StringCharacter "o"]
-             [:StringCharacter "n"]
+             [:StringCharacters
+              [:StringCharacter "t"]
+              [:StringCharacter "h"]
+              [:StringCharacter "e"]
+              [:StringCharacter " "]
+              [:StringCharacter "f"]
+              [:StringCharacter "i"]
+              [:StringCharacter "e"]
+              [:StringCharacter "l"]
+              [:StringCharacter "d"]
+              [:StringCharacter " "]
+              [:StringCharacter "d"]
+              [:StringCharacter "e"]
+              [:StringCharacter "f"]
+              [:StringCharacter "i"]
+              [:StringCharacter "n"]
+              [:StringCharacter "i"]
+              [:StringCharacter "t"]
+              [:StringCharacter "i"]
+              [:StringCharacter "o"]
+              [:StringCharacter "n"]]
              [:Quote]]]
            [:Name "Bar"]
            [:FieldNameSeparator]
@@ -1471,9 +1575,10 @@
          [:Description
           [:StringValue
            [:Quote]
-           [:StringCharacter "t"]
-           [:StringCharacter "h"]
-           [:StringCharacter "e"]
+           [:StringCharacters
+            [:StringCharacter "t"]
+            [:StringCharacter "h"]
+            [:StringCharacter "e"]]
            [:Quote]]]
          [:InterfaceKeyword "interface"]
          [:Name "Foo"]
@@ -1484,9 +1589,10 @@
            [:Description
             [:StringValue
              [:Quote]
-             [:StringCharacter "t"]
-             [:StringCharacter "h"]
-             [:StringCharacter "e"]
+             [:StringCharacters
+              [:StringCharacter "t"]
+              [:StringCharacter "h"]
+              [:StringCharacter "e"]]
              [:Quote]]]
            [:Name "qux"]
            [:FieldNameSeparator]
@@ -1495,9 +1601,10 @@
            [:Description
             [:StringValue
              [:Quote]
-             [:StringCharacter "t"]
-             [:StringCharacter "h"]
-             [:StringCharacter "e"]
+             [:StringCharacters
+              [:StringCharacter "t"]
+              [:StringCharacter "h"]
+              [:StringCharacter "e"]]
              [:Quote]]]
            [:Name "baz"]
            [:FieldNameSeparator]
@@ -1554,9 +1661,10 @@
          [:Description
           [:StringValue
            [:Quote]
-           [:StringCharacter "t"]
-           [:StringCharacter "h"]
-           [:StringCharacter "e"]
+           [:StringCharacters
+            [:StringCharacter "t"]
+            [:StringCharacter "h"]
+            [:StringCharacter "e"]]
            [:Quote]]]
          [:UnionKeyword "union"]
          [:Name "Foobar"]
@@ -1618,9 +1726,10 @@
          [:Description
           [:StringValue
            [:Quote]
-           [:StringCharacter "t"]
-           [:StringCharacter "h"]
-           [:StringCharacter "e"]
+           [:StringCharacters
+            [:StringCharacter "t"]
+            [:StringCharacter "h"]
+            [:StringCharacter "e"]]
            [:Quote]]]
          [:EnumKeyword "enum"]
          [:Name "Foobar"]
@@ -1631,24 +1740,26 @@
            [:Description
             [:StringValue
              [:Quote]
-             [:StringCharacter "i"]
-             [:StringCharacter "t"]
-             [:StringCharacter " "]
-             [:StringCharacter "f"]
-             [:StringCharacter "o"]
-             [:StringCharacter "o"]
+             [:StringCharacters
+              [:StringCharacter "i"]
+              [:StringCharacter "t"]
+              [:StringCharacter " "]
+              [:StringCharacter "f"]
+              [:StringCharacter "o"]
+              [:StringCharacter "o"]]
              [:Quote]]]
            [:EnumValue "FOO"]]
           [:EnumValueDefinition
            [:Description
             [:StringValue
              [:Quote]
-             [:StringCharacter "i"]
-             [:StringCharacter "t"]
-             [:StringCharacter " "]
-             [:StringCharacter "b"]
-             [:StringCharacter "a"]
-             [:StringCharacter "r"]
+             [:StringCharacters
+              [:StringCharacter "i"]
+              [:StringCharacter "t"]
+              [:StringCharacter " "]
+              [:StringCharacter "b"]
+              [:StringCharacter "a"]
+              [:StringCharacter "r"]]
              [:Quote]]]
            [:EnumValue "BAR"]]
           [:BraceClose "}"]]]]]]]
@@ -1714,9 +1825,10 @@
          [:Description
           [:StringValue
            [:Quote]
-           [:StringCharacter "t"]
-           [:StringCharacter "h"]
-           [:StringCharacter "e"]
+           [:StringCharacters
+            [:StringCharacter "t"]
+            [:StringCharacter "h"]
+            [:StringCharacter "e"]]
            [:Quote]]]
          [:InputKeyword "input"]
          [:Name "Foobar"]
@@ -1727,9 +1839,10 @@
            [:Description
             [:StringValue
              [:Quote]
-             [:StringCharacter "t"]
-             [:StringCharacter "h"]
-             [:StringCharacter "e"]
+             [:StringCharacters
+              [:StringCharacter "t"]
+              [:StringCharacter "h"]
+              [:StringCharacter "e"]]
              [:Quote]]]
            [:Name "foo"]
            [:Colon ":"]
@@ -1739,18 +1852,20 @@
             [:Value
              [:StringValue
               [:Quote]
-              [:StringCharacter "f"]
-              [:StringCharacter "o"]
-              [:StringCharacter "o"]
+              [:StringCharacters
+               [:StringCharacter "f"]
+               [:StringCharacter "o"]
+               [:StringCharacter "o"]]
               [:Quote]]]]
            [:Directives [:Directive [:Name "qux"]]]]
           [:InputValueDefinition
            [:Description
             [:StringValue
              [:Quote]
-             [:StringCharacter "t"]
-             [:StringCharacter "h"]
-             [:StringCharacter "e"]
+             [:StringCharacters
+              [:StringCharacter "t"]
+              [:StringCharacter "h"]
+              [:StringCharacter "e"]]
              [:Quote]]]
            [:Name "bar"]
            [:Colon ":"]
@@ -1760,9 +1875,10 @@
             [:Value
              [:StringValue
               [:Quote]
-              [:StringCharacter "b"]
-              [:StringCharacter "a"]
-              [:StringCharacter "r"]
+              [:StringCharacters
+               [:StringCharacter "b"]
+               [:StringCharacter "a"]
+               [:StringCharacter "r"]]
               [:Quote]]]]
            [:Directives [:Directive [:Name "qux"]]]]
           [:BraceClose "}"]]]]]]]
@@ -2051,9 +2167,10 @@
            [:Description
             [:StringValue
              [:Quote]
-             [:StringCharacter "t"]
-             [:StringCharacter "h"]
-             [:StringCharacter "e"]
+             [:StringCharacters
+              [:StringCharacter "t"]
+              [:StringCharacter "h"]
+              [:StringCharacter "e"]]
              [:Quote]]]
            [:Name "qux"]
            [:FieldNameSeparator]
