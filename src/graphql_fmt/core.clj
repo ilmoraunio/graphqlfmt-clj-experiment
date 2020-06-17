@@ -62,6 +62,11 @@
   [s n]
   (subs s (min (count s) n) (count s)))
 
+(def comma-value
+  [:Comma {}
+   [:Printable {} ","]
+   [:Printable {} " "]])
+
 (defn block-string-value
   [s]
   (let [lines (clojure.string/split s #"[\u000A]|[\u000D](?![\u000A])|[\u000D][\u000A]")
@@ -145,8 +150,8 @@
    :BracketOpen (fn [x] [:Printable {} x])
    :Colon (fn [x] [:Colon {} x])
    :Commas (fn
-             ([] [:Comma {} ","])
-             ([_] [:Comma {} ","]))
+             ([] comma-value)
+             ([_] comma-value))
    :Comment comment
    :CommentChar str
    :DefaultValue (fn [& xs]
@@ -284,7 +289,7 @@
                 (conj (reduce
                         (fn [coll x] (conj coll x))
                         [:ListValue {} [:Printable {} "["]]
-                        (interpose [:Comma {} ","] xs))
+                        (interpose comma-value xs))
                       [:Printable {} "]"]))
    :Name (fn [x] [:Name {} x])
    :NamedType (fn [x] [:NamedType {} x])
@@ -314,7 +319,7 @@
                   (reduce
                     (fn [coll x] (conj coll x))
                     [:ObjectValue {}]
-                    (interpose [:Comma {} ","] xs)))
+                    (interpose comma-value xs)))
    :OnKeyword (fn [x] [:Printable {} x])
    :OperationDefinition (fn [& xs]
                           (reduce (fn [coll x]
@@ -356,7 +361,7 @@
                                              :RootOperationTypeDefinition)
                                           (= (first x)
                                              :RootOperationTypeDefinition))
-                                   (conj coll [:Comma {} ","] x)
+                                   (conj coll comma-value x)
                                    (conj coll x)))
                                [:SchemaDefinition {}
                                 [:Printable {} "schema"]
@@ -527,21 +532,7 @@
             (vector? (first rst)) (map amend-horizontal-spacing-opts rst)
             (string? (first rst)) rst))))
 
-;; enrich-ast fns
-
-(defn amend-newline-spacing
-  [ast]
-  (let [[node opts & rst] ast]
-    (into (if (:newline? opts)
-            (into [node opts [:Printable {} "\n"]]
-                  (cond-> []
-                    (:indent? opts) (conj [:Printable {} (indent-s opts)])))
-            [node opts])
-          (cond
-            (vector? (first rst)) (map amend-newline-spacing rst)
-            (string? (first rst)) (if (:newline? opts)
-                                    [[:Printable {} (first rst)]]
-                                    rst)))))
+;; enrich-ast-opts fns
 
 (defn amend-horizontal-spacing
   [ast]
@@ -611,6 +602,20 @@
     amend-horizontal-spacing-opts
     amend-structured-tree
     amend-newline-to-structure-tree))
+
+(defn amend-newline-spacing
+  [ast]
+  (let [[node opts & rst] ast]
+    (into (if (:newline? opts)
+            (into [node opts [:Printable {} "\n"]]
+                  (cond-> []
+                    (:indent? opts) (conj [:Printable {} (indent-s opts)])))
+            [node opts])
+          (cond
+            (vector? (first rst)) (map amend-newline-spacing rst)
+            (string? (first rst)) (if (:newline? opts)
+                                    [[:Printable {} (first rst)]]
+                                    rst)))))
 
 (defn enrich-ast
   [ast]

@@ -26,7 +26,6 @@
               (insta/transform
                 transform-map
                 (document-parser input)))))
-    "{foo(bar:[1,[1,2,3],$foobar])}"
     "{foo(bar:{})}"
     "{foo(bar:{foobar:1})}"
     "{foo(bar:{qux:1,baz:2})}"
