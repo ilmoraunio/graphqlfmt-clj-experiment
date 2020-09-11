@@ -109,6 +109,7 @@ Selection = Field |
 Field = Ignored* Alias? Ignored* Name Arguments? Directives? SelectionSet?
 Alias = Ignored* Name Ignored* Colon
 Arguments = Ignored* ParensOpen Argument+ Ignored* ParensClose
+(* XXX(ilmoraunio): I don't think capturing commas here is a good idea. *)
 Argument = Ignored* Name Ignored* Colon Value Ignored* Commas?
 Value = Ignored* (Variable |
                   IntValue |
