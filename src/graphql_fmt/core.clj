@@ -317,9 +317,12 @@
                                   (interpose [:Printable {} " "] xs)))
    :ObjectValue (fn [& xs]
                   (reduce
-                    (fn [coll x] (conj coll x))
+                    (fn [coll [node _opts & _rst :as x]]
+                      (conj coll (cond-> x
+                                   (not (#{:BraceOpen :BraceClose} node))
+                                   (into [comma-value]))))
                     [:ObjectValue {}]
-                    (interpose comma-value xs)))
+                    xs))
    :OnKeyword (fn [x] [:Printable {} x])
    :OperationDefinition (fn [& xs]
                           (reduce (fn [coll x]
@@ -532,6 +535,25 @@
             (vector? (first rst)) (map amend-horizontal-spacing-opts rst)
             (string? (first rst)) rst))))
 
+(defn amend-prefer-inlining-opts
+  [ast]
+  (let [[node opts & rst] ast]
+    (into [node opts]
+          (cond
+            (vector? (first rst)) (map amend-prefer-inlining-opts
+                                       (if (#{:ObjectValue} node)
+                                         (let [head-of-rst (butlast rst)
+                                               [node opts & rst] (last rst)]
+                                           (concat head-of-rst
+                                                   [(into [node
+                                                           (assoc
+                                                             opts
+                                                             :prefer-inlining?
+                                                             true)]
+                                                          rst)]))
+                                         rst))
+            (string? (first rst)) rst))))
+
 ;; enrich-ast-opts fns
 
 (defn amend-horizontal-spacing
@@ -601,12 +623,14 @@
     (amend-indentation-level 0)
     amend-horizontal-spacing-opts
     amend-structured-tree
-    amend-newline-to-structure-tree))
+    amend-newline-to-structure-tree
+    amend-prefer-inlining-opts))
 
 (defn amend-newline-spacing
   [ast]
   (let [[node opts & rst] ast]
-    (into (if (:newline? opts)
+    (into (if (and (not (:prefer-inlining? opts))
+                   (:newline? opts))
             (into [node opts [:Printable {} "\n"]]
                   (cond-> []
                     (:indent? opts) (conj [:Printable {} (indent-s opts)])))
