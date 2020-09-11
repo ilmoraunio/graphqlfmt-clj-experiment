@@ -109,6 +109,18 @@
                     (rest lines'''))]
     formatted))
 
+;; XXX(ilmoraunio): This now complects the forming of an ast and adding
+;; representation elements. These two should be split up.
+
+;; XXX(ilmoraunio): Further noting that *all* transformations could be done via
+;; `insta/transform`. Observe a transformation done for the ready ast:
+
+(comment (insta/transform
+           {:Document (fn [opts & xs]
+                        (into [:Document (assoc opts :foo :bar)]
+                              xs))}
+           [:Document {} [:Definition {} "..."]]))
+
 (def transform-map
   {:Alias (fn [& xs]
             (reduce (fn [coll x] (conj coll x))
