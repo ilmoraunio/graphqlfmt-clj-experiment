@@ -1,6 +1,6 @@
 (ns graphql-fmt.print-test
   (:require [clojure.test :refer [are deftest is testing]]
-            [graphql-fmt.core :refer [amend-indentation-level
+            [graphql-fmt.core :refer [amend-indentation-level-opts
                                       amend-newline-opts
                                       amend-newline-spacing
                                       document-parser
@@ -13,7 +13,7 @@
        (let [is-a-vec? (vector? graphql)
              expected (if is-a-vec? (second graphql) graphql)
              input (if is-a-vec? (first graphql) graphql)]
-         (amend-indentation-level
+         (amend-indentation-level-opts
            0
            (amend-newline-spacing
              (amend-newline-opts
@@ -125,7 +125,7 @@
          [graphql-statement]
          (let [graphql# (:graphql graphql-statement)]
            (prn (format "testing: %s" (:filename graphql-statement)))
-           (is (= graphql# (graphqlfmt/format graphql#))
+           (is (= graphql# (graphqlfmt/fmt graphql#))
                (:filename graphql-statement)))
          ~@graphql-statements)))
 

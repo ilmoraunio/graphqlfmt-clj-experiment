@@ -1,10 +1,9 @@
 (ns graphql-fmt.core
-  (:refer-clojure :exclude [name comment format])
+  (:refer-clojure :exclude [name comment])
   (:require [clojure.java.io :as io]
             [clojure.pprint]
             [clojure.string :as str]
-            [instaparse.core :as insta]
-            [instaparse.transform :as insta-transform])
+            [instaparse.core :as insta])
   (:gen-class))
 
 (defn ebnf [& names]
@@ -64,8 +63,7 @@
 
 (def comma-value
   [:Comma {}
-   [:Printable {} ","]
-   [:Printable {} " "]])
+   [:Printable {} ","]])
 
 (defn block-string-value
   [s]
@@ -133,10 +131,7 @@
             (reduce (fn [coll x] (conj coll x))
                     [:Alias {}]
                     xs))
-   :Argument (fn [& xs] (reduce (fn [coll x]
-                                  (cond-> coll
-                                    true (conj x)
-                                    (= :Colon (first x)) (conj [:Printable {} " "])))
+   :Argument (fn [& xs] (reduce (fn [coll x] (conj coll x))
                                 [:Argument {}]
                                 xs))
    :Arguments (fn [& xs]
@@ -164,10 +159,18 @@
                                           xs))])
    :BooleanValue boolean-value
    :BraceClose (fn [x] [:BraceClose {} x])
-   :BraceOpen (fn [x] [:BraceOpen {} x])
+   ;; XXX(ilmoraunio): Okay, it seems this is now the exception wherein a
+   ;; leaf node type now is wrapped within a Printable, making it stand out of
+   ;; all the leaf node types which are at this point *not* wrapped. I think
+   ;; this ought to be resolved somehow at some point, IMO this will not be
+   ;; tenable in the long run.
+   :BraceOpen (fn [x] [:BraceOpen {} [:Printable {} x]])
    :BracketClose (fn [x] [:Printable {} x])
    :BracketOpen (fn [x] [:Printable {} x])
-   :Colon (fn [x] [:Colon {} x])
+   ;; XXX(ilmoraunio): Ok, it seems we are having to do wrap-overs to some
+   ;; leaf element as we move forward with formatting. That's actually OK. Let's
+   ;; see how far this takes us.
+   :Colon (fn [x] [:Colon {} [:Printable {} x]])
    :Commas (fn
              ([] comma-value)
              ([_] comma-value))
@@ -234,10 +237,7 @@
    :ExponentPart str
    :ExtendKeyword (fn [x] [:Printable {} x])
    :Field (fn [& xs]
-            (reduce (fn [coll x]
-                      (conj coll (case (first x)
-                                   :Alias (conj x [:Printable {} " "])
-                                   x)))
+            (reduce (fn [coll x] (conj coll x))
                     [:Field {}]
                     xs))
    :FieldDefinition (fn [& xs]
@@ -319,11 +319,9 @@
                           xs))
    :NonZeroDigit str
    :NullValue null-value
-   :ObjectField (fn [x & xs]
+   :ObjectField (fn [& xs]
                   (reduce (fn [coll x] (conj coll x))
-                          [:ObjectField {}
-                           x
-                           [:Printable {} ":"]]
+                          [:ObjectField {}]
                           xs))
    :ObjectKeyword (fn [x] [:Printable {} x])
    :ObjectTypeDefinition (fn [& xs]
@@ -464,9 +462,10 @@
 
 (def re-transform-map
   {:ObjectValue (fn [opts & xs]
-                  (:acc (reduce (fn [{:keys [head] :as acc-head} x]
+                  (:acc (reduce (fn [{:keys [head] :as acc-head} [node & _ :as x]]
                                   (-> (update acc-head :acc conj
-                                              (if (= (ffirst head) :ObjectField)
+                                              (if (and (= node :ObjectField)
+                                                       (= (ffirst head) :ObjectField))
                                                 (into x [comma-value])
                                                 x))
                                     (update :head rest)))
@@ -517,7 +516,7 @@
 
 ;; validate ast fns
 
-(defn validate-ast-form
+(defn validate
   [ast]
   (let [[node opts & rst] ast]
     (when (and (not (vector? (first rst)))
@@ -525,12 +524,12 @@
       (throw (ex-info {} (str "Unrecognized type: " (type (first rst))))))
     (into [node opts]
           (cond
-            (vector? (first rst)) (map validate-ast-form rst)
+            (vector? (first rst)) (map validate rst)
             (string? (first rst)) rst))))
 
 ;; enrich ast opts fns
 
-(defn amend-indentation-level
+(defn amend-indentation-level-opts
   [indent-level ast]
   (let [[node opts & rst] ast]
     (let [indent-level (case node
@@ -539,7 +538,7 @@
                          indent-level)]
       (into [node (into opts {:indentation-level indent-level})]
             (cond
-              (vector? (first rst)) (map (partial amend-indentation-level indent-level) rst)
+              (vector? (first rst)) (map (partial amend-indentation-level-opts indent-level) rst)
               (string? (first rst)) rst)))))
 
 (defn amend-newline-opts
@@ -555,9 +554,10 @@
 (defn amend-horizontal-spacing-opts
   [ast]
   (let [[node opts & rst] ast]
-    (into [node (if (condp = node
-                      :Alias true
-                      false)
+    (into [node (if (cond
+                      (= node :Colon) true
+                      (= node :ObjectField) true
+                      :else false)
                   (into opts {:append-whitespace? true})
                   opts)]
           (cond
@@ -588,15 +588,20 @@
 (defn amend-horizontal-spacing
   [ast]
   (let [[node opts & rst] ast]
-    (into (if (:append-whitespace? opts)
-            (cond-> [node opts]
-              (= :Alias node) (into [[:Printable {} " "]]))
-            [node opts])
+    (into [node opts]
           (cond
-            (vector? (first rst)) (map amend-horizontal-spacing rst)
+            (vector? (first rst)) (map amend-horizontal-spacing
+                                       (if (:append-whitespace? opts)
+                                         (concat rst [[:Printable {} " "]])
+                                         rst))
+            ;; XXX(ilmoraunio): One could form an opinion that we should
+            ;; transform all our node types to produce Printable nodes so that
+            ;; we can support `append-whitespace?` for all node types. This
+            ;; could indeed be done, but it's not something that is yet forcing
+            ;; my hand, thus deferring.
             (string? (first rst)) rst))))
 
-(defn amend-structured-tree
+(defn amend-structured-tree-opts
   [ast]
   (letfn [(check [[node _opts & rst]]
             (cond
@@ -613,13 +618,13 @@
                     (and (= node :Field)
                          (check ast)) (assoc :structured-tree? true))]
             (cond
-              (vector? (first rst)) (map amend-structured-tree rst)
+              (vector? (first rst)) (map amend-structured-tree-opts rst)
               (string? (first rst)) rst)))))
 
-(defn amend-newline-to-structure-tree
+(defn amend-newline-to-structure-tree-opts
   ([ast]
    (let [[_node {:keys [structured-tree?] :as _opts} & _rst] ast]
-     (amend-newline-to-structure-tree structured-tree? ast)))
+     (amend-newline-to-structure-tree-opts structured-tree? ast)))
   ([structured? ast]
    (let [[node {:keys [structured-tree?] :as opts} & rst] ast
          within-structured-subtree? (or structured? structured-tree?)]
@@ -634,7 +639,7 @@
                         (= node :BlockStringCharacters)) (assoc :newline? true))]
            (cond
              (vector?
-               (first rst)) (map (partial amend-newline-to-structure-tree
+               (first rst)) (map (partial amend-newline-to-structure-tree-opts
                                           (or structured? structured-tree?))
                                  rst)
              (string? (first rst)) rst)))))
@@ -650,14 +655,14 @@
   (->> ast
     (insta/transform re-transform-map)))
 
-(defn enrich-ast-opts
+(defn ast-opts
   [ast]
   (->> ast
     amend-newline-opts
-    (amend-indentation-level 0)
+    (amend-indentation-level-opts 0)
     amend-horizontal-spacing-opts
-    amend-structured-tree
-    amend-newline-to-structure-tree
+    amend-structured-tree-opts
+    amend-newline-to-structure-tree-opts
     amend-prefer-inlining-opts))
 
 (defn amend-newline-spacing
@@ -674,11 +679,6 @@
             (string? (first rst)) (if (:newline? opts)
                                     [[:Printable {} (first rst)]]
                                     rst)))))
-
-(defn enrich-ast
-  [ast]
-  (->> ast
-    (amend-newline-spacing)))
 
 ;; re-transformation fns
 
@@ -714,23 +714,28 @@
   (-> ast
     (format-block-string-values)
     ;; TODO: remove all Comma elements from under structured-tree? (except from under ListValues)
-    ))
+    (amend-newline-spacing)
+    (amend-horizontal-spacing)))
 
-(defn format
-  [s]
+(defn xf
+ [s]
   (->> s
     ast
     transform
-    validate-ast-form
-    enrich-ast-opts
-    re-transform
-    enrich-ast
+    validate
+    ast-opts
+    re-transform))
+
+(defn fmt
+  [s]
+  (->> s
+    xf
     (pr-str-ast "")
     (clojure.core/format "%s\n")))
 
 ;; TODO: Figure out why multi-line block string values are not printed out correctly in CLI.
 (defn -main [& args]
   (let [graphql (or (first args) (apply str (line-seq (java.io.BufferedReader. *in*))))
-        output (format graphql)]
+        output (fmt graphql)]
     (print output)
     (flush)))

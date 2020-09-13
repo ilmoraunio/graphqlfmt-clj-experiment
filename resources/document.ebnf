@@ -127,7 +127,7 @@ ListValue = (<'['> Ignored* <']'>) |
             (<'['> Value+ Ignored* <']'>)
 ObjectValue = (BraceOpen Ignored* BraceClose) |
               (BraceOpen ObjectField+ Ignored* BraceClose)
-ObjectField = Ignored* Name Ignored* <':'> Ignored* Value
+ObjectField = Ignored* Name Ignored* Colon Ignored* Value
 Directives = Directive+
 Directive = Ignored* <'@'> Ignored* Name Arguments?
 FragmentSpread = Ignored* <'...'> Ignored* FragmentName Directives?
