@@ -121,6 +121,13 @@
                               xs))}
            [:Document {} [:Definition {} "..."]]))
 
+;; XXX(ilmoraunio): Even further noting that this transform-map should, at first
+;; hand, comprise of only the *very basic* ast forming. We can further down the
+;; ast pipeline do re-transformation where we amend _additional_ entries to the
+;; ast. But not before we have initialized the `[node options sub-tree]` format
+;; via `ast` (with exception to leaf values that make sense to initialize here,
+;; leaves are part of the ast too).
+
 (def transform-map
   {:Alias (fn [& xs]
             (reduce (fn [coll x] (conj coll x))
@@ -329,10 +336,8 @@
                                   (interpose [:Printable {} " "] xs)))
    :ObjectValue (fn [& xs]
                   (reduce
-                    (fn [coll [node _opts & _rst :as x]]
-                      (conj coll (cond-> x
-                                   (not (#{:BraceOpen :BraceClose} node))
-                                   (into [comma-value]))))
+                    (fn [coll x]
+                      (conj coll x))
                     [:ObjectValue {}]
                     xs))
    :OnKeyword (fn [x] [:Printable {} x])
@@ -456,6 +461,18 @@
                                         xs)
                                 [:Printable {} ")"]
                                 [:Printable {} " "]))})
+
+(def re-transform-map
+  {:ObjectValue (fn [opts & xs]
+                  (:acc (reduce (fn [{:keys [head] :as acc-head} x]
+                                  (-> (update acc-head :acc conj
+                                              (if (= (ffirst head) :ObjectField)
+                                                (into x [comma-value])
+                                                x))
+                                    (update :head rest)))
+                                {:acc [:ObjectValue opts]
+                                 :head (rest xs)}
+                                xs)))})
 
 (def template
   [:Document {}
@@ -628,6 +645,11 @@
     document-parser
     (insta/transform transform-map)))
 
+(defn transform
+  [ast]
+  (->> ast
+    (insta/transform re-transform-map)))
+
 (defn enrich-ast-opts
   [ast]
   (->> ast
@@ -698,6 +720,7 @@
   [s]
   (->> s
     ast
+    transform
     validate-ast-form
     enrich-ast-opts
     re-transform
