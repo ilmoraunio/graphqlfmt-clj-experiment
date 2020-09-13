@@ -1,11 +1,7 @@
 (ns graphql-fmt.print-test
+  (:refer-clojure :exclude [name comment])
   (:require [clojure.test :refer [are deftest is testing]]
-            [graphql-fmt.core :refer [amend-indentation-level-opts
-                                      amend-newline-opts
-                                      amend-newline-spacing
-                                      document-parser
-                                      transform-map
-                                      pr-str-ast] :as graphqlfmt]
+            [graphql-fmt.core :refer :all :as graphqlfmt]
             [instaparse.core :as insta]))
 
 #_(deftest test-unformatted-output
