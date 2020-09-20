@@ -580,7 +580,19 @@
            :ObjectField (fn [opts & xs]
                           (into [:ObjectField (assoc opts :append-whitespace?
                                                           true)]
-                                xs))}]
+                                xs))
+           :ObjectValue (fn [opts & xs]
+                          (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
+                                          (-> (update acc-head :acc conj
+                                                      (if (and (= node :BraceOpen)
+                                                               (= (ffirst head) :ObjectField))
+                                                        (into [node (assoc opts :append-whitespace? true)]
+                                                              rst)
+                                                        x))
+                                            (update :head rest)))
+                                        {:acc [:ObjectValue opts]
+                                         :head (rest xs)}
+                                        xs)))}]
     (insta/transform m ast)))
 
 (defn amend-prefer-inlining-opts
