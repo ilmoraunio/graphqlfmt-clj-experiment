@@ -1,8 +1,7 @@
 (ns graphql-fmt.core-test
+  (:refer-clojure :exclude [name comment])
   (:require [clojure.test :refer [are deftest is testing]]
-            [graphql-fmt.core :refer [document-parser
-                                      ignored-parser
-                                      token-parser]]))
+            [graphql-fmt.core :refer :all]))
 
 (deftest test-ignored
   (are [input ast]
@@ -257,9 +256,9 @@
        (if (vector? document)
          (do
            (doseq [document-representation document]
-             (is (= ast (document-parser document-representation))))
+             (is (= ast (document-parser document-representation)) document-representation))
            true)
-         (is (= ast (document-parser document))))
+         (is (= ast (document-parser document)) document))
 
     ["{foo}"
      "{ foo }"
@@ -554,6 +553,7 @@
                [:BraceOpen "{"]
                [:ObjectField
                 [:Name "foobar"]
+                [:Colon ":"]
                 [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]
                [:BraceClose "}"]]]]
             [:ParensClose ")"]]]]
@@ -581,9 +581,11 @@
                [:BraceOpen "{"]
                [:ObjectField
                 [:Name "qux"]
+                [:Colon ":"]
                 [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]
                [:ObjectField
                 [:Name "baz"]
+                [:Colon ":"]
                 [:Value [:IntValue [:IntegerPart [:NonZeroDigit "2"]]]]]
                [:BraceClose "}"]]]]
             [:ParensClose ")"]]]]
