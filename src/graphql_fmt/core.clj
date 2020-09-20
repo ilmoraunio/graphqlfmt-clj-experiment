@@ -561,7 +561,7 @@
             (vector? (first rst)) (map amend-newline-opts rst)
             (string? (first rst)) rst))))
 
-(defn horizontal-spacing-opts
+(defn amend-horizontal-spacing-opts
   [ast]
   (let [m {:ListValue (fn [opts & xs]
                         (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
@@ -573,21 +573,15 @@
                                           (update :head rest)))
                                       {:acc [:ListValue opts]
                                        :head (rest xs)}
-                                      xs)))}]
+                                      xs)))
+           :Colon (fn [opts & xs]
+                    (into [:Colon (assoc opts :append-whitespace? true)]
+                          xs))
+           :ObjectField (fn [opts & xs]
+                          (into [:ObjectField (assoc opts :append-whitespace?
+                                                          true)]
+                                xs))}]
     (insta/transform m ast)))
-
-(defn amend-horizontal-spacing-opts
-  [ast]
-  (let [[node opts & rst] ast]
-    (into [node (if (cond
-                      (= node :Colon) true
-                      (= node :ObjectField) true
-                      :else false)
-                  (into opts {:append-whitespace? true})
-                  opts)]
-          (cond
-            (vector? (first rst)) (map amend-horizontal-spacing-opts rst)
-            (string? (first rst)) rst))))
 
 (defn amend-prefer-inlining-opts
   [ast]
@@ -685,7 +679,6 @@
   (->> ast
     amend-newline-opts
     (amend-indentation-level-opts 0)
-    horizontal-spacing-opts
     amend-horizontal-spacing-opts
     amend-structured-tree-opts
     amend-newline-to-structure-tree-opts
