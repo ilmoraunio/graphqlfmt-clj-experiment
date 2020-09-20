@@ -308,7 +308,7 @@
                 (reduce (fn [coll x] (conj coll x))
                         [:ListValue {}]
                         xs))
-   :Name (fn [x] [:Name {} x])
+   :Name (fn [x] [:Name {} [:Printable {} x]])
    :NamedType (fn [x] [:NamedType {} x])
    :NegativeSign str
    :NonNullType (fn [& xs]
@@ -549,6 +549,17 @@
                                       {:acc [:Arguments opts]
                                        :head (rest xs)}
                                       xs)))
+           :Field (fn [opts & xs]
+                    (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
+                                    (-> (update acc-head :acc conj
+                                                (if (and (= node :Name)
+                                                         (#{:Directives :SelectionSet} (ffirst head)))
+                                                  (into [node (assoc opts :append-whitespace? true)] rst)
+                                                  x))
+                                      (update :head rest)))
+                                  {:acc [:Field opts]
+                                   :head (rest xs)}
+                                  xs)))
            :ListValue (fn [opts & xs]
                         (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
                                         (-> (update acc-head :acc conj
