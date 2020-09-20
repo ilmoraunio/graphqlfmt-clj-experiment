@@ -608,8 +608,7 @@
             [:Argument
              [:Name "foo"]
              [:Colon ":"]
-             [:Value [:BooleanValue "true"]]
-             [:Commas [:Comma]]]
+             [:Value [:BooleanValue "true"]]]
             [:Argument
              [:Name "bar"]
              [:Colon ":"]
@@ -713,8 +712,7 @@
               [:Argument
                [:Name "a"]
                [:Colon ":"]
-               [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]
-               [:Commas [:Comma]]]
+               [:Value [:IntValue [:IntegerPart [:NonZeroDigit "1"]]]]]
               [:Argument
                [:Name "b"]
                [:Colon ":"]

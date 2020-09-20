@@ -1,4 +1,6 @@
 Document = Ignored* Definition+ Ignored*
+(* XXX(ilmoraunio): This ebnf would be portable if we didn't contain ordered
+                    choice below here. *)
 Definition = Ignored* (TypeSystemExtension /
                        TypeSystemDefinition /
                        ExecutableDefinition)
@@ -109,8 +111,7 @@ Selection = Field |
 Field = Ignored* Alias? Ignored* Name Arguments? Directives? SelectionSet?
 Alias = Ignored* Name Ignored* Colon
 Arguments = Ignored* ParensOpen Argument+ Ignored* ParensClose
-(* XXX(ilmoraunio): I don't think capturing commas here is a good idea. *)
-Argument = Ignored* Name Ignored* Colon Value Ignored* Commas?
+Argument = Ignored* Name Ignored* Colon Value Ignored*
 Value = Ignored* (Variable |
                   IntValue |
                   FloatValue |

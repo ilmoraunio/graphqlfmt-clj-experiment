@@ -458,31 +458,6 @@
                                 [:Printable {} ")"]
                                 [:Printable {} " "]))})
 
-(def re-transform-map
-  {:ObjectValue (fn [opts & xs]
-                  (:acc (reduce (fn [{:keys [head] :as acc-head} [node & _ :as x]]
-                                  (-> (update acc-head :acc conj
-                                              (if (and (= node :ObjectField)
-                                                       (= (ffirst head) :ObjectField))
-                                                (into x [comma-value])
-                                                x))
-                                    (update :head rest)))
-                                {:acc [:ObjectValue opts]
-                                 :head (rest xs)}
-                                xs)))
-   :ListValue (fn [opts & xs]
-                (conj (:acc (reduce (fn [{:keys [head] :as acc-head} [node & _ :as x]]
-                                      (-> (update acc-head :acc conj
-                                                  (if (and (= node :Value)
-                                                           (= (ffirst head) :Value))
-                                                    (into x [comma-value])
-                                                    x))
-                                        (update :head rest)))
-                                    {:acc [:ListValue opts [:Printable {} "["]]
-                                     :head (rest xs)}
-                                    xs))
-                      [:Printable {} "]"]))})
-
 (def template
   [:Document {}
    [:Definition {}
@@ -563,7 +538,18 @@
 
 (defn amend-horizontal-spacing-opts
   [ast]
-  (let [m {:ListValue (fn [opts & xs]
+  (let [m {:Arguments (fn [opts & xs]
+                        (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
+                                        (-> (update acc-head :acc conj
+                                                    (if (and (= node :Argument)
+                                                             (= (ffirst head) :Argument))
+                                                      (into [node (assoc opts :append-whitespace? true)] rst)
+                                                      x))
+                                          (update :head rest)))
+                                      {:acc [:Arguments opts]
+                                       :head (rest xs)}
+                                      xs)))
+           :ListValue (fn [opts & xs]
                         (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
                                         (-> (update acc-head :acc conj
                                                     (if (and (= node :Value)
@@ -683,8 +669,41 @@
 
 (defn transform
   [ast]
-  (->> ast
-    (insta/transform re-transform-map)))
+  (let [m {:Arguments (fn [opts & xs]
+                        (:acc (reduce (fn [{:keys [head] :as acc-head} [node & _ :as x]]
+                                        (-> (update acc-head :acc conj
+                                                    (if (and (= node :Argument)
+                                                             (= (ffirst head) :Argument))
+                                                      (into x [comma-value])
+                                                      x))
+                                          (update :head rest)))
+                                      {:acc [:Arguments opts]
+                                       :head (rest xs)}
+                                      xs)))
+           :ListValue (fn [opts & xs]
+                        (conj (:acc (reduce (fn [{:keys [head] :as acc-head} [node & _ :as x]]
+                                              (-> (update acc-head :acc conj
+                                                          (if (and (= node :Value)
+                                                                   (= (ffirst head) :Value))
+                                                            (into x [comma-value])
+                                                            x))
+                                                (update :head rest)))
+                                            {:acc [:ListValue opts [:Printable {} "["]]
+                                             :head (rest xs)}
+                                            xs))
+                              [:Printable {} "]"]))
+           :ObjectValue (fn [opts & xs]
+                          (:acc (reduce (fn [{:keys [head] :as acc-head} [node & _ :as x]]
+                                          (-> (update acc-head :acc conj
+                                                      (if (and (= node :ObjectField)
+                                                               (= (ffirst head) :ObjectField))
+                                                        (into x [comma-value])
+                                                        x))
+                                            (update :head rest)))
+                                        {:acc [:ObjectValue opts]
+                                         :head (rest xs)}
+                                        xs)))}]
+    (insta/transform m ast)))
 
 (defn opts
   [ast]
