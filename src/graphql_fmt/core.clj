@@ -142,7 +142,7 @@
    :ArgumentsDefinition (fn [& xs]
                           (reduce (fn [coll x] (conj coll x))
                                   [:ArgumentsDefinition {}]
-                                  (interpose [:Printable {} " "] xs)))
+                                  xs))
    :BlockQuote (fn [] [:BlockQuote {} "\"\"\""])
    :BlockQuoteOpen (fn [] [:BlockQuoteOpen {} "\"\"\""])
    :BlockQuoteClose (fn [] [:BlockQuoteClose {} "\"\"\""])
@@ -275,7 +275,7 @@
    :InputValueDefinition (fn [& xs]
                            (reduce (fn [coll x] (conj coll x))
                                    [:InputValueDefinition {}]
-                                   (conj (interpose [:Printable {} " "] xs))))
+                                   xs))
    :InputFieldsDefinition (fn [& xs]
                             (reduce (fn [coll x] (conj coll x))
                                     [:InputFieldsDefinition {}]
