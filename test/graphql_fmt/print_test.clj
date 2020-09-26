@@ -22,7 +22,6 @@
               (insta/transform
                 transform-map
                 (document-parser input)))))
-    "interface Foo { qux : String }"
     "\"the\" interface Foo @bar { \"the\" qux : String \"the\" baz : String }"
     ["\"the\"interface Foo@bar{\"the\"qux:String\"the\"baz:String}"
      "\"the\" interface Foo @bar { \"the\" qux : String \"the\" baz : String }"]
