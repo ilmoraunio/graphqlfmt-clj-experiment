@@ -257,7 +257,7 @@
                                   [:Printable {} " "]]
                                  (conj (interpose [:Printable {} " "] xs))))
    :FractionalPart (partial str ".")
-   :FragmentName (fn [s] [:Printable {} s])
+   :FragmentName (fn [s] [:FragmentName {} [:Printable {} s]])
    :FragmentSpread (fn [& xs]
                      (reduce (fn [coll x] (conj coll x))
                              [:FragmentSpread {} [:Printable {} "..."]]
@@ -560,6 +560,17 @@
                                   {:acc [:Field opts]
                                    :head (rest xs)}
                                   xs)))
+           :FragmentSpread (fn [opts & xs]
+                             (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
+                                             (-> (update acc-head :acc conj
+                                                         (if (and (= node :FragmentName)
+                                                                  (#{:Directives :TypeCondition} (ffirst head)))
+                                                           (into [node (assoc opts :append-whitespace? true)] rst)
+                                                           x))
+                                               (update :head rest)))
+                                           {:acc [:FragmentName opts]
+                                            :head (rest xs)}
+                                           xs)))
            :ListValue (fn [opts & xs]
                         (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
                                         (-> (update acc-head :acc conj
