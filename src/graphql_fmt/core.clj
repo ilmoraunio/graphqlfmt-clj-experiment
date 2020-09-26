@@ -632,6 +632,14 @@
                                         {:acc [:ObjectValue opts]
                                          :head (rest xs)}
                                         xs)))
+           :SchemaDefinition (fn [opts & xs]
+                               (reduce (fn [coll [node opts & rst :as x]]
+                                         (conj coll
+                                               (if (= node :Directives)
+                                                 (into [node (assoc opts :append-whitespace? true)] rst)
+                                                 x)))
+                                       [:SchemaDefinition opts]
+                                       xs))
            :VariableDefinition (fn [opts & xs]
                                  (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
                                                  (-> (update acc-head :acc conj

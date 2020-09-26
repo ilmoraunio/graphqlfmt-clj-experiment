@@ -22,7 +22,6 @@
               (insta/transform
                 transform-map
                 (document-parser input)))))
-    "schema @foo{query:Foo}"
     "\"the scalar\" scalar Foo @bar"
     "\"documents the\" type Foo @bar"
     "type Foo { \"the field definition\" Bar : String @foobar }"
