@@ -1,0 +1,14 @@
+{
+  foo {
+    a
+  }
+  bar {
+    a
+    b
+  }
+  foobar {
+    a {
+      b
+    }
+  }
+}
