@@ -1,0 +1,3 @@
+{
+  frob @foo(bar: true)
+}
