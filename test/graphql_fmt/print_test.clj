@@ -22,7 +22,6 @@
               (insta/transform
                 transform-map
                 (document-parser input)))))
-    "query frob($foo:[bar!]) {a,b}"
     "query frob($foo:[bar!]!) {a,b}"
     "query frob($foo:bar=true) {a,b}"
     "fragment foo on Bar @foobar {a,b,c}"
