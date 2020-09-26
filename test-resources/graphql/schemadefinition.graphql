@@ -1,0 +1,5 @@
+schema {
+  query: Foo
+  subscription: Bar
+  mutation: Foobar
+}

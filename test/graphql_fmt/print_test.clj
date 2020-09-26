@@ -22,7 +22,6 @@
               (insta/transform
                 transform-map
                 (document-parser input)))))
-    "schema {query:Foo,subscription:Bar,mutation:Foobar}"
     "schema @foo{query:Foo}"
     "\"the scalar\" scalar Foo @bar"
     "\"documents the\" type Foo @bar"

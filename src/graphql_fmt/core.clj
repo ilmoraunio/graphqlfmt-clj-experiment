@@ -370,13 +370,7 @@
                                   [:ScalarTypeExtension {}]
                                   (interpose [:Printable {} " "] xs)))
    :SchemaDefinition (fn [& xs]
-                       (reduce (fn [coll x]
-                                 (if (and (= (first (last coll))
-                                             :RootOperationTypeDefinition)
-                                          (= (first x)
-                                             :RootOperationTypeDefinition))
-                                   (conj coll comma-value x)
-                                   (conj coll x)))
+                       (reduce (fn [coll x] (conj coll x))
                                [:SchemaDefinition {}
                                 [:Printable {} "schema"]
                                 [:Printable {} " "]]
@@ -516,8 +510,14 @@
   [indent-level ast]
   (let [[node opts & rst] ast]
     (let [indent-level (case node
-                         (:SelectionSet :Arguments :Value) (inc indent-level)
-                         (:ParensClose :BraceClose :BlockQuoteClose :BlockStringCharacters) (max (dec indent-level) 0)
+                         (:SelectionSet
+                           :Arguments
+                           :Value
+                           :RootOperationTypeDefinition) (inc indent-level)
+                         (:ParensClose
+                           :BraceClose
+                           :BlockQuoteClose
+                           :BlockStringCharacters) (max (dec indent-level) 0)
                          indent-level)]
       (into [node (into opts {:indentation-level indent-level})]
             (cond
@@ -529,7 +529,8 @@
   (let [[node opts & rst] ast]
     (into [node (cond-> opts
                   (#{:BraceClose
-                     :Selection} node) (assoc :newline? true :indent? true))]
+                     :Selection
+                     :RootOperationTypeDefinition} node) (assoc :newline? true :indent? true))]
           (cond
             (vector? (first rst)) (map amend-newline-opts rst)
             (string? (first rst)) rst))))
@@ -727,7 +728,7 @@
                            :BlockQuoteClose
                            :ObjectField
                            :ParensClose} node)) (assoc :newline? true
-                                                       :indent? true)
+                                                                       :indent? true)
                    (and within-structured-subtree?
                         (= node :BlockStringCharacters)) (assoc :newline? true))]
            (cond
@@ -780,16 +781,16 @@
                                          :head (rest xs)}
                                         xs)))
            :VariableDefinitions (fn [opts & xs]
-                                 (:acc (reduce (fn [{:keys [head] :as acc-head} [node & _ :as x]]
-                                                 (-> (update acc-head :acc conj
-                                                             (if (and (= node :VariableDefinition)
-                                                                      (= (ffirst head) :VariableDefinition))
-                                                               (into x [comma-value])
-                                                               x))
-                                                   (update :head rest)))
-                                               {:acc [:VariableDefinitions opts]
-                                                :head (rest xs)}
-                                               xs)))}]
+                                  (:acc (reduce (fn [{:keys [head] :as acc-head} [node & _ :as x]]
+                                                  (-> (update acc-head :acc conj
+                                                              (if (and (= node :VariableDefinition)
+                                                                       (= (ffirst head) :VariableDefinition))
+                                                                (into x [comma-value])
+                                                                x))
+                                                    (update :head rest)))
+                                                {:acc [:VariableDefinitions opts]
+                                                 :head (rest xs)}
+                                                xs)))}]
     (insta/transform m ast)))
 
 (defn opts
