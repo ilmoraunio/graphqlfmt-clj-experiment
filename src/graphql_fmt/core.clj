@@ -229,7 +229,7 @@
                            (reduce (fn [coll x] (conj coll x))
                                    [:EnumValuesDefinition {}]
                                    (conj (interpose [:Printable {} " "] xs))))
-   :Equals (fn [x] [:Printable {} x])
+   :Equals (fn [x] [:Equals {} [:Printable {} x]])
    :EscapedCharacter str
    :EscapedUnicode str
    :ExclamationMark (fn [x] [:Printable {} x])
@@ -547,6 +547,14 @@
                                       {:acc [:Arguments opts]
                                        :head (rest xs)}
                                       xs)))
+           :DefaultValue (fn [opts & xs]
+                           (reduce (fn [coll [node opts & rst :as x]]
+                                     (conj coll
+                                           (if (= node :Equals)
+                                             (into [node (assoc opts :append-whitespace? true)] rst)
+                                             x)))
+                                   [:DefaultValue opts]
+                                   xs))
            :Field (fn [opts & xs]
                     (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
                                     (-> (update acc-head :acc conj
@@ -623,6 +631,18 @@
                                         {:acc [:ObjectValue opts]
                                          :head (rest xs)}
                                         xs)))
+           :VariableDefinition (fn [opts & xs]
+                                 (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
+                                                 (-> (update acc-head :acc conj
+                                                             (if (and (= node :Type)
+                                                                      (= (ffirst head) :DefaultValue))
+                                                               (into [node (assoc opts :append-whitespace? true)]
+                                                                     rst)
+                                                               x))
+                                                   (update :head rest)))
+                                               {:acc [:VariableDefinition opts]
+                                                :head (rest xs)}
+                                               xs)))
            :VariableDefinitions (fn [opts & xs]
                                   (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
                                                   (-> (update acc-head :acc conj
