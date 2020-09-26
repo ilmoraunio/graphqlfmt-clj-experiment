@@ -360,11 +360,11 @@
                               [:SchemaExtension {}]
                               (conj (interpose [:Printable {} " "] xs))))
    :SchemaKeyword (fn [x] [:Printable {} x])
-   :ScalarKeyword (fn [x] [:Printable {} x])
+   :ScalarKeyword (fn [x] [:ScalarKeyword {} [:Printable {} x]])
    :ScalarTypeDefinition (fn [& xs]
                            (reduce (fn [coll x] (conj coll x))
                                    [:ScalarTypeDefinition {}]
-                                   (interpose [:Printable {} " "] xs)))
+                                   xs))
    :ScalarTypeExtension (fn [& xs]
                           (reduce (fn [coll x] (conj coll x))
                                   [:ScalarTypeExtension {}]
@@ -526,14 +526,25 @@
 
 (defn amend-newline-opts
   [ast]
-  (let [[node opts & rst] ast]
-    (into [node (cond-> opts
-                  (#{:BraceClose
-                     :Selection
-                     :RootOperationTypeDefinition} node) (assoc :newline? true :indent? true))]
-          (cond
-            (vector? (first rst)) (map amend-newline-opts rst)
-            (string? (first rst)) rst))))
+  (let [m {:Description (fn [opts & xs]
+                          (into [:Description (assoc opts :newline? true
+                                                          :indent? true
+                                                          :print-after? true)]
+                                xs))
+           :BraceClose (fn [opts & xs]
+                         (into [:BraceClose (assoc opts :newline? true
+                                                        :indent? true)]
+                               xs))
+           :Selection (fn [opts & xs]
+                        (into [:Selection (assoc opts :newline? true
+                                                      :indent? true)]
+                              xs))
+           :RootOperationTypeDefinition (fn [opts & xs]
+                                          (into [:RootOperationTypeDefinition
+                                                 (assoc opts :newline? true
+                                                             :indent? true)]
+                                                xs))}]
+    (insta/transform m ast)))
 
 (defn amend-horizontal-spacing-opts
   [ast]
@@ -632,6 +643,16 @@
                                         {:acc [:ObjectValue opts]
                                          :head (rest xs)}
                                         xs)))
+           :ScalarTypeDefinition (fn [opts & xs]
+                                   (reduce (fn [coll [node opts & rst :as x]]
+                                             (conj coll
+                                                   (if (#{:ScalarKeyword
+                                                          :Name} node)
+                                                     (into [node (assoc opts :append-whitespace? true)]
+                                                           rst)
+                                                     x)))
+                                           [:ScalarTypeDefinition opts]
+                                           xs))
            :SchemaDefinition (fn [opts & xs]
                                (reduce (fn [coll [node opts & rst :as x]]
                                          (conj coll
@@ -736,7 +757,7 @@
                            :BlockQuoteClose
                            :ObjectField
                            :ParensClose} node)) (assoc :newline? true
-                                                                       :indent? true)
+                                                       :indent? true)
                    (and within-structured-subtree?
                         (= node :BlockStringCharacters)) (assoc :newline? true))]
            (cond
@@ -816,12 +837,17 @@
   (let [[node opts & rst] ast]
     (into (if (and (not (:prefer-inlining? opts))
                    (:newline? opts))
-            (into [node opts [:Printable {} "\n"]]
-                  (cond-> []
-                    (:indent? opts) (conj [:Printable {} (indent-s opts)])))
+            (cond-> [node opts]
+              (not (:print-after? opts)) (conj [:Printable {} "\n"])
+              (and (not (:print-after? opts))
+                   (:indent? opts)) (conj [:Printable {} (indent-s opts)]))
             [node opts])
           (cond
-            (vector? (first rst)) (map amend-newline-spacing rst)
+            (vector? (first rst)) (map amend-newline-spacing
+                                       (cond-> rst
+                                         (:print-after? opts) (concat [[:Printable {} "\n"]])
+                                         (and (:print-after? opts)
+                                              (:indent? opts)) (concat [[:Printable {} (indent-s opts)]])))
             (string? (first rst)) (if (:newline? opts)
                                     [[:Printable {} (first rst)]]
                                     rst)))))
