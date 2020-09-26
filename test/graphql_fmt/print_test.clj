@@ -22,7 +22,6 @@
               (insta/transform
                 transform-map
                 (document-parser input)))))
-    "fragment foo on Bar @foobar {a,b,c}"
     "schema {query:Foo,subscription:Bar,mutation:Foobar}"
     "schema @foo{query:Foo}"
     "\"the scalar\" scalar Foo @bar"

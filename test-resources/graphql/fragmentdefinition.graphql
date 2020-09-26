@@ -1,0 +1,5 @@
+fragment foo on Bar @foobar {
+  a
+  b
+  c
+}
