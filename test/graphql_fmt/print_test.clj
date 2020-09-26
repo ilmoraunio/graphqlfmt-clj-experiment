@@ -22,7 +22,6 @@
               (insta/transform
                 transform-map
                 (document-parser input)))))
-    "{...on Foo{...on Bar{foobar}}}"
     "{...on Foo@bar{foobar}}"
     "query {frob}"
     "mutation {frob}"

@@ -575,7 +575,7 @@
            :InlineFragment (fn [opts & xs]
                              (reduce (fn [coll [node opts & rst :as x]]
                                        (conj coll
-                                             (if (= node :Ellipsis)
+                                             (if (#{:Ellipsis :TypeCondition} node)
                                                (into [node (assoc opts :append-whitespace? true)] rst)
                                                x)))
                                      [:InlineFragment opts]
