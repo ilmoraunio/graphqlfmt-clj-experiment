@@ -22,7 +22,6 @@
               (insta/transform
                 transform-map
                 (document-parser input)))))
-    "query {frob}"
     "mutation {frob}"
     "subscription {frob}"
     "query frobnicator{frob}"

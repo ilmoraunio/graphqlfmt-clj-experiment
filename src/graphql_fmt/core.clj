@@ -339,10 +339,7 @@
                     xs))
    :OnKeyword (fn [x] [:Printable {} x])
    :OperationDefinition (fn [& xs]
-                          (reduce (fn [coll x]
-                                    (if (= (first x) :OperationType)
-                                      (conj coll x [:Printable {} " "])
-                                      (conj coll x)))
+                          (reduce (fn [coll x] (conj coll x))
                                   [:OperationDefinition {}]
                                   xs))
    :OperationType (fn [x] [:OperationType {} [:Printable {} x]])
@@ -600,6 +597,14 @@
                           (into [:ObjectField (assoc opts :append-whitespace?
                                                           true)]
                                 xs))
+           :OperationDefinition (fn [opts & xs]
+                                  (reduce (fn [coll [node opts & rst :as x]]
+                                            (conj coll
+                                                  (if (= node :OperationType)
+                                                    (into [node (assoc opts :append-whitespace? true)] rst)
+                                                    x)))
+                                          [:OperationDefinition opts]
+                                          xs))
            :ObjectValue (fn [opts & xs]
                           (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
                                           (-> (update acc-head :acc conj
