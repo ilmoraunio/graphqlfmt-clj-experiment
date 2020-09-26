@@ -647,15 +647,20 @@
                                                  :head (rest xs)}
                                                 xs)))
            :ObjectTypeDefinition (fn [opts & xs]
-                                   (reduce (fn [coll [node opts & rst :as x]]
-                                             (conj coll
-                                                   (if (#{:ObjectKeyword
-                                                          :Name} node)
-                                                     (into [node (assoc opts :append-whitespace? true)]
-                                                           rst)
-                                                     x)))
-                                           [:ObjectTypeDefinition opts]
-                                           xs))
+                                   (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
+                                                   (-> (update acc-head :acc conj
+                                                               (if (or (#{:ObjectKeyword
+                                                                          :Name} node)
+                                                                       (and (= node :ImplementsInterfaces)
+                                                                            (#{:Directives
+                                                                               :FieldsDefinition} (ffirst head))))
+                                                                 (into [node (assoc opts :append-whitespace? true)]
+                                                                       rst)
+                                                                 x))
+                                                     (update :head rest)))
+                                                 {:acc [:ObjectTypeDefinition opts]
+                                                  :head (rest xs)}
+                                                 xs)))
            :ObjectValue (fn [opts & xs]
                           (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
                                           (-> (update acc-head :acc conj

@@ -22,7 +22,6 @@
               (insta/transform
                 transform-map
                 (document-parser input)))))
-    "type Foo implements Bar { qux : String }"
     "type Foo implements & Bar { qux : String }"
     "type Foo implements Bar & Foobar { qux : String }"
     "interface Foo { qux : String }"
