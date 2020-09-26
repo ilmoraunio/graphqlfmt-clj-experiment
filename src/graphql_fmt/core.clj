@@ -622,7 +622,19 @@
                                             (update :head rest)))
                                         {:acc [:ObjectValue opts]
                                          :head (rest xs)}
-                                        xs)))}]
+                                        xs)))
+           :VariableDefinitions (fn [opts & xs]
+                                  (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
+                                                  (-> (update acc-head :acc conj
+                                                              (if (and (= node :VariableDefinition)
+                                                                       (= (ffirst head) :VariableDefinition))
+                                                                (into [node (assoc opts :append-whitespace? true)]
+                                                                      rst)
+                                                                x))
+                                                    (update :head rest)))
+                                                {:acc [:VariableDefinitions opts]
+                                                 :head (rest xs)}
+                                                xs)))}]
     (insta/transform m ast)))
 
 (defn amend-prefer-inlining-opts
@@ -746,7 +758,18 @@
                                             (update :head rest)))
                                         {:acc [:ObjectValue opts]
                                          :head (rest xs)}
-                                        xs)))}]
+                                        xs)))
+           :VariableDefinitions (fn [opts & xs]
+                                 (:acc (reduce (fn [{:keys [head] :as acc-head} [node & _ :as x]]
+                                                 (-> (update acc-head :acc conj
+                                                             (if (and (= node :VariableDefinition)
+                                                                      (= (ffirst head) :VariableDefinition))
+                                                               (into x [comma-value])
+                                                               x))
+                                                   (update :head rest)))
+                                               {:acc [:VariableDefinitions opts]
+                                                :head (rest xs)}
+                                               xs)))}]
     (insta/transform m ast)))
 
 (defn opts
