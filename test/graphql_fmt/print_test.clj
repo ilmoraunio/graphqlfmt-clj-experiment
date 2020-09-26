@@ -22,7 +22,6 @@
               (insta/transform
                 transform-map
                 (document-parser input)))))
-    "\"documents the\" type Foo @bar"
     "type Foo { \"the field definition\" Bar : String @foobar }"
     "type Foo { Bar : String }"
     "type Foo { Qux : String Baz : String }"

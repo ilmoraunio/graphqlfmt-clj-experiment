@@ -322,11 +322,11 @@
                   (reduce (fn [coll x] (conj coll x))
                           [:ObjectField {}]
                           xs))
-   :ObjectKeyword (fn [x] [:Printable {} x])
+   :ObjectKeyword (fn [x] [:ObjectKeyword {} [:Printable {} x]])
    :ObjectTypeDefinition (fn [& xs]
                            (reduce (fn [coll x] (conj coll x))
                                    [:ObjectTypeDefinition {}]
-                                   (interpose [:Printable {} " "] xs)))
+                                   xs))
    :ObjectTypeExtension (fn [& xs]
                           (reduce (fn [coll x] (conj coll x))
                                   [:ObjectTypeExtension {}]
@@ -631,6 +631,16 @@
                                                 {:acc [:OperationDefinition opts]
                                                  :head (rest xs)}
                                                 xs)))
+           :ObjectTypeDefinition (fn [opts & xs]
+                                   (reduce (fn [coll [node opts & rst :as x]]
+                                             (conj coll
+                                                   (if (#{:ObjectKeyword
+                                                          :Name} node)
+                                                     (into [node (assoc opts :append-whitespace? true)]
+                                                           rst)
+                                                     x)))
+                                           [:ScalarTypeDefinition opts]
+                                           xs))
            :ObjectValue (fn [opts & xs]
                           (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
                                           (-> (update acc-head :acc conj
