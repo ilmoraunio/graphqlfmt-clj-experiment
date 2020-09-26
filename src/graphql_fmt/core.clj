@@ -291,11 +291,11 @@
                                        (conj (interpose [:Printable {} " "] xs))))
    :IntValue int-value
    :IntegerPart str
-   :InterfaceKeyword (fn [x] [:Printable {} x])
+   :InterfaceKeyword (fn [x] [:InterfaceKeyword {} [:Printable {} x]])
    :InterfaceTypeDefinition (fn [& xs]
                               (reduce (fn [coll x] (conj coll x))
                                       [:InterfaceTypeDefinition {}]
-                                      (conj (interpose [:Printable {} " "] xs))))
+                                      xs))
    :InterfaceTypeExtension (fn [& xs]
                              (reduce (fn [coll x] (conj coll x))
                                      [:InterfaceTypeExtension {}]
@@ -614,6 +614,19 @@
                                                x)))
                                      [:InlineFragment opts]
                                      xs))
+           :InterfaceTypeDefinition (fn [opts & xs]
+                                      (:acc (reduce (fn [{:keys [_head] :as acc-head} [node opts & rst :as x]]
+                                                      (-> (update acc-head :acc conj
+                                                                  (if (#{:InterfaceKeyword
+                                                                         :Name
+                                                                         :Directives} node)
+                                                                    (into [node (assoc opts :append-whitespace? true)] rst)
+                                                                    x))
+                                                        (update :head rest)))
+                                                    {:acc [:InterfaceTypeDefinition opts]
+                                                     :head (rest xs)}
+                                                    xs
+                                                    )))
            :ListValue (fn [opts & xs]
                         (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
                                         (-> (update acc-head :acc conj
