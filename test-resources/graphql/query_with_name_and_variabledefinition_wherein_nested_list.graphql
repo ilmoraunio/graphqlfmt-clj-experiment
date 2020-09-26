@@ -1,0 +1,4 @@
+query frob($foo: [[bar]]) {
+  a
+  b
+}
