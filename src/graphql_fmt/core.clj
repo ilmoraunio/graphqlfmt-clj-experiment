@@ -654,7 +654,7 @@
                                                      (into [node (assoc opts :append-whitespace? true)]
                                                            rst)
                                                      x)))
-                                           [:ScalarTypeDefinition opts]
+                                           [:ObjectTypeDefinition opts]
                                            xs))
            :ObjectValue (fn [opts & xs]
                           (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
