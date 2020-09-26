@@ -1408,7 +1408,7 @@
               [:StringCharacter "n"]]
              [:Quote]]]
            [:Name "Bar"]
-           [:FieldNameSeparator]
+           [:Colon ":"]
            [:Type [:NamedType [:Name "String"]]]
            [:Directives [:Directive [:Name "foobar"]]]]
           [:BraceClose "}"]]]]]]]
@@ -1427,7 +1427,7 @@
           [:BraceOpen "{"]
           [:FieldDefinition
            [:Name "Bar"]
-           [:FieldNameSeparator]
+           [:Colon ":"]
            [:Type [:NamedType [:Name "String"]]]]
           [:BraceClose "}"]]]]]]]
 
@@ -1445,11 +1445,11 @@
           [:BraceOpen "{"]
           [:FieldDefinition
            [:Name "Qux"]
-           [:FieldNameSeparator]
+           [:Colon ":"]
            [:Type [:NamedType [:Name "String"]]]]
           [:FieldDefinition
            [:Name "Baz"]
-           [:FieldNameSeparator]
+           [:Colon ":"]
            [:Type [:NamedType [:Name "String"]]]]
           [:BraceClose "}"]]]]]]]
 
@@ -1466,7 +1466,7 @@
           [:BraceOpen "{"]
           [:FieldDefinition
            [:Name "Qux"]
-           [:FieldNameSeparator]
+           [:Colon ":"]
            [:Type
             [:NonNullType [:NamedType [:Name "String"]] [:ExclamationMark "!"]]]]
           [:FieldDefinition
@@ -1479,7 +1479,7 @@
              [:Type
               [:NonNullType [:NamedType [:Name "String"]] [:ExclamationMark "!"]]]]
             [:ParensClose ")"]]
-           [:FieldNameSeparator]
+           [:Colon ":"]
            [:Type
             [:NonNullType [:NamedType [:Name "String"]] [:ExclamationMark "!"]]]]
           [:BraceClose "}"]]]]]]]
@@ -1501,7 +1501,7 @@
           [:BraceOpen "{"]
           [:FieldDefinition
            [:Name "qux"]
-           [:FieldNameSeparator]
+           [:Colon ":"]
            [:Type [:NamedType [:Name "String"]]]]
           [:BraceClose "}"]]]]]]]
 
@@ -1523,7 +1523,7 @@
           [:BraceOpen "{"]
           [:FieldDefinition
            [:Name "qux"]
-           [:FieldNameSeparator]
+           [:Colon ":"]
            [:Type [:NamedType [:Name "String"]]]]
           [:BraceClose "}"]]]]]]]
 
@@ -1547,7 +1547,7 @@
           [:BraceOpen "{"]
           [:FieldDefinition
            [:Name "qux"]
-           [:FieldNameSeparator]
+           [:Colon ":"]
            [:Type [:NamedType [:Name "String"]]]]
           [:BraceClose "}"]]]]]]]
 
@@ -1565,7 +1565,7 @@
           [:BraceOpen "{"]
           [:FieldDefinition
            [:Name "qux"]
-           [:FieldNameSeparator]
+           [:Colon ":"]
            [:Type [:NamedType [:Name "String"]]]]
           [:BraceClose "}"]]]]]]]
 
@@ -1600,7 +1600,7 @@
               [:StringCharacter "e"]]
              [:Quote]]]
            [:Name "qux"]
-           [:FieldNameSeparator]
+           [:Colon ":"]
            [:Type [:NamedType [:Name "String"]]]]
           [:FieldDefinition
            [:Description
@@ -1612,7 +1612,7 @@
               [:StringCharacter "e"]]
              [:Quote]]]
            [:Name "baz"]
-           [:FieldNameSeparator]
+           [:Colon ":"]
            [:Type [:NamedType [:Name "String"]]]]
           [:BraceClose "}"]]]]]]]
 
@@ -2147,7 +2147,7 @@
           [:BraceOpen "{"]
           [:FieldDefinition
            [:Name "qux"]
-           [:FieldNameSeparator]
+           [:Colon ":"]
            [:Type [:NamedType [:Name "String"]]]]
           [:BraceClose "}"]]]]]]]
 
@@ -2178,7 +2178,7 @@
               [:StringCharacter "e"]]
              [:Quote]]]
            [:Name "qux"]
-           [:FieldNameSeparator]
+           [:Colon ":"]
            [:Type [:NamedType [:Name "String"]]]
            [:Directives [:Directive [:Name "baz"]]]]
           [:BraceClose "}"]]]]]]]
@@ -2211,11 +2211,11 @@
           [:BraceOpen "{"]
           [:FieldDefinition
            [:Name "foo"]
-           [:FieldNameSeparator]
+           [:Colon ":"]
            [:Type [:NamedType [:Name "String"]]]]
           [:FieldDefinition
            [:Name "bar"]
-           [:FieldNameSeparator]
+           [:Colon ":"]
            [:Type [:NamedType [:Name "String"]]]]
           [:BraceClose "}"]]]]]]]
 
@@ -2235,7 +2235,7 @@
           [:BraceOpen "{"]
           [:FieldDefinition
            [:Name "bar"]
-           [:FieldNameSeparator]
+           [:Colon ":"]
            [:Type [:NamedType [:Name "String"]]]]
           [:BraceClose "}"]]]]]]]
 

@@ -244,12 +244,11 @@
    :FieldDefinition (fn [& xs]
                       (reduce (fn [coll x] (conj coll x))
                               [:FieldDefinition {}]
-                              (interpose [:Printable {} " "] xs)))
-   :FieldNameSeparator (fn [] [:Printable {} ":"])
+                              xs))
    :FieldsDefinition (fn [& xs]
                        (conj (reduce (fn [coll x] (conj coll x))
                                      [:FieldsDefinition {}]
-                                     (interpose [:Printable {} " "] xs))))
+                                     xs)))
    :FloatValue float-value
    :FragmentDefinition (fn [& xs]
                          (reduce (fn [coll x] (conj coll x))
@@ -510,10 +509,11 @@
   [indent-level ast]
   (let [[node opts & rst] ast]
     (let [indent-level (case node
-                         (:SelectionSet
-                           :Arguments
-                           :Value
-                           :RootOperationTypeDefinition) (inc indent-level)
+                         (:Arguments
+                           :FieldsDefinition
+                           :SelectionSet
+                           :RootOperationTypeDefinition
+                           :Value) (inc indent-level)
                          (:ParensClose
                            :BraceClose
                            :BlockQuoteClose
@@ -535,6 +535,10 @@
                          (into [:BraceClose (assoc opts :newline? true
                                                         :indent? true)]
                                xs))
+           :FieldDefinition (fn [opts & xs]
+                              (into [:FieldDefinition (assoc opts :newline? true
+                                                                  :indent? true)]
+                                    xs))
            :Selection (fn [opts & xs]
                         (into [:Selection (assoc opts :newline? true
                                                       :indent? true)]
@@ -578,6 +582,14 @@
                                   {:acc [:Field opts]
                                    :head (rest xs)}
                                   xs)))
+           :FieldDefinition (fn [opts & xs]
+                              (reduce (fn [coll [node opts & rst :as x]]
+                                        (conj coll
+                                              (if (= node :Type)
+                                                (into [node (assoc opts :append-whitespace? true)] rst)
+                                                x)))
+                                      [:FieldDefinition opts]
+                                      xs))
            :FragmentSpread (fn [opts & xs]
                              (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
                                              (-> (update acc-head :acc conj
