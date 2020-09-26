@@ -1,4 +1,3 @@
 type Foo {
-  "the field definition"
-  Bar: String @foobar
+  Bar: String
 }

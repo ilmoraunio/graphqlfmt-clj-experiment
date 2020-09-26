@@ -583,13 +583,16 @@
                                    :head (rest xs)}
                                   xs)))
            :FieldDefinition (fn [opts & xs]
-                              (reduce (fn [coll [node opts & rst :as x]]
-                                        (conj coll
-                                              (if (= node :Type)
-                                                (into [node (assoc opts :append-whitespace? true)] rst)
-                                                x)))
-                                      [:FieldDefinition opts]
-                                      xs))
+                              (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
+                                              (-> (update acc-head :acc conj
+                                                          (if (and (= node :Type)
+                                                                   (= (ffirst head) :Directives))
+                                                            (into [node (assoc opts :append-whitespace? true)] rst)
+                                                            x))
+                                                (update :head rest)))
+                                            {:acc [:FieldDefinition opts]
+                                             :head (rest xs)}
+                                            xs)))
            :FragmentSpread (fn [opts & xs]
                              (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
                                              (-> (update acc-head :acc conj
