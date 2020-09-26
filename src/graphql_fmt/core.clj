@@ -598,15 +598,19 @@
                                                           true)]
                                 xs))
            :OperationDefinition (fn [opts & xs]
-                                  (reduce (fn [coll [node opts & rst :as x]]
-                                            (conj coll
-                                                  (if (#{:Directives
-                                                         :Name
-                                                         :OperationType} node)
-                                                    (into [node (assoc opts :append-whitespace? true)] rst)
-                                                    x)))
-                                          [:OperationDefinition opts]
-                                          xs))
+                                  (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
+                                                  (-> (update acc-head :acc conj
+                                                              (if (or (#{:Directives
+                                                                         :OperationType} node)
+                                                                      (and (= node :Name)
+                                                                           (#{:Directives
+                                                                              :SelectionSet} (ffirst head))))
+                                                                (into [node (assoc opts :append-whitespace? true)] rst)
+                                                                x))
+                                                    (update :head rest)))
+                                                {:acc [:OperationDefinition opts]
+                                                 :head (rest xs)}
+                                                xs)))
            :ObjectValue (fn [opts & xs]
                           (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
                                           (-> (update acc-head :acc conj
