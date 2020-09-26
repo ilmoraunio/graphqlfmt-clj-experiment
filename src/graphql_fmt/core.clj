@@ -209,6 +209,7 @@
                (reduce (fn [coll x] (conj coll x))
                        [:Document {}]
                        (conj (interpose [:Printable {} " "] xs))))
+   :Ellipsis (fn [_] [:Ellipsis {} [:Printable {} "..."]])
    :ExecutableDirectiveLocation (fn [x] [:ExecutableDirectiveLocation {} x])
    :EnumKeyword (fn [x] [:Printable {} x])
    :EnumTypeDefinition (fn [& xs]
@@ -260,7 +261,7 @@
    :FragmentName (fn [s] [:FragmentName {} [:Printable {} s]])
    :FragmentSpread (fn [& xs]
                      (reduce (fn [coll x] (conj coll x))
-                             [:FragmentSpread {} [:Printable {} "..."]]
+                             [:FragmentSpread {}]
                              xs))
    :ImplementsInterfaces (fn [& xs]
                            (reduce (fn [coll x] (conj coll x))
@@ -270,7 +271,7 @@
    :ImplementsTypeSeparator (fn [x] [:Printable {} x])
    :InlineFragment (fn [& xs]
                      (reduce (fn [coll x] (conj coll x))
-                             [:InlineFragment {} [:Printable {} "..."]]
+                             [:InlineFragment {}]
                              xs))
    :InputValueDefinition (fn [& xs]
                            (reduce (fn [coll x] (conj coll x))
@@ -571,6 +572,14 @@
                                            {:acc [:FragmentName opts]
                                             :head (rest xs)}
                                            xs)))
+           :InlineFragment (fn [opts & xs]
+                             (reduce (fn [coll [node opts & rst :as x]]
+                                       (conj coll
+                                             (if (= node :Ellipsis)
+                                               (into [node (assoc opts :append-whitespace? true)] rst)
+                                               x)))
+                                     [:InlineFragment opts]
+                                     xs))
            :ListValue (fn [opts & xs]
                         (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
                                         (-> (update acc-head :acc conj

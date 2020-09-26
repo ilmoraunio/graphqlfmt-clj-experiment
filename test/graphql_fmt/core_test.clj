@@ -880,7 +880,7 @@
        [:OperationDefinition
         [:SelectionSet
          [:BraceOpen "{"]
-         [:Selection [:FragmentSpread [:FragmentName "frob"]]]
+         [:Selection [:FragmentSpread [:Ellipsis "..."] [:FragmentName "frob"]]]
          [:BraceClose "}"]]]]]]
 
     ["{...frob@foo}"
@@ -894,6 +894,7 @@
          [:BraceOpen "{"]
          [:Selection
           [:FragmentSpread
+           [:Ellipsis "..."]
            [:FragmentName "frob"]
            [:Directives [:Directive [:Name "foo"]]]]]
          [:BraceClose "}"]]]]]]
@@ -907,8 +908,8 @@
        [:OperationDefinition
         [:SelectionSet
          [:BraceOpen "{"]
-         [:Selection [:FragmentSpread [:FragmentName "foo"]]]
-         [:Selection [:FragmentSpread [:FragmentName "bar"]]]
+         [:Selection [:FragmentSpread [:Ellipsis "..."] [:FragmentName "foo"]]]
+         [:Selection [:FragmentSpread [:Ellipsis "..."] [:FragmentName "bar"]]]
          [:BraceClose "}"]]]]]]
 
     ["{...{frob}}"
@@ -922,6 +923,7 @@
          [:BraceOpen "{"]
          [:Selection
           [:InlineFragment
+           [:Ellipsis "..."]
            [:SelectionSet
             [:BraceOpen "{"]
             [:Selection [:Field [:Name "frob"]]]
@@ -939,11 +941,13 @@
          [:BraceOpen "{"]
          [:Selection
           [:InlineFragment
+           [:Ellipsis "..."]
            [:TypeCondition [:NamedType [:Name "Foo"]]]
            [:SelectionSet
             [:BraceOpen "{"]
             [:Selection
              [:InlineFragment
+              [:Ellipsis "..."]
               [:TypeCondition [:NamedType [:Name "Bar"]]]
               [:SelectionSet
                [:BraceOpen "{"]
@@ -963,6 +967,7 @@
          [:BraceOpen "{"]
          [:Selection
           [:InlineFragment
+           [:Ellipsis "..."]
            [:TypeCondition [:NamedType [:Name "Foo"]]]
            [:Directives [:Directive [:Name "bar"]]]
            [:SelectionSet

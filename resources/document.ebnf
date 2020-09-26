@@ -131,9 +131,9 @@ ObjectValue = (BraceOpen Ignored* BraceClose) |
 ObjectField = Ignored* Name Ignored* Colon Ignored* Value
 Directives = Directive+
 Directive = Ignored* <'@'> Ignored* Name Arguments?
-FragmentSpread = Ignored* <'...'> Ignored* FragmentName Directives?
+FragmentSpread = Ignored* Ellipsis Ignored* FragmentName Directives?
 FragmentName = #"^(?!on)[_A-Za-z][_0-9A-Za-z]*"
-InlineFragment = <'...'> TypeCondition? Directives? SelectionSet
+InlineFragment = Ellipsis TypeCondition? Directives? SelectionSet
 TypeCondition = Ignored* <'on'> Ignored* NamedType
 Type = Ignored* (NamedType |
                  ListType |
