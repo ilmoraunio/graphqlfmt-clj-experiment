@@ -22,8 +22,6 @@
               (insta/transform
                 transform-map
                 (document-parser input)))))
-    "type Foo implements & Bar { qux : String }"
-    "type Foo implements Bar & Foobar { qux : String }"
     "interface Foo { qux : String }"
     "\"the\" interface Foo @bar { \"the\" qux : String \"the\" baz : String }"
     ["\"the\"interface Foo@bar{\"the\"qux:String\"the\"baz:String}"
@@ -64,7 +62,11 @@
     "extend input Foobar @foo @bar"
     "extend input Foobar { qux : String baz : String }"
     "extend input Foobar @qux { baz : String }"
-    "query {foo} {foo:String} fragment foo on Bar {foo} type Foo schema {query:Foo}"))
+    "query {foo} {foo:String} fragment foo on Bar {foo} type Foo schema {query:Foo}"
+    ;;
+    ;; we need to have a test that tests for exact input and output
+    "type Foo implements & Bar { qux : String }"
+    ))
 
 (def graphql-statements
   (->> (clojure.java.io/file "test-resources/graphql")
