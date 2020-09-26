@@ -22,7 +22,6 @@
               (insta/transform
                 transform-map
                 (document-parser input)))))
-    "query frobnicator{frob}"
     "query frobnicator@foo{frob}"
     "query frob($foo:bar) {a,b}"
     "query frob($foo:bar$qux:baz) {a,b}"
