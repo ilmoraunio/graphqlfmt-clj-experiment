@@ -600,8 +600,9 @@
            :OperationDefinition (fn [opts & xs]
                                   (reduce (fn [coll [node opts & rst :as x]]
                                             (conj coll
-                                                  (if (#{:OperationType
-                                                         :Name} node)
+                                                  (if (#{:Directives
+                                                         :Name
+                                                         :OperationType} node)
                                                     (into [node (assoc opts :append-whitespace? true)] rst)
                                                     x)))
                                           [:OperationDefinition opts]
