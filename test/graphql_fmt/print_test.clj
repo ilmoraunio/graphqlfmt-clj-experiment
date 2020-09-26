@@ -22,7 +22,6 @@
               (insta/transform
                 transform-map
                 (document-parser input)))))
-    "{frob@foo(a:1,b:2)}"
     "{frob@foo(a:1) @bar(a:1)}"
     "{foo{bar}}"
     "{foo{bar{foobar}}}"
