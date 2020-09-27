@@ -418,7 +418,7 @@
                                   [:TypeSystemExtension {}]
                                   xs))
    :UnionEqualitySeparator (fn [x] [:Printable {} x])
-   :UnionKeyword (fn [x] [:Printable {} x])
+   :UnionKeyword (fn [x] [:UnionKeyword {} [:Printable {} x]])
    :UnionMemberTypes (fn [& xs]
                        (reduce (fn [coll x] (conj coll x))
                                [:UnionMemberTypes {}]
@@ -426,7 +426,7 @@
    :UnionTypeDefinition (fn [& xs]
                           (reduce (fn [coll x] (conj coll x))
                                   [:UnionTypeDefinition {}]
-                                  (interpose [:Printable {} " "] xs)))
+                                  xs))
    :UnionTypeExtension (fn [& xs]
                          (reduce (fn [coll x] (conj coll x))
                                  [:UnionTypeExtension {}]
@@ -704,6 +704,25 @@
                                                  x)))
                                        [:SchemaDefinition opts]
                                        xs))
+           :UnionTypeDefinition (fn [opts & xs]
+                                  (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
+                                                  (-> (update acc-head :acc conj
+                                                              (if (or (= node :UnionKeyword)
+                                                                      (and (= node :Name)
+                                                                           (#{:Directives
+                                                                              :UnionMemberTypes} (ffirst head)))
+                                                                      (and (= node :Directives)
+                                                                           (= (ffirst head) :UnionMemberTypes)))
+                                                                (into [node (assoc
+                                                                              opts
+                                                                              :append-whitespace?
+                                                                              true)]
+                                                                      rst)
+                                                                x))
+                                                    (update :head rest)))
+                                                {:acc [:UnionTypeDefinition opts]
+                                                 :head (rest xs)}
+                                                xs)))
            :VariableDefinition (fn [opts & xs]
                                  (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
                                                  (-> (update acc-head :acc conj
