@@ -22,7 +22,6 @@
               (insta/transform
                 transform-map
                 (document-parser input)))))
-    "enum Foobar { FOO BAR }"
     "\"the\" enum Foobar @qux { \"it foo\" FOO \"it bar\" BAR }"
     "input Foobar"
     "input Foobar { foo : String }"
