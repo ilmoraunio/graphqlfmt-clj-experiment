@@ -224,11 +224,11 @@
    :EnumValueDefinition (fn [& xs]
                           (reduce (fn [coll x] (conj coll x))
                                   [:EnumValueDefinition {}]
-                                  (conj (interpose [:Printable {} " "] xs))))
+                                  xs))
    :EnumValuesDefinition (fn [& xs]
                            (reduce (fn [coll x] (conj coll x))
                                    [:EnumValuesDefinition {}]
-                                   (conj (interpose [:Printable {} " "] xs))))
+                                   xs))
    :Equals (fn [x] [:Equals {} [:Printable {} x]])
    :EscapedCharacter str
    :EscapedUnicode str
@@ -510,6 +510,7 @@
   (let [[node opts & rst] ast]
     (let [indent-level (case node
                          (:Arguments
+                           :EnumValuesDefinition
                            :FieldsDefinition
                            :SelectionSet
                            :RootOperationTypeDefinition
@@ -535,6 +536,11 @@
                          (into [:BraceClose (assoc opts :newline? true
                                                         :indent? true)]
                                xs))
+           :EnumValueDefinition (fn [opts & xs]
+                                   (into [:EnumValueDefinition
+                                          (assoc opts :newline? true
+                                                      :indent? true)]
+                                         xs))
            :FieldDefinition (fn [opts & xs]
                               (into [:FieldDefinition (assoc opts :newline? true
                                                                   :indent? true)]
