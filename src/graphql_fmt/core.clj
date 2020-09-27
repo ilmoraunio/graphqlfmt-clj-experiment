@@ -211,16 +211,16 @@
                        (conj (interpose [:Printable {} " "] xs))))
    :Ellipsis (fn [_] [:Ellipsis {} [:Printable {} "..."]])
    :ExecutableDirectiveLocation (fn [x] [:ExecutableDirectiveLocation {} x])
-   :EnumKeyword (fn [x] [:Printable {} x])
+   :EnumKeyword (fn [x] [:EnumKeyword {} [:Printable {} x]])
    :EnumTypeDefinition (fn [& xs]
                          (reduce (fn [coll x] (conj coll x))
                                  [:EnumTypeDefinition {}]
-                                 (conj (interpose [:Printable {} " "] xs))))
+                                 xs))
    :EnumTypeExtension (fn [& xs]
                         (reduce (fn [coll x] (conj coll x))
                                 [:EnumTypeExtension {}]
                                 (conj (interpose [:Printable {} " "] xs))))
-   :EnumValue (fn [x] [:EnumValue {} x])
+   :EnumValue (fn [x] [:EnumValue {} [:Printable {} x]])
    :EnumValueDefinition (fn [& xs]
                           (reduce (fn [coll x] (conj coll x))
                                   [:EnumValueDefinition {}]
@@ -577,6 +577,32 @@
                                              x)))
                                    [:DefaultValue opts]
                                    xs))
+           :EnumTypeDefinition (fn [opts & xs]
+                                 (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
+                                                 (-> (update acc-head :acc conj
+                                                             (if (or (= node :EnumKeyword)
+                                                                     (and (= node :Name)
+                                                                          (#{:Directives
+                                                                             :EnumValuesDefinition} (ffirst head)))
+                                                                     (and (= node :Directives)
+                                                                          (= (ffirst head) :EnumValuesDefinition)))
+                                                               (into [node (assoc opts :append-whitespace? true)] rst)
+                                                               x))
+                                                   (update :head rest)))
+                                               {:acc [:EnumTypeDefinition opts]
+                                                :head (rest xs)}
+                                               xs)))
+           :EnumValueDefinition (fn [opts & xs]
+                                  (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
+                                                  (-> (update acc-head :acc conj
+                                                              (if (and (= node :EnumValue)
+                                                                       (= (ffirst head) :Directives))
+                                                                (into [node (assoc opts :append-whitespace? true)] rst)
+                                                                x))
+                                                    (update :head rest)))
+                                                {:acc [:EnumValueDefinition opts]
+                                                 :head (rest xs)}
+                                                xs)))
            :Field (fn [opts & xs]
                     (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
                                     (-> (update acc-head :acc conj
