@@ -1,0 +1,7 @@
+"the"
+input Foobar @qux {
+  "the"
+  foo: String = "foo" @qux
+  "the"
+  bar: String = "bar" @qux
+}

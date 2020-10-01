@@ -280,11 +280,11 @@
                             (reduce (fn [coll x] (conj coll x))
                                     [:InputFieldsDefinition {}]
                                     xs))
-   :InputKeyword (fn [x] [:Printable {} x])
+   :InputKeyword (fn [x] [:InputKeyword {} [:Printable {} x]])
    :InputObjectTypeDefinition (fn [& xs]
                                 (reduce (fn [coll x] (conj coll x))
                                         [:InputObjectTypeDefinition {}]
-                                        (conj (interpose [:Printable {} " "] xs))))
+                                        xs))
    :InputObjectTypeExtension (fn [& xs]
                                (reduce (fn [coll x] (conj coll x))
                                        [:InputObjectTypeExtension {}]
@@ -657,6 +657,35 @@
                                                x)))
                                      [:InlineFragment opts]
                                      xs))
+           :InputObjectTypeDefinition (fn [opts & xs]
+                                        (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
+                                                        (-> (update acc-head :acc conj
+                                                                    (if (or (= node :InputKeyword)
+                                                                            (and (= node :Name)
+                                                                                 (#{:Directives
+                                                                                    :InputFieldsDefinition} (ffirst head)))
+                                                                            (and (= node :Directives)
+                                                                                 (= (ffirst head) :InputFieldsDefinition)))
+                                                                      (into [node (assoc opts :append-whitespace? true)] rst)
+                                                                      x))
+                                                          (update :head rest)))
+                                                      {:acc [:InputObjectTypeDefinition opts]
+                                                       :head (rest xs)}
+                                                      xs)))
+           :InputValueDefinition (fn [opts & xs]
+                                   (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
+                                                   (-> (update acc-head :acc conj
+                                                               (if (or (and (= node :Type)
+                                                                            (#{:DefaultValue
+                                                                               :Directives} (ffirst head)))
+                                                                       (and (= node :DefaultValue)
+                                                                            (= (ffirst head) :Directives)))
+                                                                 (into [node (assoc opts :append-whitespace? true)] rst)
+                                                                 x))
+                                                     (update :head rest)))
+                                                 {:acc [:InputValueDefinition opts]
+                                                  :head (rest xs)}
+                                                 xs)))
            :InterfaceTypeDefinition (fn [opts & xs]
                                       (:acc (reduce (fn [{:keys [_head] :as acc-head} [node opts & rst :as x]]
                                                       (-> (update acc-head :acc conj
