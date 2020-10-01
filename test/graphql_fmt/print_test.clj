@@ -22,7 +22,6 @@
               (insta/transform
                 transform-map
                 (document-parser input)))))
-    "input Foobar { foo : String }"
     "input Foobar { foo : String bar : String }"
     "\"the\" input Foobar @qux { \"the\" foo : String =\"foo\" @qux \"the\" bar : String =\"bar\" @qux }"
     "directive @ foo on FIELD"

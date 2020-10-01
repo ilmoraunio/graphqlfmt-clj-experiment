@@ -279,7 +279,7 @@
    :InputFieldsDefinition (fn [& xs]
                             (reduce (fn [coll x] (conj coll x))
                                     [:InputFieldsDefinition {}]
-                                    (conj (interpose [:Printable {} " "] xs))))
+                                    xs))
    :InputKeyword (fn [x] [:Printable {} x])
    :InputObjectTypeDefinition (fn [& xs]
                                 (reduce (fn [coll x] (conj coll x))
@@ -512,6 +512,7 @@
                          (:Arguments
                            :EnumValuesDefinition
                            :FieldsDefinition
+                           :InputFieldsDefinition
                            :SelectionSet
                            :RootOperationTypeDefinition
                            :Value) (inc indent-level)
@@ -545,6 +546,16 @@
                               (into [:FieldDefinition (assoc opts :newline? true
                                                                   :indent? true)]
                                     xs))
+           :InputFieldsDefinition (fn [opts & xs]
+                                    (reduce (fn [coll [node opts & rst :as x]]
+                                              (conj coll
+                                                    (if (= node :InputValueDefinition)
+                                                      (into [node (assoc opts :newline? true
+                                                                              :indent? true)]
+                                                            rst)
+                                                      x)))
+                                            [:InputFieldsDefinition opts]
+                                            xs))
            :Selection (fn [opts & xs]
                         (into [:Selection (assoc opts :newline? true
                                                       :indent? true)]
