@@ -190,8 +190,8 @@
    :DirectiveDefinition (fn [& xs]
                           (reduce (fn [coll x] (conj coll x))
                                   [:DirectiveDefinition {}]
-                                  (conj (interpose [:Printable {} " "] xs))))
-   :DirectiveKeyword (fn [x] [:Printable {} x])
+                                  xs))
+   :DirectiveKeyword (fn [x] [:DirectiveKeyword {} [:Printable {} x]])
    :DirectiveLocation (fn [& xs]
                         (reduce (fn [coll x] (conj coll x))
                                 [:DirectiveLocation {}]
@@ -200,7 +200,7 @@
                          (reduce (fn [coll x] (conj coll x))
                                  [:DirectiveLocations {}]
                                  (conj (interpose [:Printable {} " "] xs))))
-   :DirectivePrefix (fn [x] [:Printable {} x])
+   :DirectivePrefix (fn [x] [:DirectivePrefix {} [:Printable {} x]])
    :Directives (fn [& xs]
                  (reduce (fn [coll x] (conj coll x))
                          [:Directives {}]
@@ -336,7 +336,7 @@
                       (conj coll x))
                     [:ObjectValue {}]
                     xs))
-   :OnKeyword (fn [x] [:Printable {} x])
+   :OnKeyword (fn [x] [:OnKeyword {} [:Printable {} x]])
    :OperationDefinition (fn [& xs]
                           (reduce (fn [coll x] (conj coll x))
                                   [:OperationDefinition {}]
@@ -588,6 +588,19 @@
                                              x)))
                                    [:DefaultValue opts]
                                    xs))
+           :DirectiveDefinition (fn [opts & xs]
+                                  (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
+                                                  (-> (update acc-head :acc conj
+                                                              (if (#{:ArgumentsDefinition
+                                                                     :DirectiveKeyword
+                                                                     :Name
+                                                                     :OnKeyword} node)
+                                                                (into [node (assoc opts :append-whitespace? true)] rst)
+                                                                x))
+                                                    (update :head rest)))
+                                                {:acc [:DirectiveDefinition opts]
+                                                 :head (rest xs)}
+                                                xs)))
            :EnumTypeDefinition (fn [opts & xs]
                                  (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
                                                  (-> (update acc-head :acc conj

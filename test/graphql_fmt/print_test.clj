@@ -22,7 +22,6 @@
               (insta/transform
                 transform-map
                 (document-parser input)))))
-    "directive @ foo on FIELD"
     "directive @ foo on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT"
     "directive @ foo ( qux : String baz : String ) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT"
     "extend schema @foo @bar"
