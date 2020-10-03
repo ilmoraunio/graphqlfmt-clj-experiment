@@ -580,6 +580,17 @@
                                       {:acc [:Arguments opts]
                                        :head (rest xs)}
                                       xs)))
+           :ArgumentsDefinition (fn [opts & xs]
+                                  (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
+                                                  (-> (update acc-head :acc conj
+                                                              (if (and (= node :InputValueDefinition)
+                                                                       (= (ffirst head) :InputValueDefinition))
+                                                                (into [node (assoc opts :append-whitespace? true)] rst)
+                                                                x))
+                                                    (update :head rest)))
+                                                {:acc [:ArgumentsDefinition opts]
+                                                 :head (rest xs)}
+                                                xs)))
            :DefaultValue (fn [opts & xs]
                            (reduce (fn [coll [node opts & rst :as x]]
                                      (conj coll
@@ -591,10 +602,11 @@
            :DirectiveDefinition (fn [opts & xs]
                                   (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
                                                   (-> (update acc-head :acc conj
-                                                              (if (#{:ArgumentsDefinition
-                                                                     :DirectiveKeyword
-                                                                     :Name
-                                                                     :OnKeyword} node)
+                                                              (if (or (#{:ArgumentsDefinition
+                                                                         :DirectiveKeyword
+                                                                         :OnKeyword} node)
+                                                                      (and (= node :Name)
+                                                                           (= (ffirst head) :OnKeyword)))
                                                                 (into [node (assoc opts :append-whitespace? true)] rst)
                                                                 x))
                                                     (update :head rest)))
@@ -933,6 +945,17 @@
                                       {:acc [:Arguments opts]
                                        :head (rest xs)}
                                       xs)))
+           :ArgumentsDefinition (fn [opts & xs]
+                                  (:acc (reduce (fn [{:keys [head] :as acc-head} [node & _ :as x]]
+                                                  (-> (update acc-head :acc conj
+                                                              (if (and (= node :InputValueDefinition)
+                                                                       (= (ffirst head) :InputValueDefinition))
+                                                                (into x [comma-value])
+                                                                x))
+                                                    (update :head rest)))
+                                                {:acc [:ArgumentsDefinition opts]
+                                                 :head (rest xs)}
+                                                xs)))
            :ListValue (fn [opts & xs]
                         (conj (:acc (reduce (fn [{:keys [head] :as acc-head} [node & _ :as x]]
                                               (-> (update acc-head :acc conj
