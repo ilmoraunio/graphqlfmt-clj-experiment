@@ -22,9 +22,6 @@
               (insta/transform
                 transform-map
                 (document-parser input)))))
-    "extend enum Foobar @foo @bar"
-    "extend enum Foobar { QUX BAZ }"
-    "extend enum Foobar @qux { BAZ }"
     "extend input Foobar @foo @bar"
     "extend input Foobar { qux : String baz : String }"
     "extend input Foobar @qux { baz : String }"
