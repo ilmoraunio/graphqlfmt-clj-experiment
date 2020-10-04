@@ -208,7 +208,7 @@
    :Document (fn [& xs]
                (reduce (fn [coll x] (conj coll x))
                        [:Document {}]
-                       (conj (interpose [:Printable {} " "] xs))))
+                       xs))
    :Ellipsis (fn [_] [:Ellipsis {} [:Printable {} "..."]])
    :ExecutableDirectiveLocation (fn [x] [:ExecutableDirectiveLocation {} x])
    :EnumKeyword (fn [x] [:EnumKeyword {} [:Printable {} x]])
@@ -533,15 +533,28 @@
                                                           :indent? true
                                                           :print-after? true)]
                                 xs))
+           :Document (fn [opts & xs]
+                       (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
+                                       (-> (update acc-head :acc conj
+                                                   (if (and (= node :Definition)
+                                                            (= (ffirst head) :Definition))
+                                                     (into [node (assoc opts :newline? true
+                                                                             :indent? true
+                                                                             :print-after? true)] rst)
+                                                     x))
+                                         (update :head rest)))
+                                     {:acc [:Document opts]
+                                      :head (rest xs)}
+                                     xs)))
            :BraceClose (fn [opts & xs]
                          (into [:BraceClose (assoc opts :newline? true
                                                         :indent? true)]
                                xs))
            :EnumValueDefinition (fn [opts & xs]
-                                   (into [:EnumValueDefinition
-                                          (assoc opts :newline? true
-                                                      :indent? true)]
-                                         xs))
+                                  (into [:EnumValueDefinition
+                                         (assoc opts :newline? true
+                                                     :indent? true)]
+                                        xs))
            :FieldDefinition (fn [opts & xs]
                               (into [:FieldDefinition (assoc opts :newline? true
                                                                   :indent? true)]
@@ -759,10 +772,13 @@
            :ObjectTypeDefinition (fn [opts & xs]
                                    (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
                                                    (-> (update acc-head :acc conj
-                                                               (if (or (#{:ObjectKeyword
-                                                                          :Name} node)
+                                                               (if (or (#{:ObjectKeyword} node)
                                                                        (and (= node :ImplementsInterfaces)
                                                                             (#{:Directives
+                                                                               :FieldsDefinition} (ffirst head)))
+                                                                       (and (= node :Name)
+                                                                            (#{:ImplementsInterfaces
+                                                                               :Directives
                                                                                :FieldsDefinition} (ffirst head))))
                                                                  (into [node (assoc opts :append-whitespace? true)]
                                                                        rst)

@@ -1,0 +1,13 @@
+query {
+  foo
+}
+{
+  foo: String
+}
+fragment foo on Bar {
+  foo
+}
+type Foo
+schema {
+  query: Foo
+}

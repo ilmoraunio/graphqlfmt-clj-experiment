@@ -22,7 +22,6 @@
               (insta/transform
                 transform-map
                 (document-parser input)))))
-    "query {foo} {foo:String} fragment foo on Bar {foo} type Foo schema {query:Foo}"
     ;;
     ;; we need to have a test that tests for exact input and output
     "type Foo implements & Bar { qux : String }"
