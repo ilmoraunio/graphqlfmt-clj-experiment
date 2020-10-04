@@ -1,0 +1,4 @@
+extend input Foobar @foo @bar {
+  foo: String
+  bar: String
+}
