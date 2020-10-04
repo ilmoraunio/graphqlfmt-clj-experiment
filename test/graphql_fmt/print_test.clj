@@ -22,7 +22,6 @@
               (insta/transform
                 transform-map
                 (document-parser input)))))
-    "extend type Foo { qux : String }"
     "extend type Foo implements Bar @foobar { \"the\" qux : String @baz }"
     "extend interface Foo @bar"
     "extend interface Foobar { foo : String bar : String }"
