@@ -1,0 +1,1 @@
+extend type Foo implements Qux & Baz @bar
