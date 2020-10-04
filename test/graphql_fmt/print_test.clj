@@ -22,7 +22,6 @@
               (insta/transform
                 transform-map
                 (document-parser input)))))
-    "extend interface Foobar { foo : String bar : String }"
     "extend interface Foobar @foo { bar : String }"
     "extend union Foobar @foo @bar"
     "extend union Foobar = Qux | Baz"
