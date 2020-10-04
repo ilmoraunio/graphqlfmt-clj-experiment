@@ -22,10 +22,6 @@
               (insta/transform
                 transform-map
                 (document-parser input)))))
-    "extend schema @foo @bar"
-    "extend schema { query : frobnicate }"
-    "extend schema @foo { query : frobnicate mutation : frobnitz }"
-    "extend scalar Foo @bar"
     "extend type Foo implements Qux & Baz"
     "extend type Foo @bar"
     "extend type Foo implements Qux & Baz @bar"
@@ -47,6 +43,12 @@
     ;;
     ;; we need to have a test that tests for exact input and output
     "type Foo implements & Bar { qux : String }"
+    ;;
+    ;; unsupported by prettier ... maybe roll own support (or try to see if
+    ;; later version of prettier does the job)...?
+    "extend schema @foo @bar"
+    "extend schema { query : frobnicate }"
+    "extend schema @foo { query : frobnicate mutation : frobnitz }"
     ))
 
 (def graphql-statements
