@@ -1,0 +1,4 @@
+extend interface Foobar @foo @bar {
+  "the"
+  bar: String @qux @baz
+}
