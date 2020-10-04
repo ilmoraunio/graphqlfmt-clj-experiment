@@ -1,0 +1,4 @@
+extend type Foo implements Foo & Bar @foo @bar {
+  "the"
+  qux: String @qux @baz
+}
