@@ -1517,7 +1517,6 @@
          [:Name "Foo"]
          [:ImplementsInterfaces
           [:ImplementsKeyword "implements"]
-          [:ImplementsTypeSeparator "&"]
           [:NamedType [:Name "Bar"]]]
          [:FieldsDefinition
           [:BraceOpen "{"]

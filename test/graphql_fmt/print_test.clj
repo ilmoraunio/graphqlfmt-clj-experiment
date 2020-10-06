@@ -23,9 +23,6 @@
                 transform-map
                 (document-parser input)))))
     ;;
-    ;; we need to have a test that tests for exact input and output
-    "type Foo implements & Bar { qux : String }"
-    ;;
     ;; unsupported by prettier ... maybe roll own support (or try to see if
     ;; later version of prettier does the job)...?
     "extend schema @foo @bar"
@@ -43,14 +40,22 @@
     (mapv (fn [[filename graphql]] {:filename filename
                                     :graphql graphql}))))
 
+(defn- expected
+  [filename]
+  (when-let [re (re-find #"(.+)\.input(\.graphql)$" filename)]
+    (apply str "test-resources/graphql/" (interpose ".expected" (rest re)))))
+
 (defmacro run-tests
   []
   `(do (clojure.template/do-template
          [graphql-statement]
          (let [graphql# (:graphql graphql-statement)]
            (prn (format "testing: %s" (:filename graphql-statement)))
-           (is (= graphql# (graphqlfmt/fmt graphql#))
-               (:filename graphql-statement)))
+           (if-let [expected# (expected (:filename graphql-statement))]
+             (is (= (slurp expected#) (graphqlfmt/fmt graphql#))
+                 (:filename graphql-statement))
+             (is (= graphql# (graphqlfmt/fmt graphql#))
+                 (:filename graphql-statement))))
          ~@graphql-statements)))
 
 (deftest test-formatted-output (run-tests))

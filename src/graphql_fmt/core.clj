@@ -265,9 +265,9 @@
    :ImplementsInterfaces (fn [& xs]
                            (reduce (fn [coll x] (conj coll x))
                                    [:ImplementsInterfaces {}]
-                                   (conj (interpose [:Printable {} " "] xs))))
-   :ImplementsKeyword (fn [x] [:Printable {} x])
-   :ImplementsTypeSeparator (fn [x] [:Printable {} x])
+                                   xs))
+   :ImplementsKeyword (fn [_] [:ImplementsKeyword {} [:Printable {} "implements"]])
+   :ImplementsTypeSeparator (fn [_] [:ImplementsTypeSeparator {} [:Printable {} "&"]])
    :InlineFragment (fn [& xs]
                      (reduce (fn [coll x] (conj coll x))
                              [:InlineFragment {}]
@@ -695,6 +695,19 @@
                                                x)))
                                      [:InlineFragment opts]
                                      xs))
+           :ImplementsInterfaces (fn [opts & xs]
+                                   (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
+                                                   (-> (update acc-head :acc conj
+                                                               (if (or (#{:ImplementsKeyword
+                                                                          :ImplementsTypeSeparator} node)
+                                                                       (and (= node :ImplementsInterfaces)
+                                                                            (= (ffirst head) :ImplementsTypeSeparator)))
+                                                                 (into [node (assoc opts :append-whitespace? true)] rst)
+                                                                 x))
+                                                     (update :head rest)))
+                                                 {:acc [:ImplementsInterfaces opts]
+                                                  :head (rest xs)}
+                                                 xs)))
            :InputObjectTypeDefinition (fn [opts & xs]
                                         (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
                                                         (-> (update acc-head :acc conj
