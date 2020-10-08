@@ -30,7 +30,6 @@
 
     "# frobnitz"
     [[:Comment
-      [:CommentChar " "]
       [:CommentChar "f"]
       [:CommentChar "r"]
       [:CommentChar "o"]
@@ -41,7 +40,15 @@
       [:CommentChar "z"]]]
 
     ","
-    []))
+    []
+
+    "#       hello"
+    [[:Comment
+      [:CommentChar "h"]
+      [:CommentChar "e"]
+      [:CommentChar "l"]
+      [:CommentChar "l"]
+      [:CommentChar "o"]]]))
 
 (deftest test-tokens
   (is (= [:Token [:Punctuator "{"]]

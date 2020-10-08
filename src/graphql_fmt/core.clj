@@ -6,6 +6,9 @@
             [instaparse.core :as insta])
   (:gen-class))
 
+;; Noting that our version of `ffirst` should probably learn to ignore comments,
+;; since that is well something that may bump up in the ast at that point.
+
 (defn ebnf [& names]
   (apply str (map (fn [name]
                     (-> (str name ".ebnf")
@@ -24,9 +27,9 @@
   (insta/parser (ebnf "document" "token" "ignored")))
 
 (defn comment
-  ([] [:Comment {} "#"])
-  ([x] [:Comment {} (str "# " x)])
-  ([x & ys] [:Comment {} (str "# " x (apply str ys))]))
+  ([] [:Comment {} [:Printable {} "#"]])
+  ([x] [:Comment {} [:Printable {} (str "# " x)]])
+  ([x & ys] [:Comment {} [:Printable {} (str "# " x (apply str ys))]]))
 
 (defn document [x]
   [:Document {} x])
@@ -204,7 +207,7 @@
    :Directives (fn [& xs]
                  (reduce (fn [coll x] (conj coll x))
                          [:Directives {}]
-                         (conj (interpose [:Printable {} " "] xs))))
+                         xs))
    :Document (fn [& xs]
                (reduce (fn [coll x] (conj coll x))
                        [:Document {}]
@@ -236,7 +239,7 @@
    :ExecutableDefinition (fn [x] [:ExecutableDefinition {} x])
    :ExponentIndicator str
    :ExponentPart str
-   :ExtendKeyword (fn [x] [:Printable {} x])
+   :ExtendKeyword (fn [x] [:ExtendKeyword {} [:Printable {} x]])
    :Field (fn [& xs]
             (reduce (fn [coll x] (conj coll x))
                     [:Field {}]
@@ -345,7 +348,7 @@
    :OperationTypeDefinition (fn [& xs]
                               (reduce (fn [coll x] (conj coll x))
                                       [:OperationTypeDefinition {}]
-                                      (interpose [:Printable {} " "] xs)))
+                                      xs))
    :ParensOpen (fn [x] [:ParensOpen {} x])
    :ParensClose (fn [x] [:ParensClose {} x])
    :PipeCharacter (fn [x] [:Printable {} x])
@@ -357,8 +360,8 @@
    :SchemaExtension (fn [& xs]
                       (reduce (fn [coll x] (conj coll x))
                               [:SchemaExtension {}]
-                              (conj (interpose [:Printable {} " "] xs))))
-   :SchemaKeyword (fn [x] [:Printable {} x])
+                              xs))
+   :SchemaKeyword (fn [x] [:SchemaKeyword {} [:Printable {} x]])
    :ScalarKeyword (fn [x] [:ScalarKeyword {} [:Printable {} x]])
    :ScalarTypeDefinition (fn [& xs]
                            (reduce (fn [coll x] (conj coll x))
@@ -513,8 +516,9 @@
                            :EnumValuesDefinition
                            :FieldsDefinition
                            :InputFieldsDefinition
-                           :SelectionSet
+                           :OperationTypeDefinition
                            :RootOperationTypeDefinition
+                           :SelectionSet
                            :Value) (inc indent-level)
                          (:ParensClose
                            :BraceClose
@@ -528,7 +532,12 @@
 
 (defn amend-newline-opts
   [ast]
-  (let [m {:Description (fn [opts & xs]
+  (let [m {:Comment (fn [opts & xs]
+                      (into [:Comment (assoc opts :newline? true
+                                                  :indent? false
+                                                  :print-after? true)]
+                            xs))
+           :Description (fn [opts & xs]
                           (into [:Description (assoc opts :newline? true
                                                           :indent? true
                                                           :print-after? true)]
@@ -568,6 +577,11 @@
                                                             rst)
                                                       x)))
                                             [:InputFieldsDefinition opts]
+                                            xs))
+           :OperationTypeDefinition (fn [opts & xs]
+                                      (into [:OperationTypeDefinition
+                                             (assoc opts :newline? true
+                                                         :indent? true)]
                                             xs))
            :Selection (fn [opts & xs]
                         (into [:Selection (assoc opts :newline? true
@@ -612,6 +626,17 @@
                                              x)))
                                    [:DefaultValue opts]
                                    xs))
+           :Directives (fn [opts & xs]
+                         (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
+                                         (-> (update acc-head :acc conj
+                                                     (if (and (= node :Directive)
+                                                              (= (ffirst head) :Directive))
+                                                       (into [node (assoc opts :append-whitespace? true)] rst)
+                                                       x))
+                                           (update :head rest)))
+                                       {:acc [:Directives opts]
+                                        :head (rest xs)}
+                                       xs)))
            :DirectiveDefinition (fn [opts & xs]
                                   (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
                                                   (-> (update acc-head :acc conj
@@ -830,6 +855,22 @@
                                                  x)))
                                        [:SchemaDefinition opts]
                                        xs))
+           :SchemaExtension (fn [opts & xs]
+                              (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
+                                              (-> (update acc-head :acc conj
+                                                          (if (or (#{:ExtendKeyword
+                                                                     :SchemaKeyword} node)
+                                                                   (and (= node :Directives)
+                                                                        (= (ffirst head) :BraceOpen)))
+                                                            (into [node (assoc opts
+                                                                          :append-whitespace?
+                                                                          true)]
+                                                                  rst)
+                                                            x))
+                                                (update :head rest)))
+                                            {:acc [:SchemaExtension opts]
+                                             :head (rest xs)}
+                                            xs)))
            :UnionTypeDefinition (fn [opts & xs]
                                   (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
                                                   (-> (update acc-head :acc conj

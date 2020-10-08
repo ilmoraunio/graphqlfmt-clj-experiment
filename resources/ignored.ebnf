@@ -9,7 +9,7 @@ LineTerminator = NewLine
 NewLine = #"[\u000A]" |
           #"[\u000D](?![\u000A])" |
           #"[\u000D]" #"[\u000A]"
-Comment = <'#'> CommentChar* !CommentChar
+Comment = <'#'> <#"[\h]*"> CommentChar* !CommentChar
 CommentChar = #"[\u0009\u0020-\uFFFF]"
 Commas = Comma* (* unused *)
 Comma = <','>

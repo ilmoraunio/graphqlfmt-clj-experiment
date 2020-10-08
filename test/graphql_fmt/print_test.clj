@@ -22,12 +22,6 @@
               (insta/transform
                 transform-map
                 (document-parser input)))))
-    ;;
-    ;; unsupported by prettier ... maybe roll own support (or try to see if
-    ;; later version of prettier does the job)...?
-    "extend schema @foo @bar"
-    "extend schema { query : frobnicate }"
-    "extend schema @foo { query : frobnicate mutation : frobnitz }"
     ;; from https://graphql.org/learn/schema/:
     "{\n  search(text: \"an\") {\n    __typename\n    ... on Human {\n      name\n      height\n    }\n    ... on Droid {\n      name\n      primaryFunction\n    }\n    ... on Starship {\n      name\n      length\n    }\n  }\n}"
     ))
