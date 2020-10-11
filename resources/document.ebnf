@@ -132,7 +132,7 @@ Directives = Directive+
 Directive = Ignored* <'@'> Ignored* Name Arguments?
 FragmentSpread = Ignored* Ellipsis Ignored* FragmentName Directives?
 FragmentName = #"^(?!on)[_A-Za-z][_0-9A-Za-z]*"
-InlineFragment = Ellipsis TypeCondition? Directives? SelectionSet
+InlineFragment = Ignored* Ellipsis TypeCondition? Directives? SelectionSet
 TypeCondition = Ignored* <'on'> Ignored* NamedType
 Type = Ignored* (NamedType |
                  ListType |

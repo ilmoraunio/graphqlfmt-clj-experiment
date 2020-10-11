@@ -1,0 +1,12 @@
+{
+  foobar {
+    ... on Foo {
+      qux
+      baz
+    }
+    ... on Bar {
+      frob
+      nitz
+    }
+  }
+}

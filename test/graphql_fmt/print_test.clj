@@ -4,28 +4,6 @@
             [graphql-fmt.core :refer :all :as graphqlfmt]
             [instaparse.core :as insta]))
 
-#_(deftest test-unformatted-output
-  (are [graphql]
-       (let [is-a-vec? (vector? graphql)
-             expected (if is-a-vec? (second graphql) graphql)
-             input (if is-a-vec? (first graphql) graphql)]
-         (amend-indentation-level-opts
-           0
-           (amend-newline-spacing
-             (amend-newline-opts
-               (insta/transform
-                 transform-map
-                 (document-parser input)))))
-         (= expected
-            (pr-str-ast
-              ""
-              (insta/transform
-                transform-map
-                (document-parser input)))))
-    ;; from https://graphql.org/learn/schema/:
-    "{\n  search(text: \"an\") {\n    __typename\n    ... on Human {\n      name\n      height\n    }\n    ... on Droid {\n      name\n      primaryFunction\n    }\n    ... on Starship {\n      name\n      length\n    }\n  }\n}"
-    ))
-
 (def graphql-statements
   (->> (clojure.java.io/file "test-resources/graphql")
     (file-seq)
