@@ -1,6 +1,4 @@
 Document = Ignored* Definition+ Ignored*
-(* XXX(ilmoraunio): This ebnf would be portable if we didn't contain ordered
-                    choice below here. *)
 Definition = Ignored* (TypeSystemExtension /
                        TypeSystemDefinition /
                        ExecutableDefinition)
