@@ -201,11 +201,11 @@
    :DirectiveLocation (fn [& xs]
                         (reduce (fn [coll x] (conj coll x))
                                 [:DirectiveLocation {}]
-                                (conj (interpose [:Printable {} " "] xs))))
+                                xs))
    :DirectiveLocations (fn [& xs]
                          (reduce (fn [coll x] (conj coll x))
                                  [:DirectiveLocations {}]
-                                 (conj (interpose [:Printable {} " "] xs))))
+                                 xs))
    :DirectivePrefix (fn [x] [:DirectivePrefix {} [:Printable {} x]])
    :Directives (fn [& xs]
                  (reduce (fn [coll x] (conj coll x))
@@ -358,7 +358,7 @@
                                       xs))
    :ParensOpen (fn [x] [:ParensOpen {} x])
    :ParensClose (fn [x] [:ParensClose {} x])
-   :PipeCharacter (fn [x] [:Printable {} x])
+   :PipeCharacter (fn [x] [:PipeCharacter {} [:Printable {} x]])
    :Quote (fn [] [:Quote {} "\""])
    :RootOperationTypeDefinition (fn [& xs]
                                   (reduce (fn [coll x] (conj coll x))
@@ -633,17 +633,6 @@
                                              x)))
                                    [:DefaultValue opts]
                                    xs))
-           :Directives (fn [opts & xs]
-                         (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
-                                         (-> (update acc-head :acc conj
-                                                     (if (and (= node :Directive)
-                                                              (= (ffirst head) :Directive))
-                                                       (into [node (assoc opts :append-whitespace? true)] rst)
-                                                       x))
-                                           (update :head rest)))
-                                       {:acc [:Directives opts]
-                                        :head (rest xs)}
-                                       xs)))
            :DirectiveDefinition (fn [opts & xs]
                                   (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
                                                   (-> (update acc-head :acc conj
@@ -658,6 +647,26 @@
                                                 {:acc [:DirectiveDefinition opts]
                                                  :head (rest xs)}
                                                 xs)))
+           :DirectiveLocations (fn [opts & xs]
+                                 (reduce (fn [coll [node opts & rst :as x]]
+                                           (conj coll
+                                                 (if (#{:DirectiveLocations
+                                                        :PipeCharacter} node)
+                                                   (into [node (assoc opts :append-whitespace? true)] rst)
+                                                   x)))
+                                         [:DirectiveLocations opts]
+                                         xs))
+           :Directives (fn [opts & xs]
+                         (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
+                                         (-> (update acc-head :acc conj
+                                                     (if (and (= node :Directive)
+                                                              (= (ffirst head) :Directive))
+                                                       (into [node (assoc opts :append-whitespace? true)] rst)
+                                                       x))
+                                           (update :head rest)))
+                                       {:acc [:Directives opts]
+                                        :head (rest xs)}
+                                       xs)))
            :EnumTypeDefinition (fn [opts & xs]
                                  (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
                                                  (-> (update acc-head :acc conj
@@ -867,8 +876,8 @@
                                               (-> (update acc-head :acc conj
                                                           (if (or (#{:ExtendKeyword
                                                                      :SchemaKeyword} node)
-                                                                   (and (= node :Directives)
-                                                                        (= (ffirst head) :BraceOpen)))
+                                                                  (and (= node :Directives)
+                                                                       (= (ffirst head) :BraceOpen)))
                                                             (into [node (assoc opts
                                                                           :append-whitespace?
                                                                           true)]
