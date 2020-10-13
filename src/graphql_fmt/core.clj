@@ -183,7 +183,10 @@
                    (reduce (fn [coll x] (conj coll x))
                            [:DefaultValue {}]
                            xs))
-   :Definition (fn [x] [:Definition {} x])
+   :Definition (fn [& xs]
+                 (reduce (fn [coll x] (conj coll x))
+                         [:Definition {}]
+                         xs))
    :Description (fn [x] [:Description {} x])
    :Digit str
    :Directive (fn [& xs]
@@ -303,6 +306,10 @@
                              (reduce (fn [coll x] (conj coll x))
                                      [:InterfaceTypeExtension {}]
                                      (conj (interpose [:Printable {} " "] xs))))
+   :LineTerminator (fn [s] [:LineTerminator {} s])
+   ;; As per prettier, if multiple LineTerminators are inputted, we only output
+   ;; one extra LineTerminator.
+   :LineTerminators (fn [_] [:LineTerminator {} "\n"])
    :ListType (fn [& xs]
                (reduce (fn [coll x] (conj coll x))
                        [:ListType {}]

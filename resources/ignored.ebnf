@@ -1,14 +1,16 @@
 <Ignored> = <UnicodeBOM> |
             <WhiteSpace> |
-            <LineTerminator> |
+            (LineTerminators / <LineTerminator>) |
             Comment |
             <Comma>
 UnicodeBOM = #"[\uFEFF]"
 WhiteSpace = #"[\u0009\u0020]"
-LineTerminator = NewLine
-NewLine = #"[\u000A]" |
-          #"[\u000D](?![\u000A])" |
-          #"[\u000D]" #"[\u000A]"
+LineTerminators = #"[\u000A]{2,}" |
+                  #"([\u000D](?![\u000A])){2,}" |
+                  #"([\u000D][\u000A]){2,}"
+LineTerminator = #"[\u000A]" |
+                 #"[\u000D](?![\u000A])" |
+                 #"[\u000D]" #"[\u000A]"
 Comment = <'#'> <#"[\h]*"> CommentChar* !CommentChar
 CommentChar = #"[\u0009\u0020-\uFFFF]"
 Commas = Comma* (* unused *)
