@@ -934,22 +934,33 @@
 
 (defn amend-prefer-inlining-opts
   [ast]
-  (let [[node opts & rst] ast]
-    (into [node opts]
-          (cond
-            (vector? (first rst)) (map amend-prefer-inlining-opts
-                                       (if (#{:ObjectValue} node)
-                                         (let [head-of-rst (butlast rst)
-                                               [node opts & rst] (last rst)]
-                                           (concat head-of-rst
-                                                   [(into [node
-                                                           (assoc
-                                                             opts
-                                                             :prefer-inlining?
-                                                             true)]
-                                                          rst)]))
-                                         rst))
-            (string? (first rst)) rst))))
+  (let [m {:ArgumentsDefinition (fn [opts & xs]
+                                  (reduce (fn [coll [node _opts & _rst :as x]]
+                                            (conj coll
+                                                  (if (= node :InputValueDefinition)
+                                                    (let [m {:Description (fn [opts & xs]
+                                                                            (into [:Description
+                                                                                   (assoc
+                                                                                     opts
+                                                                                     :prefer-inlining? true
+                                                                                     :append-whitespace? true)]
+                                                                                  xs))}]
+                                                      (insta/transform m x))
+                                                    x)))
+                                          [:ArgumentsDefinition opts]
+                                          xs))
+           :ObjectValue (fn [opts & xs]
+                          (reduce (fn [coll [node opts & rst :as x]]
+                                    (conj coll
+                                          (if (= node :BraceClose)
+                                            (into [node (assoc opts
+                                                          :prefer-inlining?
+                                                          true)]
+                                                  rst)
+                                            x)))
+                                  [:ObjectValue opts]
+                                  xs))}]
+    (insta/transform m ast)))
 
 ;; enrich-ast-opts fns
 
@@ -1101,8 +1112,10 @@
           (cond
             (vector? (first rst)) (map amend-newline-spacing
                                        (cond-> rst
-                                         (:print-after? opts) (concat [[:Printable {} "\n"]])
-                                         (and (:print-after? opts)
+                                         (and (not (:prefer-inlining? opts))
+                                              (:print-after? opts)) (concat [[:Printable {} "\n"]])
+                                         (and (not (:prefer-inlining? opts))
+                                              (:print-after? opts)
                                               (:indent? opts)) (concat [[:Printable {} (indent-s opts)]])))
             (string? (first rst)) (if (:newline? opts)
                                     [[:Printable {} (first rst)]]
@@ -1154,12 +1167,17 @@
     opts
     re-transform))
 
+(defn pr-s
+  [ast]
+  (->> ast
+    (pr-str-ast "")
+    (clojure.core/format "%s\n")))
+
 (defn fmt
   [s]
   (->> s
     xf
-    (pr-str-ast "")
-    (clojure.core/format "%s\n")))
+    pr-s))
 
 ;; TODO: Figure out why multi-line block string values are not printed out correctly in CLI.
 (defn -main [& args]
