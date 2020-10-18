@@ -147,19 +147,18 @@
                                   [:ArgumentsDefinition {}]
                                   xs))
    :BlockQuote (fn [] [:BlockQuote {} "\"\"\""])
-   :BlockQuoteOpen (fn [] [:BlockQuoteOpen {} "\"\"\""])
-   :BlockQuoteClose (fn [] [:BlockQuoteClose {} "\"\"\""])
+   :BlockQuoteOpen (fn [] [:BlockQuoteOpen {} [:Printable {} "\"\"\""]])
+   :BlockQuoteClose (fn [] [:BlockQuoteClose {} [:Printable {} "\"\"\""]])
    :BlockStringCharacter (fn [s] [:BlockStringCharacter {} s])
    :BlockStringCharacters (fn [& xs]
+                            ;; XXX(ilmoraunio): I wonder if this should be done
+                            ;;                  in the transform phase.
                             [:BlockStringCharacters {}
-                             (apply str (reduce
-                                          (fn [coll [_node-name _opts s]]
-                                            ;; XXX(ilmoraunio): Guaranteed to
-                                            ;; be BlockStringCharacter at this
-                                            ;; point.
-                                            (conj coll s))
-                                          []
-                                          xs))])
+                             [:Printable {} (apply str (reduce
+                                                         (fn [coll [_node-name _opts s]]
+                                                           (conj coll s))
+                                                         []
+                                                         xs))]])
    :BooleanValue boolean-value
    :BraceClose (fn [x] [:BraceClose {} x])
    ;; XXX(ilmoraunio): Okay, it seems this is now the exception wherein a
@@ -525,12 +524,9 @@
                            :InputFieldsDefinition
                            :OperationTypeDefinition
                            :RootOperationTypeDefinition
-                           :SelectionSet
-                           :Value) (inc indent-level)
+                           :SelectionSet) (inc indent-level)
                          (:ParensClose
-                           :BraceClose
-                           :BlockQuoteClose
-                           :BlockStringCharacters) (max (dec indent-level) 0)
+                           :BraceClose) (max (dec indent-level) 0)
                          indent-level)]
       (into [node (into opts {:indentation-level indent-level})]
             (cond
@@ -539,7 +535,22 @@
 
 (defn amend-newline-opts
   [ast]
-  (let [m {:Comment (fn [opts & xs]
+  (let [m {:BlockStringCharacters (fn [opts & xs]
+                                    (into [:BlockStringCharacters (assoc opts
+                                                                    :newline? true
+                                                                    :print-after? true)]
+                                          xs))
+           :BlockQuoteOpen (fn [opts & xs]
+                             (into [:BlockQuoteOpen (assoc opts
+                                                      :newline? true
+                                                      :print-after? true)]
+                                   xs))
+           :BlockQuoteClose (fn [opts & xs]
+                              (into [:BlockQuoteClose (assoc opts
+                                                        :newline? true
+                                                        :indent? true)]
+                                    xs))
+           :Comment (fn [opts & xs]
                       (into [:Comment (assoc opts :newline? true
                                                   :indent? false
                                                   :print-after? true)]
@@ -1140,15 +1151,11 @@
 
 (defn format-block-string-values
   [ast]
-  (let [[node opts & rst] ast]
-    (into [node opts]
-          (cond
-            (vector? (first rst)) (map format-block-string-values rst)
-            (string? (first rst)) (case node
-                                    :BlockStringCharacters [(block-string-characters
-                                                              (first rst)
-                                                              opts)]
-                                    rst)))))
+  (let [m {:BlockStringCharacters (fn [opts [_ printable-opts s] & xs]
+                                    (into [:BlockStringCharacters opts
+                                           (block-string-characters s printable-opts)]
+                                          xs))}]
+    (insta/transform m ast)))
 
 (defn re-transform
   [ast]

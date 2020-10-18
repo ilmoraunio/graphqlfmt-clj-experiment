@@ -8,6 +8,7 @@
   (->> (clojure.java.io/file "test-resources/graphql")
     (file-seq)
     (filter #(.isFile %))
+    (remove #(re-find #"\.expected\." (.getName %)))
     (map (juxt #(.getName %) slurp))
     (mapv (fn [[filename graphql]] {:filename filename
                                     :graphql graphql}))))
