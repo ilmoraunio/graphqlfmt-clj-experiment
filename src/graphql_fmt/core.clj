@@ -1186,9 +1186,10 @@
     xf
     pr-s))
 
-;; TODO: Figure out why multi-line block string values are not printed out correctly in CLI.
 (defn -main [& args]
-  (let [graphql (or (first args) (apply str (line-seq (java.io.BufferedReader. *in*))))
+  (let [graphql (if (>= (count args) 1)
+                  (slurp (first args))
+                  (slurp *in*))
         output (fmt graphql)]
     (print output)
     (flush)))
