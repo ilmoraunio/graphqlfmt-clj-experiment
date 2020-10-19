@@ -1,0 +1,7 @@
+"the"
+interface Foo @bar {
+  "the"
+  qux: String
+  "the"
+  baz: String
+}

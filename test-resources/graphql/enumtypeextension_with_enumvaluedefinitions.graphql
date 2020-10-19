@@ -1,0 +1,4 @@
+extend enum Foobar {
+  QUX
+  BAZ
+}

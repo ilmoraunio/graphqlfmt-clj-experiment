@@ -1,0 +1,39 @@
+mutation {
+  sendEmail(
+    message: """
+    Hello,
+      World!
+
+    Yours,
+      GraphQL.
+    """
+  )
+}
+
+{
+  foo(
+    bar: """
+    foobar
+    """
+  )
+}
+
+"""
+foo
+"""
+type Foo {
+  """
+  bar
+  """
+  bar: Bar!
+}
+
+"""
+
+"""
+type Foo {
+  """
+
+  """
+  bar: Bar!
+}

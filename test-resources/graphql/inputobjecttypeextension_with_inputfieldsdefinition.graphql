@@ -1,0 +1,4 @@
+extend input Foobar {
+  qux: String
+  baz: String
+}

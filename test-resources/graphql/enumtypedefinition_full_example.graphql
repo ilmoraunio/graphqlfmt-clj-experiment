@@ -1,0 +1,7 @@
+"the"
+enum Foobar @qux {
+  "it foo"
+  FOO @frob
+  "it bar"
+  BAR @frob @frobnitz
+}

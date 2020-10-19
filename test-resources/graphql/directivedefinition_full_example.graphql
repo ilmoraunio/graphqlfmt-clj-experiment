@@ -1,0 +1,1 @@
+directive @foo(qux: String, baz: String) on FIELD | FRAGMENT_SPREAD

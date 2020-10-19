@@ -1,0 +1,4 @@
+type Foo {
+  Qux: String!
+  Baz(fooArg: String!): String!
+}

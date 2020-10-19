@@ -1,0 +1,4 @@
+extend interface Foobar {
+  foo: String
+  bar: String
+}

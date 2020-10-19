@@ -1,0 +1,9 @@
+# Support through prettier doesn't exist atm, so this is a best effort attempt.
+extend schema @foo @bar
+extend schema {
+  query: frobnicate
+}
+extend schema @foo {
+  query: frobnicate
+  mutation: frobnitz
+}

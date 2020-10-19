@@ -82,9 +82,8 @@ TypeSystemDirectiveLocation = 'SCHEMA' |
                               'INPUT_FIELD_DEFINITION'
 Description = StringValue
 FieldsDefinition = Ignored* BraceOpen FieldDefinition+ Ignored* BraceClose
-FieldDefinition = Ignored* Description? Ignored* Name Ignored* FieldNameSeparator Type Directives?
-FieldNameSeparator = <':'>
-ImplementsInterfaces = (Ignored* ImplementsKeyword Ignored* ImplementsTypeSeparator? Ignored* NamedType) |
+FieldDefinition = Ignored* Description? Ignored* Name Ignored* ArgumentsDefinition? Ignored* Colon Type Directives?
+ImplementsInterfaces = (Ignored* ImplementsKeyword Ignored* <ImplementsTypeSeparator?> Ignored* NamedType) |
                        (ImplementsInterfaces Ignored* ImplementsTypeSeparator Ignored* NamedType)
 ImplementsKeyword = 'implements'
 ImplementsTypeSeparator = '&'
@@ -102,14 +101,14 @@ FragmentDefinition = <'fragment'> Ignored+ FragmentName Ignored+ TypeCondition D
 OperationType = 'query' | 'mutation' | 'subscription'
 VariableDefinitions = Ignored* <'('> VariableDefinition+ Ignored* <')'>
 VariableDefinition = Ignored* Variable Ignored* Colon Type DefaultValue?
-SelectionSet = Ignored* <'{'> Ignored* Selection+ Ignored* <'}'>
+SelectionSet = Ignored* BraceOpen Ignored* Selection+ Ignored* BraceClose
 Selection = Field |
             FragmentSpread |
             InlineFragment
 Field = Ignored* Alias? Ignored* Name Arguments? Directives? SelectionSet?
-Alias = Ignored* Name Ignored* <':'>
-Arguments = Ignored* <'('> Argument+ Ignored* <')'>
-Argument = Ignored* Name Ignored* <':'> Value Ignored* <Comma*>
+Alias = Ignored* Name Ignored* Colon
+Arguments = Ignored* ParensOpen Argument+ Ignored* ParensClose
+Argument = Ignored* Name Ignored* Colon Value Ignored*
 Value = Ignored* (Variable |
                   IntValue |
                   FloatValue |
@@ -124,14 +123,14 @@ DefaultValue = Ignored* Equals Value
 EnumValue = #"^(?!(true|false|null))[_A-Za-z][_0-9A-Za-z]*"
 ListValue = (<'['> Ignored* <']'>) |
             (<'['> Value+ Ignored* <']'>)
-ObjectValue = (<'{'> Ignored* <'}'>) |
-              (<'{'> ObjectField+ Ignored* <'}'>)
-ObjectField = Ignored* Name Ignored* <':'> Ignored* Value
+ObjectValue = (BraceOpen Ignored* BraceClose) |
+              (BraceOpen ObjectField+ Ignored* BraceClose)
+ObjectField = Ignored* Name Ignored* Colon Ignored* Value
 Directives = Directive+
 Directive = Ignored* <'@'> Ignored* Name Arguments?
-FragmentSpread = Ignored* <'...'> Ignored* FragmentName Directives?
+FragmentSpread = Ignored* Ellipsis Ignored* FragmentName Directives?
 FragmentName = #"^(?!on)[_A-Za-z][_0-9A-Za-z]*"
-InlineFragment = <'...'> TypeCondition? Directives? SelectionSet
+InlineFragment = Ignored* Ellipsis TypeCondition? Directives? SelectionSet
 TypeCondition = Ignored* <'on'> Ignored* NamedType
 Type = Ignored* (NamedType |
                  ListType |
