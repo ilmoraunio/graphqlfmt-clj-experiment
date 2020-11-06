@@ -1110,6 +1110,30 @@
     amend-newline-to-structure-tree-opts
     amend-prefer-inlining-opts))
 
+(defn amend-characters-opts
+  [ast]
+  (letfn [(characters [[_node _opts & rst]]
+            (cond
+              (nil? (first rst)) 0
+              (vector? (first rst)) (reduce + (map characters rst))
+              (string? (first rst)) (or (and
+                                          ;; By convention, we expect rogue newlines
+                                          ;; not to show up in the middle of a
+                                          ;; subtree.
+                                          (not= (first rst) "\n")
+                                          (count (first rst)))
+                                        0)))]
+    (let [[node opts & rst] ast]
+      (into [node (assoc opts :character-count (characters ast))]
+            (cond
+              (vector? (first rst)) (map amend-characters-opts rst)
+              (string? (first rst)) rst)))))
+
+(defn re-opts
+  [ast]
+  (->> ast
+    (amend-characters-opts)))
+
 (defn amend-newline-spacing
   [ast]
   (let [[node opts & rst] ast]
@@ -1172,7 +1196,8 @@
     transform
     validate
     opts
-    re-transform))
+    re-transform
+    re-opts))
 
 (defn pr-s
   [ast]
