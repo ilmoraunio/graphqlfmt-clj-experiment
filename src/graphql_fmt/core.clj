@@ -160,7 +160,7 @@
                                                          []
                                                          xs))]])
    :BooleanValue boolean-value
-   :BraceClose (fn [x] [:BraceClose {} x])
+   :BraceClose (fn [x] [:BraceClose {} [:Printable {} x]])
    ;; XXX(ilmoraunio): Okay, it seems this is now the exception wherein a
    ;; leaf node type now is wrapped within a Printable, making it stand out of
    ;; all the leaf node types which are at this point *not* wrapped. I think
@@ -355,8 +355,8 @@
                               (reduce (fn [coll x] (conj coll x))
                                       [:OperationTypeDefinition {}]
                                       xs))
-   :ParensOpen (fn [x] [:ParensOpen {} x])
-   :ParensClose (fn [x] [:ParensClose {} x])
+   :ParensOpen (fn [x] [:ParensOpen {} [:Printable {} x]])
+   :ParensClose (fn [x] [:ParensClose {} [:Printable {} x]])
    :PipeCharacter (fn [x] [:PipeCharacter {} [:Printable {} x]])
    :Quote (fn [] [:Quote {} "\""])
    :RootOperationTypeDefinition (fn [& xs]
@@ -535,81 +535,136 @@
 
 (defn amend-newline-opts
   [ast]
-  (let [m {:BlockStringCharacters (fn [opts & xs]
-                                    (into [:BlockStringCharacters (assoc opts
-                                                                    :newline? true
-                                                                    :print-after? true)]
-                                          xs))
-           :BlockQuoteOpen (fn [opts & xs]
-                             (into [:BlockQuoteOpen (assoc opts
-                                                      :newline? true
-                                                      :print-after? true)]
-                                   xs))
-           :BlockQuoteClose (fn [opts & xs]
-                              (into [:BlockQuoteClose (assoc opts
-                                                        :newline? true
-                                                        :indent? true)]
-                                    xs))
-           :Comment (fn [opts & xs]
-                      (into [:Comment (assoc opts :newline? true
-                                                  :indent? false
-                                                  :print-after? true)]
+  (let [m {:Comment (fn [opts & xs]
+                      (into [:Comment (assoc opts :append-newline? true)]
                             xs))
            :Description (fn [opts & xs]
-                          (into [:Description (assoc opts :newline? true
-                                                          :indent? true
-                                                          :print-after? true)]
+                          (into [:Description (assoc opts :append-newline? true
+                                                          :prepend-indent? true)]
                                 xs))
            :Document (fn [opts & xs]
                        (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
                                        (-> (update acc-head :acc conj
                                                    (if (and (= node :Definition)
                                                             (= (ffirst head) :Definition))
-                                                     (into [node (assoc opts :newline? true
-                                                                             :indent? true
-                                                                             :print-after? true)] rst)
+                                                     (into [node (assoc opts :append-newline? true
+                                                                             :prepend-indent? true)]
+                                                           rst)
                                                      x))
                                          (update :head rest)))
                                      {:acc [:Document opts]
                                       :head (rest xs)}
                                      xs)))
            :BraceClose (fn [opts & xs]
-                         (into [:BraceClose (assoc opts :newline? true
-                                                        :indent? true)]
+                         (into [:BraceClose (assoc opts :prepend-indent? true)]
                                xs))
            :EnumValueDefinition (fn [opts & xs]
-                                  (into [:EnumValueDefinition
-                                         (assoc opts :newline? true
-                                                     :indent? true)]
-                                        xs))
+                                  (reduce (fn [coll [node opts & rst]]
+                                            (conj coll
+                                                  (into [node
+                                                         (cond-> opts
+                                                           (= node :EnumValue) (assoc :prepend-indent? true))]
+                                                        rst)))
+                                          [:EnumValueDefinition opts]
+                                          xs))
+           :EnumValuesDefinition (fn [opts & xs]
+                                   (reduce (fn [coll [node opts & rst]]
+                                             (conj coll
+                                                   (into [node
+                                                          (cond-> opts
+                                                            (= node :BraceOpen) (assoc :append-newline? true)
+                                                            (= node :EnumValueDefinition) (assoc :append-newline? true))]
+                                                         rst)))
+                                           [:EnumValuesDefinition opts]
+                                           xs))
            :FieldDefinition (fn [opts & xs]
-                              (into [:FieldDefinition (assoc opts :newline? true
-                                                                  :indent? true)]
-                                    xs))
+                              (reduce (fn [coll [node opts & rst]]
+                                        (conj coll
+                                              (into [node
+                                                     (cond-> opts
+                                                       (= node :Name) (assoc :prepend-indent? true))]
+                                                    rst)))
+                                      [:FieldDefinition opts]
+                                      xs))
+           :FieldsDefinition (fn [opts & xs]
+                               (reduce (fn [coll [node opts & rst]]
+                                         (conj coll
+                                               (into [node
+                                                      (cond-> opts
+                                                        (= node :BraceOpen) (assoc :append-newline? true)
+                                                        (= node :FieldDefinition) (assoc :append-newline? true))]
+                                                     rst)))
+                                       [:FieldsDefinition opts]
+                                       xs))
            :InputFieldsDefinition (fn [opts & xs]
                                     (reduce (fn [coll [node opts & rst :as x]]
                                               (conj coll
-                                                    (if (= node :InputValueDefinition)
-                                                      (into [node (assoc opts :newline? true
-                                                                              :indent? true)]
-                                                            rst)
-                                                      x)))
+                                                    (into [node
+                                                           (cond-> opts
+                                                             (= node :BraceOpen) (assoc :append-newline? true)
+                                                             (= node :InputValueDefinition) (assoc :append-newline? true))]
+                                                          rst)))
                                             [:InputFieldsDefinition opts]
                                             xs))
-           :OperationTypeDefinition (fn [opts & xs]
-                                      (into [:OperationTypeDefinition
-                                             (assoc opts :newline? true
-                                                         :indent? true)]
-                                            xs))
-           :Selection (fn [opts & xs]
-                        (into [:Selection (assoc opts :newline? true
-                                                      :indent? true)]
-                              xs))
-           :RootOperationTypeDefinition (fn [opts & xs]
-                                          (into [:RootOperationTypeDefinition
-                                                 (assoc opts :newline? true
-                                                             :indent? true)]
-                                                xs))}]
+           :InputValueDefinition (fn [opts & xs]
+                                   (reduce (fn [coll [node opts & rst]]
+                                             (conj coll
+                                                   (into [node
+                                                          (cond-> opts
+                                                            (= node :Name) (assoc :prepend-indent? true))]
+                                                         rst)))
+                                           [:InputValueDefinition opts]
+                                           xs))
+           :SchemaDefinition (fn [opts & xs]
+                               (reduce (fn [coll [node opts & rst :as _x]]
+                                         (conj coll
+                                               (into [node
+                                                      (cond-> opts
+                                                        (= node :BraceOpen) (assoc :append-newline? true)
+                                                        (= node :RootOperationTypeDefinition) (assoc :prepend-indent? true
+                                                                                                     :append-newline? true))]
+                                                     rst)))
+                                       [:SchemaDefinition opts]
+                                       xs))
+           :SchemaExtension (fn [opts & xs]
+                              (reduce (fn [coll [node opts & rst :as _x]]
+                                        (conj coll
+                                              (into [node
+                                                     (cond-> opts
+                                                       (= node :BraceOpen) (assoc :append-newline? true)
+                                                       (= node :OperationTypeDefinition) (assoc :prepend-indent? true
+                                                                                                :append-newline? true))]
+                                                    rst)))
+                                      [:SchemaExtension opts]
+                                      xs))
+           :SelectionSet (fn [opts & xs]
+                           (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as _x]]
+                                           (-> (update acc-head :acc conj
+                                                       (into [node
+                                                              (cond-> opts
+                                                                (= node :BraceOpen) (assoc :append-newline? true)
+                                                                (and (= node :Selection)
+                                                                     (not= (ffirst head) :BraceClose)) (assoc :prepend-indent? true
+                                                                                                              :append-newline? true)
+                                                                (and (= node :Selection)
+                                                                     (= (ffirst head) :BraceClose)) (assoc :prepend-indent? true
+                                                                                                           :append-newline? true))]
+                                                             rst))
+                                             (update :head rest)))
+                                         {:acc [:SelectionSet opts]
+                                          :head (rest xs)}
+                                         xs)))
+           :StringValue (fn [opts & xs]
+                          (reduce (fn [coll [node opts & rst]]
+                                    (conj coll
+                                          (into [node
+                                                 (cond-> opts
+                                                   (= node :BlockQuoteOpen) (assoc :append-newline? true)
+                                                   (= node :BlockStringCharacters) (assoc :append-newline? true)
+                                                   (= node :BlockQuoteClose) (assoc :prepend-indent? true))]
+                                                rst)))
+                                  [:StringValue opts]
+                                  xs))}]
     (insta/transform m ast)))
 
 (defn amend-horizontal-spacing-opts
@@ -946,17 +1001,19 @@
 (defn amend-prefer-inlining-opts
   [ast]
   (let [m {:ArgumentsDefinition (fn [opts & xs]
-                                  (reduce (fn [coll [node _opts & _rst :as x]]
+                                  (reduce (fn [coll [node opts & rst :as x]]
                                             (conj coll
                                                   (if (= node :InputValueDefinition)
-                                                    (let [m {:Description (fn [opts & xs]
-                                                                            (into [:Description
-                                                                                   (assoc
-                                                                                     opts
-                                                                                     :prefer-inlining? true
-                                                                                     :append-whitespace? true)]
-                                                                                  xs))}]
-                                                      (insta/transform m x))
+                                                    (reduce (fn [coll [node opts & rst]]
+                                                              (conj coll
+                                                                    (into [node
+                                                                           (cond-> opts
+                                                                             (= node :Description) (assoc :prefer-inlining? true
+                                                                                                          :append-whitespace? true)
+                                                                             (= node :Name) (assoc :prefer-inlining? true))]
+                                                                          rst)))
+                                                            [:InputValueDefinition opts]
+                                                            rst)
                                                     x)))
                                           [:ArgumentsDefinition opts]
                                           xs))
@@ -1021,12 +1078,15 @@
      (into [node (cond-> opts
                    (and within-structured-subtree?
                         (#{:Argument
-                           :BlockQuoteClose
-                           :ObjectField
-                           :ParensClose} node)) (assoc :newline? true
-                                                       :indent? true)
+                           :ObjectField} node)) (assoc :prepend-newline? true
+                                                       :prepend-indent? true)
                    (and within-structured-subtree?
-                        (= node :BlockStringCharacters)) (assoc :newline? true))]
+                        (#{:ParensClose} node)) (assoc :prepend-indent? true)
+                   (and within-structured-subtree?
+                        (#{:BlockQuoteClose} node)) (assoc :prepend-indent? true
+                                                           :append-newline? true)
+                   (and within-structured-subtree?
+                        (= node :BlockStringCharacters)) (assoc :append-newline? true))]
            (cond
              (vector?
                (first rst)) (map (partial amend-newline-to-structure-tree-opts
@@ -1137,21 +1197,16 @@
 (defn amend-newline-spacing
   [ast]
   (let [[node opts & rst] ast]
-    (into (if (and (not (:prefer-inlining? opts))
-                   (:newline? opts))
+    (into (if (not (:prefer-inlining? opts))
             (cond-> [node opts]
-              (not (:print-after? opts)) (conj [:Printable {} "\n"])
-              (and (not (:print-after? opts))
-                   (:indent? opts)) (conj [:Printable {} (indent-s opts)]))
+              (:prepend-newline? opts) (conj [:Printable {} "\n"])
+              (:prepend-indent? opts) (conj [:Printable {} (indent-s opts)]))
             [node opts])
           (cond
             (vector? (first rst)) (map amend-newline-spacing
                                        (cond-> rst
                                          (and (not (:prefer-inlining? opts))
-                                              (:print-after? opts)) (concat [[:Printable {} "\n"]])
-                                         (and (not (:prefer-inlining? opts))
-                                              (:print-after? opts)
-                                              (:indent? opts)) (concat [[:Printable {} (indent-s opts)]])))
+                                              (:append-newline? opts)) (concat [[:Printable {} "\n"]])))
             (string? (first rst)) (if (:newline? opts)
                                     [[:Printable {} (first rst)]]
                                     rst)))))
@@ -1177,7 +1232,7 @@
   [ast]
   (let [m {:BlockStringCharacters (fn [opts [_ printable-opts s] & xs]
                                     (into [:BlockStringCharacters opts
-                                           (block-string-characters s printable-opts)]
+                                           [:Printable {} (block-string-characters s printable-opts)]]
                                           xs))}]
     (insta/transform m ast)))
 
