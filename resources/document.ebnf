@@ -1,6 +1,6 @@
 Document = Ignored* Definition+ Ignored*
-Definition = Ignored* (TypeSystemExtension /
-                       TypeSystemDefinition /
+Definition = Ignored* (TypeSystemExtension !SelectionSet |
+                       TypeSystemDefinition !SelectionSet |
                        ExecutableDefinition)
 TypeSystemExtension = SchemaExtension |
                       TypeExtension

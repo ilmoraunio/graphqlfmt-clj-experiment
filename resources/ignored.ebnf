@@ -1,6 +1,6 @@
 <Ignored> = <UnicodeBOM> |
             <WhiteSpace> |
-            (LineTerminators / <LineTerminator>) |
+            (LineTerminators | !LineTerminators <LineTerminator>) |
             Comment |
             <Comma>
 UnicodeBOM = #"[\uFEFF]"
