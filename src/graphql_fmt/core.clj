@@ -1254,6 +1254,21 @@
     re-transform
     re-opts))
 
+(defn row-transform
+  [ast]
+  ;; start going through the ast stack recursively
+  ;; if the node's value is not a newline, add to the current row
+  ;; if the node's value is a newline, add value to current row and add a new row
+  ;; if the current branch is exhausted, return current rows and pass it to the next branch recursion
+  ;; go through all the branches until the stack is completely exhausted
+  ;; build a rows ast from the collection of rows
+  )
+
+(defn row-xf
+  [ast]
+  (->> ast
+    row-transform))
+
 (defn pr-s
   [ast]
   (->> ast
@@ -1264,6 +1279,7 @@
   [s]
   (->> s
     xf
+    row-xf
     pr-s))
 
 (defn -main [& args]
