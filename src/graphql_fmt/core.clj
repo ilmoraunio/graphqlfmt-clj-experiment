@@ -1264,6 +1264,35 @@
   ;; build a rows ast from the collection of rows
   )
 
+
+(defn rere-ast
+  [[node opts & rst]]
+  (lazy-seq
+    (cond
+      (nil? rst) [node opts]
+      (string? (first rst)) [node opts (first rst)]
+      (seq rst) (concat [node opts] (map rere-ast rst)))))
+
+
+#_(comment
+  (rere-ast [:foo {}])
+  ; nil
+  (rere-ast [:foo {} "string"])
+  ; ("string")
+  (rere-ast [:foo {} [:bar {}]])
+  ; ([:bar {}])
+  (rere-ast [:foo {} [:bar {} "string"]])
+  ; ([:bar {} "string"])
+  (rere-ast [:foo {} [:bar {}] [:qux {}]])
+  ; ([:bar {}] [:qux {}])
+  (rere-ast [:foo {} [:bar {} [:foobar {}]] [:qux {}]])
+  ; ([:bar {} [:foobar {}]] [:qux {}])
+  (rere-ast [:foo {} [:bar {} [:foobar {} "foobar"]]])
+  ; ([:bar {} [:foobar {} "foobar"]])
+  (rere-ast [:foo {} [:bar {} [:foobar {} "foobar"]] [:qux {} "baz"]])
+  ; ([:bar {} [:foobar {} "foobar"]] [:qux {} "baz"])
+  )
+
 (defn row-xf
   [ast]
   (->> ast
