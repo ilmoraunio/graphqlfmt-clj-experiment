@@ -1261,7 +1261,7 @@
     (cond
       (nil? rst) [node opts]
       (string? (first rst)) (let [s (first rst)
-                                  newline? (= s "\n")]
+                                  newline? (= s (System/lineSeparator))]
                               (vswap! row conj [(if newline?
                                                   :Newline
                                                   :Printable) {} s])
