@@ -1254,49 +1254,36 @@
     re-transform
     re-opts))
 
-(defn row-transform
-  [ast]
-  ;; start going through the ast stack recursively
-  ;; if the node's value is not a newline, add to the current row
-  ;; if the node's value is a newline, add value to current row and add a new row
-  ;; if the current branch is exhausted, return current rows and pass it to the next branch recursion
-  ;; go through all the branches until the stack is completely exhausted
-  ;; build a rows ast from the collection of rows
-  )
+(let [empty-row [:Row {}]]
 
-
-(defn rere-ast
-  [[node opts & rst]]
-  (lazy-seq
+  (defn -row-ast!
+    [rows row [node opts & rst]]
     (cond
       (nil? rst) [node opts]
-      (string? (first rst)) [node opts (first rst)]
-      (seq rst) (concat [node opts] (map rere-ast rst)))))
+      (string? (first rst)) (let [s (first rst)
+                                  newline? (= s "\n")]
+                              (vswap! row conj [(if newline?
+                                                  :Newline
+                                                  :Printable) {} s])
+                              (when newline?
+                                (vswap! rows conj @row)
+                                (vreset! row empty-row))
+                              [node opts s])
+      (seq rst) (into [node opts] (mapv (partial -row-ast! rows row) rst))))
 
-
-#_(comment
-  (rere-ast [:foo {}])
-  ; nil
-  (rere-ast [:foo {} "string"])
-  ; ("string")
-  (rere-ast [:foo {} [:bar {}]])
-  ; ([:bar {}])
-  (rere-ast [:foo {} [:bar {} "string"]])
-  ; ([:bar {} "string"])
-  (rere-ast [:foo {} [:bar {}] [:qux {}]])
-  ; ([:bar {}] [:qux {}])
-  (rere-ast [:foo {} [:bar {} [:foobar {}]] [:qux {}]])
-  ; ([:bar {} [:foobar {}]] [:qux {}])
-  (rere-ast [:foo {} [:bar {} [:foobar {} "foobar"]]])
-  ; ([:bar {} [:foobar {} "foobar"]])
-  (rere-ast [:foo {} [:bar {} [:foobar {} "foobar"]] [:qux {} "baz"]])
-  ; ([:bar {} [:foobar {} "foobar"]] [:qux {} "baz"])
-  )
+  (defn row-ast
+    [ast]
+    (let [rows (volatile! [:Rows {}])
+          row (volatile! empty-row)]
+      (-row-ast! rows row ast)
+      (when (not= @row empty-row)
+        (vswap! rows conj @row))
+      @rows)))
 
 (defn row-xf
   [ast]
   (->> ast
-    row-transform))
+    row-ast))
 
 (defn pr-s
   [ast]
