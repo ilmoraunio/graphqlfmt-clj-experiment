@@ -1283,7 +1283,9 @@
 (defn row-xf
   [ast]
   (->> ast
-    row-ast))
+    row-ast
+    ;; calculate length of each Printable and aggregate to Row, disregard Newlines
+    ))
 
 (defn pr-s
   [ast]
