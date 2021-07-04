@@ -492,11 +492,21 @@
     [:Printable {} "bar"]
     [:Printable {} "}"]]])
 
+(def +character-limit+ 80)
+
 (defn pr-str-ast
-  [s ast]
-  (let [[_node _opts & rst] ast]
+  [s character-count ast]
+  (let [[node opts & rst] ast]
     (apply str (cond
-                 (vector? (first rst)) (map (partial pr-str-ast s) rst)
+                 (and (= node :Softline)
+                      (and character-count
+                           (> character-count +character-limit+))) (map (partial pr-str-ast s character-count) rst)
+                 (and (not= node :Softline)
+                      (vector? (first rst))) (map (partial pr-str-ast s
+                                                           (if (= node :Row)
+                                                             (:character-count opts)
+                                                             character-count))
+                                                  rst)
                  (string? (first rst)) (str s (first rst))))))
 
 ;; validate ast fns
@@ -1186,9 +1196,10 @@
 
 (defn amend-characters-opts
   [ast]
-  (letfn [(characters [[_node _opts & rst]]
+  (letfn [(characters [[node _opts & rst]]
             (cond
               (nil? (first rst)) 0
+              (= node :Softline) 0
               (vector? (first rst)) (reduce + (map characters rst))
               (string? (first rst)) (or (and
                                           ;; By convention, we expect rogue newlines
@@ -1303,7 +1314,7 @@
 (defn pr-s
   [ast]
   (->> ast
-    (pr-str-ast "")
+    (pr-str-ast "" nil)
     (clojure.core/format "%s\n")))
 
 (defn fmt
