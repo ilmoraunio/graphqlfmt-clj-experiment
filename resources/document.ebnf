@@ -99,7 +99,7 @@ OperationDefinition = (OperationType Ignored* Name? VariableDefinitions? Directi
                       SelectionSet
 FragmentDefinition = <'fragment'> Ignored+ FragmentName Ignored+ TypeCondition Directives? SelectionSet
 OperationType = 'query' | 'mutation' | 'subscription'
-VariableDefinitions = Ignored* <'('> VariableDefinition+ Ignored* <')'>
+VariableDefinitions = Ignored* ParensOpen VariableDefinition+ Ignored* ParensClose
 VariableDefinition = Ignored* Variable Ignored* Colon Type DefaultValue?
 SelectionSet = Ignored* BraceOpen Ignored* Selection+ Ignored* BraceClose
 Selection = Field |

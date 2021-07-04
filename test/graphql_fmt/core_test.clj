@@ -1061,10 +1061,12 @@
         [:OperationType "query"]
         [:Name "frob"]
         [:VariableDefinitions
+         [:ParensOpen "("]
          [:VariableDefinition
           [:Variable [:Name "foo"]]
           [:Colon ":"]
-          [:Type [:NamedType [:Name "bar"]]]]]
+          [:Type [:NamedType [:Name "bar"]]]]
+         [:ParensClose ")"]]
         [:SelectionSet
          [:BraceOpen "{"]
          [:Selection [:Field [:Name "a"]]]
@@ -1081,6 +1083,7 @@
         [:OperationType "query"]
         [:Name "frob"]
         [:VariableDefinitions
+         [:ParensOpen "("]
          [:VariableDefinition
           [:Variable [:Name "foo"]]
           [:Colon ":"]
@@ -1088,7 +1091,8 @@
          [:VariableDefinition
           [:Variable [:Name "qux"]]
           [:Colon ":"]
-          [:Type [:NamedType [:Name "baz"]]]]]
+          [:Type [:NamedType [:Name "baz"]]]]
+         [:ParensClose ")"]]
         [:SelectionSet
          [:BraceOpen "{"]
          [:Selection [:Field [:Name "a"]]]
@@ -1105,13 +1109,15 @@
         [:OperationType "query"]
         [:Name "frob"]
         [:VariableDefinitions
+         [:ParensOpen "("]
          [:VariableDefinition
           [:Variable [:Name "foo"]]
           [:Colon ":"]
           [:Type [:ListType
                   [:BracketOpen "["]
                   [:Type [:NamedType [:Name "bar"]]]
-                  [:BracketClose "]"]]]]]
+                  [:BracketClose "]"]]]]
+         [:ParensClose ")"]]
         [:SelectionSet
          [:BraceOpen "{"]
          [:Selection [:Field [:Name "a"]]]
@@ -1128,6 +1134,7 @@
         [:OperationType "query"]
         [:Name "frob"]
         [:VariableDefinitions
+         [:ParensOpen "("]
          [:VariableDefinition
           [:Variable [:Name "foo"]]
           [:Colon ":"]
@@ -1137,7 +1144,8 @@
                           [:BracketOpen "["]
                           [:Type [:NamedType [:Name "bar"]]]
                           [:BracketClose "]"]]]
-                  [:BracketClose "]"]]]]]
+                  [:BracketClose "]"]]]]
+         [:ParensClose ")"]]
         [:SelectionSet
          [:BraceOpen "{"]
          [:Selection [:Field [:Name "a"]]]
@@ -1154,10 +1162,12 @@
         [:OperationType "query"]
         [:Name "frob"]
         [:VariableDefinitions
+         [:ParensOpen "("]
          [:VariableDefinition
           [:Variable [:Name "foo"]]
           [:Colon ":"]
-          [:Type [:NonNullType [:NamedType [:Name "bar"]] [:ExclamationMark "!"]]]]]
+          [:Type [:NonNullType [:NamedType [:Name "bar"]] [:ExclamationMark "!"]]]]
+         [:ParensClose ")"]]
         [:SelectionSet
          [:BraceOpen "{"]
          [:Selection [:Field [:Name "a"]]]
@@ -1174,6 +1184,7 @@
         [:OperationType "query"]
         [:Name "frob"]
         [:VariableDefinitions
+         [:ParensOpen "("]
          [:VariableDefinition
           [:Variable [:Name "foo"]]
           [:Colon ":"]
@@ -1182,7 +1193,8 @@
                    [:BracketOpen "["]
                    [:Type [:NamedType [:Name "bar"]]]
                    [:BracketClose "]"]]
-                  [:ExclamationMark "!"]]]]]
+                  [:ExclamationMark "!"]]]]
+         [:ParensClose ")"]]
         [:SelectionSet
          [:BraceOpen "{"]
          [:Selection [:Field [:Name "a"]]]
@@ -1199,6 +1211,7 @@
         [:OperationType "query"]
         [:Name "frob"]
         [:VariableDefinitions
+         [:ParensOpen "("]
          [:VariableDefinition
           [:Variable [:Name "foo"]]
           [:Colon ":"]
@@ -1207,7 +1220,8 @@
                   [:Type [:NonNullType
                           [:NamedType [:Name "bar"]]
                           [:ExclamationMark "!"]]]
-                  [:BracketClose "]"]]]]]
+                  [:BracketClose "]"]]]]
+         [:ParensClose ")"]]
         [:SelectionSet
          [:BraceOpen "{"]
          [:Selection [:Field [:Name "a"]]]
@@ -1224,6 +1238,7 @@
         [:OperationType "query"]
         [:Name "frob"]
         [:VariableDefinitions
+         [:ParensOpen "("]
          [:VariableDefinition
           [:Variable [:Name "foo"]]
           [:Colon ":"]
@@ -1235,7 +1250,8 @@
                      [:NamedType [:Name "bar"]]
                      [:ExclamationMark "!"]]]
              [:BracketClose "]"]]
-            [:ExclamationMark "!"]]]]]
+            [:ExclamationMark "!"]]]]
+         [:ParensClose ")"]]
         [:SelectionSet
          [:BraceOpen "{"]
          [:Selection [:Field [:Name "a"]]]
@@ -1252,13 +1268,15 @@
         [:OperationType "query"]
         [:Name "frob"]
         [:VariableDefinitions
+         [:ParensOpen "("]
          [:VariableDefinition
           [:Variable [:Name "foo"]]
           [:Colon ":"]
           [:Type [:NamedType [:Name "bar"]]]
           [:DefaultValue
            [:Equals "="]
-           [:Value [:BooleanValue "true"]]]]]
+           [:Value [:BooleanValue "true"]]]]
+         [:ParensClose ")"]]
         [:SelectionSet
          [:BraceOpen "{"]
          [:Selection [:Field [:Name "a"]]]

@@ -451,10 +451,8 @@
                                  xs))
    :VariableDefinitions (fn [& xs]
                           (conj (reduce (fn [coll x] (conj coll x))
-                                        [:VariableDefinitions {}
-                                         [:Printable {} "("]]
+                                        [:VariableDefinitions {}]
                                         xs)
-                                [:Printable {} ")"]
                                 [:Printable {} " "]))})
 
 (def template
@@ -536,7 +534,8 @@
                            :InputFieldsDefinition
                            :OperationTypeDefinition
                            :RootOperationTypeDefinition
-                           :SelectionSet) (inc indent-level)
+                           :SelectionSet
+                           :VariableDefinitions) (inc indent-level)
                          (:ParensClose
                            :BraceClose) (max (dec indent-level) 0)
                          indent-level)]
@@ -774,10 +773,16 @@
            :Field (fn [opts & xs]
                     (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
                                     (-> (update acc-head :acc conj
-                                                (if (and (= node :Name)
-                                                         (#{:Directives :SelectionSet} (ffirst head)))
+                                                (cond
+                                                  (and (= node :Name)
+                                                       (#{:Directives :SelectionSet} (ffirst head)))
                                                   (into [node (assoc opts :append-whitespace? true)] rst)
-                                                  x))
+
+                                                  (and (= node :Arguments)
+                                                       (some? (ffirst head)))
+                                                  (into [node opts] (concat rst [[:Printable {} " "]]))
+
+                                                  :else x))
                                       (update :head rest)))
                                   {:acc [:Field opts]
                                    :head (rest xs)}
@@ -1054,11 +1059,6 @@
                                          (:append-whitespace? opts) (concat rst [[:Printable {} " "]])
                                          (:append-softspace? opts) (concat rst [[:Softspace {} " "]])
                                          :else rst))
-            ;; XXX(ilmoraunio): One could form an opinion that we should
-            ;; transform all our node types to produce Printable nodes so that
-            ;; we can support `append-whitespace?` for all node types. This
-            ;; could indeed be done, but it's not something that is yet forcing
-            ;; my hand, thus deferring.
             (string? (first rst)) rst))))
 
 (defn amend-softline
@@ -1072,7 +1072,10 @@
                                (conj xs (softline opts))))
              :ParensClose (fn [opts & xs]
                             (into [:ParensClose opts]
-                                  (conj xs (softline opts))))}]
+                                  (conj xs (softline opts))))
+             :VariableDefinition (fn [opts & xs]
+                                   (into [:VariableDefinition opts]
+                                         (conj xs (softline opts))))}]
       (insta/transform m ast))))
 
 (defn amend-structured-tree-opts
