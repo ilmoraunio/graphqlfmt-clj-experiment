@@ -1051,7 +1051,7 @@
 (defn amend-softline
   [ast]
   (letfn [(softline [opts]
-            [:Softline {:ignore-from-row-count-total true}
+            [:Softline {}
              [:Newline {} "\n"]
              [:Printable {} (indent-s opts)]])]
     (let [m {:Argument (fn [opts & xs]
@@ -1198,15 +1198,12 @@
                                           (count (first rst)))
                                         0)))]
     (let [[node opts & rst] ast]
-      (into [node (assoc opts :character-count (characters ast))]
-            (cond
-              (vector? (first rst)) (map amend-characters-opts rst)
-              (string? (first rst)) rst)))))
-
-(defn re-opts
-  [ast]
-  (->> ast
-    (amend-characters-opts)))
+      (if (= node :Softline)
+        (into [node opts] rst)
+        (into [node (assoc opts :character-count (characters ast))]
+              (cond
+                (vector? (first rst)) (map amend-characters-opts rst)
+                (string? (first rst)) rst))))))
 
 (defn amend-newline-spacing
   [ast]
@@ -1266,8 +1263,7 @@
     transform
     validate
     opts
-    re-transform
-    re-opts))
+    re-transform))
 
 (let [empty-row [:Row {}]]
 
@@ -1302,8 +1298,7 @@
   [ast]
   (->> ast
     row-ast
-    ;; calculate length of each Printable and aggregate to Row, disregard Newlines
-    ))
+    amend-characters-opts))
 
 (defn pr-s
   [ast]
