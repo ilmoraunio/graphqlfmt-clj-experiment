@@ -1275,6 +1275,9 @@
     [rows row [node opts & rst]]
     (cond
       (nil? rst) [node opts]
+      (= node :Softline) (let [softline (into [node opts] rst)]
+                           (vswap! row conj softline)
+                           softline)
       (string? (first rst)) (let [s (first rst)
                                   newline? (= s (System/lineSeparator))]
                               (vswap! row conj [(if newline?
