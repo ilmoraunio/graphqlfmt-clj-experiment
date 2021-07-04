@@ -1048,6 +1048,20 @@
             ;; my hand, thus deferring.
             (string? (first rst)) rst))))
 
+(defn amend-softline
+  [ast]
+  (letfn [(softline [opts]
+            [:Softline {:ignore-from-row-count-total true}
+             [:Newline {} "\n"]
+             [:Printable {} (indent-s opts)]])]
+    (let [m {:Argument (fn [opts & xs]
+                         (into [:Argument opts]
+                               (conj xs (softline opts))))
+             :ParensClose (fn [opts & xs]
+                            (into [:ParensClose opts]
+                                  (conj xs (softline opts))))}]
+      (insta/transform m ast))))
+
 (defn amend-structured-tree-opts
   [ast]
   (letfn [(check [[node _opts & rst]]
@@ -1242,7 +1256,8 @@
     (format-block-string-values)
     ;; TODO: remove all Comma elements from under structured-tree? (except from under ListValues)
     (amend-newline-spacing)
-    (amend-horizontal-spacing)))
+    (amend-horizontal-spacing)
+    (amend-softline)))
 
 (defn xf
  [s]
