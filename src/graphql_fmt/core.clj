@@ -65,8 +65,7 @@
   (subs s (min (count s) n) (count s)))
 
 (def comma-value
-  [:Comma {}
-   [:Printable {} ","]])
+  [:Comma {} ","])
 
 (defn block-string-value
   [s]
@@ -497,17 +496,20 @@
 (defn pr-str-ast
   [s character-count ast]
   (let [[node opts & rst] ast]
-    (apply str (cond
-                 (and (= node :Softline)
-                      (and character-count
-                           (> character-count +character-limit+))) (map (partial pr-str-ast s character-count) rst)
-                 (and (not= node :Softline)
-                      (vector? (first rst))) (map (partial pr-str-ast s
-                                                           (if (= node :Row)
-                                                             (:character-count opts)
-                                                             character-count))
-                                                  rst)
-                 (string? (first rst)) (str s (first rst))))))
+    (let [character-count-exceeded? (and character-count
+                                         (> character-count +character-limit+))]
+      (apply str (cond
+                   (and (= node :Softline) character-count-exceeded?) (map (partial pr-str-ast s character-count) rst)
+                   (and (not= node :Softline)
+                        (vector? (first rst))) (map (partial pr-str-ast s
+                                                             (if (= node :Row)
+                                                               (:character-count opts)
+                                                               character-count))
+                                                    rst)
+                   (or (and (= node :Comma) (not character-count-exceeded?))
+                       (and (= node :Softspace) (not character-count-exceeded?))
+                       (and (not (#{:Comma :Softspace} node))
+                            (string? (first rst)))) (str s (first rst)))))))
 
 ;; validate ast fns
 
@@ -684,7 +686,7 @@
                                         (-> (update acc-head :acc conj
                                                     (if (and (= node :Argument)
                                                              (= (ffirst head) :Argument))
-                                                      (into [node (assoc opts :append-whitespace? true)] rst)
+                                                      (into [node (assoc opts :append-softspace? true)] rst)
                                                       x))
                                           (update :head rest)))
                                       {:acc [:Arguments opts]
@@ -695,7 +697,7 @@
                                                   (-> (update acc-head :acc conj
                                                               (if (and (= node :InputValueDefinition)
                                                                        (= (ffirst head) :InputValueDefinition))
-                                                                (into [node (assoc opts :append-whitespace? true)] rst)
+                                                                (into [node (assoc opts :append-softspace? true)] rst)
                                                                 x))
                                                     (update :head rest)))
                                                 {:acc [:ArgumentsDefinition opts]
@@ -999,7 +1001,7 @@
                                                   (-> (update acc-head :acc conj
                                                               (if (and (= node :VariableDefinition)
                                                                        (= (ffirst head) :VariableDefinition))
-                                                                (into [node (assoc opts :append-whitespace? true)]
+                                                                (into [node (assoc opts :append-softspace? true)]
                                                                       rst)
                                                                 x))
                                                     (update :head rest)))
@@ -1048,9 +1050,10 @@
     (into [node opts]
           (cond
             (vector? (first rst)) (map amend-horizontal-spacing
-                                       (if (:append-whitespace? opts)
-                                         (concat rst [[:Printable {} " "]])
-                                         rst))
+                                       (cond
+                                         (:append-whitespace? opts) (concat rst [[:Printable {} " "]])
+                                         (:append-softspace? opts) (concat rst [[:Softspace {} " "]])
+                                         :else rst))
             ;; XXX(ilmoraunio): One could form an opinion that we should
             ;; transform all our node types to produce Printable nodes so that
             ;; we can support `append-whitespace?` for all node types. This
@@ -1287,9 +1290,10 @@
                            softline)
       (string? (first rst)) (let [s (first rst)
                                   newline? (= s (System/lineSeparator))]
-                              (vswap! row conj [(if newline?
-                                                  :Newline
-                                                  :Printable) {} s])
+                              (vswap! row conj [(cond
+                                                  newline? :Newline
+                                                  (#{:Comma :Softspace} node) node
+                                                  :else :Printable) {} s])
                               (when newline?
                                 (vswap! rows conj @row)
                                 (vreset! row empty-row))
