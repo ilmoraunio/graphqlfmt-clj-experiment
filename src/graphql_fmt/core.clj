@@ -172,9 +172,6 @@
    ;; leaf element as we move forward with formatting. That's actually OK. Let's
    ;; see how far this takes us.
    :Colon (fn [x] [:Colon {} [:Printable {} x]])
-   :Commas (fn
-             ([] comma-value)
-             ([_] comma-value))
    :Comment comment
    :CommentChar str
    :DefaultValue (fn [& xs]
