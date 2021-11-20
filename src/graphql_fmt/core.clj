@@ -1289,7 +1289,10 @@
                            (vswap! row conj softline)
                            softline)
       (string? (first rst)) (let [s (first rst)
-                                  newline? (= s (System/lineSeparator))]
+                                  newline? (= s
+                                              ;; XXX(ilmoraunio): Hmm... what if someone copy-pastes a query made in
+                                              ;; windows to a unix system? I bet this will break.
+                                              (System/lineSeparator))]
                               (vswap! row conj [(cond
                                                   newline? :Newline
                                                   (#{:Comma :Softspace} node) node
