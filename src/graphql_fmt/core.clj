@@ -2,7 +2,6 @@
   (:refer-clojure :exclude [name comment])
   (:require [clojure.java.io :as io]
             [clojure.pprint]
-            [clojure.string :as str]
             [instaparse.core :as insta])
   (:gen-class))
 
@@ -413,40 +412,6 @@
                                         [:VariableDefinitions {}]
                                         xs)
                                 [:Printable {} " "]))})
-
-(def template
-  [:Document {}
-   [:Definition {}
-    [:ExecutableDefinition {}
-     [:OperationDefinition {}
-      [:SelectionSet {}
-       [:Printable {} "{"]
-       [:Selection {}
-        [:Field {}
-         [:Name {
-                 :newline? true} "foo"]]]
-       [:Printable {} "}"]]]]]
-   [:Definition {}
-    [:Printable {} "{"]
-    [:Printable {} "bar"]
-    [:Printable {} "}"]]])
-
-(def desired-format
-  [:Document {:indentation-level 0}
-   [:Definition {:indentation-level 0}
-    [:ExecutableDefinition {:indentation-level 0}
-     [:OperationDefinition {:indentation-level 0}
-      [:SelectionSet {:indentation-level 0}
-       [:Printable {:indentation-level 0} "{"]
-       [:Selection {:indentation-level 1}
-        [:Field {:indentation-level 1}
-         [:Name {:indentation-level 1,
-                 :newline? true} "foo"]]]
-       [:Printable {} "}"]]]]]
-   [:Definition {:indentation-level 0}
-    [:Printable {} "{"]
-    [:Printable {} "bar"]
-    [:Printable {} "}"]]])
 
 (def +character-limit+ 80)
 
