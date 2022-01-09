@@ -433,8 +433,6 @@
                        (and (not (#{:Comma :Softspace} node))
                             (string? (first rst)))) (str s (first rst)))))))
 
-;; enrich ast opts fns
-
 (defn amend-indentation-level-opts
   [indent-level ast]
   (let [[node opts & rst] ast]
@@ -958,8 +956,6 @@
                                   xs))}]
     (insta/transform m ast)))
 
-;; enrich-ast-opts fns
-
 (defn amend-horizontal-spacing
   [ast]
   (let [[node opts & rst] ast]
@@ -1149,8 +1145,6 @@
             (string? (first rst)) (if (:newline? opts)
                                     [[:Printable {} (first rst)]]
                                     rst)))))
-
-;; re-transformation fns
 
 (defn block-string-characters
   [s opts]
