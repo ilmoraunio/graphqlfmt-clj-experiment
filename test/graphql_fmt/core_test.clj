@@ -1,7 +1,14 @@
 (ns graphql-fmt.core-test
   (:refer-clojure :exclude [name comment])
   (:require [clojure.test :refer [are deftest is testing]]
-            [graphql-fmt.core :refer :all]))
+            [graphql-fmt.core :refer :all]
+            [instaparse.core :as insta]))
+
+(def ignored-parser
+  (insta/parser (ebnf "ignored")))
+
+(def token-parser
+  (insta/parser (ebnf "token")))
 
 (deftest test-ignored
   (are [input ast]

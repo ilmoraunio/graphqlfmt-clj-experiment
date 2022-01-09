@@ -14,12 +14,6 @@
                       slurp))
                   names)))
 
-(def ignored-parser
-  (insta/parser (ebnf "ignored")))
-
-(def token-parser
-  (insta/parser (ebnf "token")))
-
 (def document-parser
   (insta/parser (ebnf "document" "token" "ignored")))
 
