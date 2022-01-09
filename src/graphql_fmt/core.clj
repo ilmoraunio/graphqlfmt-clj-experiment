@@ -1031,6 +1031,101 @@
                                  rst)
              (string? (first rst)) rst)))))
 
+(defn amend-characters-opts
+  [ast]
+  (letfn [(characters [[node _opts & rst]]
+            (cond
+              (nil? (first rst)) 0
+              (= node :Softline) 0
+              (vector? (first rst)) (reduce + (map characters rst))
+              (string? (first rst)) (or (and
+                                          ;; By convention, we expect rogue newlines
+                                          ;; not to show up in the middle of a
+                                          ;; subtree.
+                                          (not= (first rst) "\n")
+                                          (count (first rst)))
+                                        0)))]
+    (let [[node opts & rst] ast]
+      (if (= node :Softline)
+        (into [node opts] rst)
+        (into [node (assoc opts :character-count (characters ast))]
+              (cond
+                (vector? (first rst)) (map amend-characters-opts rst)
+                (string? (first rst)) rst))))))
+
+(defn amend-newline-spacing
+  [ast]
+  (let [[node opts & rst] ast]
+    (into (if (not (:prefer-inlining? opts))
+            (cond-> [node opts]
+              (:prepend-newline? opts) (conj [:Printable {} "\n"])
+              (:prepend-indent? opts) (conj [:Printable {} (indent-s opts)]))
+            [node opts])
+          (cond
+            (vector? (first rst)) (map amend-newline-spacing
+                                       (cond-> rst
+                                         (and (not (:prefer-inlining? opts))
+                                              (:append-newline? opts)) (concat [[:Printable {} "\n"]])))
+            (string? (first rst)) (if (:newline? opts)
+                                    [[:Printable {} (first rst)]]
+                                    rst)))))
+
+(defn block-string-characters
+  [s opts]
+  (letfn [(empty-line? [line] (re-find #"^[\u0009\u0020]*$" line))]
+    (let [lines (clojure.string/split (block-string-value s) #"\n")]
+      (reduce
+        (fn [formatted line]
+          (if (empty-line? line)
+            (str formatted "\n" line)
+            (str formatted "\n" (indent-s opts) line)))
+        (or (if (empty-line? (first lines))
+              (str (first lines))
+              (str (indent-s opts) (first lines)))
+            "")
+        (rest lines)))))
+
+(defn format-block-string-values
+  [ast]
+  (let [m {:BlockStringCharacters (fn [opts [_ printable-opts s] & xs]
+                                    (into [:BlockStringCharacters opts
+                                           [:Printable {} (block-string-characters s printable-opts)]]
+                                          xs))}]
+    (insta/transform m ast)))
+
+(let [empty-row [:Row {}]]
+
+  (defn -row-ast!
+    [rows row [node opts & rst]]
+    (cond
+      (nil? rst) [node opts]
+      (= node :Softline) (let [softline (into [node opts] rst)]
+                           (vswap! row conj softline)
+                           softline)
+      (string? (first rst)) (let [s (first rst)
+                                  newline? (= s
+                                              ;; XXX(ilmoraunio): Hmm... what if someone copy-pastes a query made in
+                                              ;; windows to a unix system? I bet this will break.
+                                              (System/lineSeparator))]
+                              (vswap! row conj [(cond
+                                                  newline? :Newline
+                                                  (#{:Comma :Softspace} node) node
+                                                  :else :Printable) {} s])
+                              (when newline?
+                                (vswap! rows conj @row)
+                                (vreset! row empty-row))
+                              [node opts s])
+      (seq rst) (into [node opts] (mapv (partial -row-ast! rows row) rst))))
+
+  (defn row-ast
+    [ast]
+    (let [rows (volatile! [:Rows {}])
+          row (volatile! empty-row)]
+      (-row-ast! rows row ast)
+      (when (not= @row empty-row)
+        (vswap! rows conj @row))
+      @rows)))
+
 (defn ast
   [s]
   (->> s
@@ -1107,68 +1202,6 @@
     amend-newline-to-structure-tree-opts
     amend-prefer-inlining-opts))
 
-(defn amend-characters-opts
-  [ast]
-  (letfn [(characters [[node _opts & rst]]
-            (cond
-              (nil? (first rst)) 0
-              (= node :Softline) 0
-              (vector? (first rst)) (reduce + (map characters rst))
-              (string? (first rst)) (or (and
-                                          ;; By convention, we expect rogue newlines
-                                          ;; not to show up in the middle of a
-                                          ;; subtree.
-                                          (not= (first rst) "\n")
-                                          (count (first rst)))
-                                        0)))]
-    (let [[node opts & rst] ast]
-      (if (= node :Softline)
-        (into [node opts] rst)
-        (into [node (assoc opts :character-count (characters ast))]
-              (cond
-                (vector? (first rst)) (map amend-characters-opts rst)
-                (string? (first rst)) rst))))))
-
-(defn amend-newline-spacing
-  [ast]
-  (let [[node opts & rst] ast]
-    (into (if (not (:prefer-inlining? opts))
-            (cond-> [node opts]
-              (:prepend-newline? opts) (conj [:Printable {} "\n"])
-              (:prepend-indent? opts) (conj [:Printable {} (indent-s opts)]))
-            [node opts])
-          (cond
-            (vector? (first rst)) (map amend-newline-spacing
-                                       (cond-> rst
-                                         (and (not (:prefer-inlining? opts))
-                                              (:append-newline? opts)) (concat [[:Printable {} "\n"]])))
-            (string? (first rst)) (if (:newline? opts)
-                                    [[:Printable {} (first rst)]]
-                                    rst)))))
-
-(defn block-string-characters
-  [s opts]
-  (letfn [(empty-line? [line] (re-find #"^[\u0009\u0020]*$" line))]
-    (let [lines (clojure.string/split (block-string-value s) #"\n")]
-      (reduce
-        (fn [formatted line]
-          (if (empty-line? line)
-            (str formatted "\n" line)
-            (str formatted "\n" (indent-s opts) line)))
-        (or (if (empty-line? (first lines))
-              (str (first lines))
-              (str (indent-s opts) (first lines)))
-            "")
-        (rest lines)))))
-
-(defn format-block-string-values
-  [ast]
-  (let [m {:BlockStringCharacters (fn [opts [_ printable-opts s] & xs]
-                                    (into [:BlockStringCharacters opts
-                                           [:Printable {} (block-string-characters s printable-opts)]]
-                                          xs))}]
-    (insta/transform m ast)))
-
 (defn re-transform
   [ast]
   (-> ast
@@ -1178,45 +1211,12 @@
     (amend-softline)))
 
 (defn xf
- [s]
+  [s]
   (->> s
     ast
     transform
     opts
     re-transform))
-
-(let [empty-row [:Row {}]]
-
-  (defn -row-ast!
-    [rows row [node opts & rst]]
-    (cond
-      (nil? rst) [node opts]
-      (= node :Softline) (let [softline (into [node opts] rst)]
-                           (vswap! row conj softline)
-                           softline)
-      (string? (first rst)) (let [s (first rst)
-                                  newline? (= s
-                                              ;; XXX(ilmoraunio): Hmm... what if someone copy-pastes a query made in
-                                              ;; windows to a unix system? I bet this will break.
-                                              (System/lineSeparator))]
-                              (vswap! row conj [(cond
-                                                  newline? :Newline
-                                                  (#{:Comma :Softspace} node) node
-                                                  :else :Printable) {} s])
-                              (when newline?
-                                (vswap! rows conj @row)
-                                (vreset! row empty-row))
-                              [node opts s])
-      (seq rst) (into [node opts] (mapv (partial -row-ast! rows row) rst))))
-
-  (defn row-ast
-    [ast]
-    (let [rows (volatile! [:Rows {}])
-          row (volatile! empty-row)]
-      (-row-ast! rows row ast)
-      (when (not= @row empty-row)
-        (vswap! rows conj @row))
-      @rows)))
 
 (defn row-xf
   [ast]
