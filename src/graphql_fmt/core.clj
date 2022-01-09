@@ -433,19 +433,6 @@
                        (and (not (#{:Comma :Softspace} node))
                             (string? (first rst)))) (str s (first rst)))))))
 
-;; validate ast fns
-
-(defn validate
-  [ast]
-  (let [[node opts & rst] ast]
-    (when (and (not (vector? (first rst)))
-               (not (string? (first rst))))
-      (throw (ex-info {} (str "Unrecognized type: " (type (first rst))))))
-    (into [node opts]
-          (cond
-            (vector? (first rst)) (map validate rst)
-            (string? (first rst)) rst))))
-
 ;; enrich ast opts fns
 
 (defn amend-indentation-level-opts
@@ -1201,7 +1188,6 @@
   (->> s
     ast
     transform
-    validate
     opts
     re-transform))
 
