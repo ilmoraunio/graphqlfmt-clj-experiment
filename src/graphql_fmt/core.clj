@@ -6,9 +6,6 @@
             [instaparse.core :as insta])
   (:gen-class))
 
-;; Noting that our version of `ffirst` should probably learn to ignore comments,
-;; since that is well something that may bump up in the ast at that point.
-
 (defn ebnf [& names]
   (apply str (map (fn [name]
                     (-> (str name ".ebnf")
@@ -109,25 +106,6 @@
                     (rest lines'''))]
     formatted))
 
-;; XXX(ilmoraunio): This now complects the forming of an ast and adding
-;; representation elements. These two should be split up.
-
-;; XXX(ilmoraunio): Further noting that *all* transformations could be done via
-;; `insta/transform`. Observe a transformation done for the ready ast:
-
-(comment (insta/transform
-           {:Document (fn [opts & xs]
-                        (into [:Document (assoc opts :foo :bar)]
-                              xs))}
-           [:Document {} [:Definition {} "..."]]))
-
-;; XXX(ilmoraunio): Even further noting that this transform-map should, at first
-;; hand, comprise of only the *very basic* ast forming. We can further down the
-;; ast pipeline do re-transformation where we amend _additional_ entries to the
-;; ast. But not before we have initialized the `[node options sub-tree]` format
-;; via `ast` (with exception to leaf values that make sense to initialize here,
-;; leaves are part of the ast too).
-
 (def transform-map
   {:Alias (fn [& xs]
             (reduce (fn [coll x] (conj coll x))
@@ -150,8 +128,6 @@
    :BlockQuoteClose (fn [] [:BlockQuoteClose {} [:Printable {} "\"\"\""]])
    :BlockStringCharacter (fn [s] [:BlockStringCharacter {} s])
    :BlockStringCharacters (fn [& xs]
-                            ;; XXX(ilmoraunio): I wonder if this should be done
-                            ;;                  in the transform phase.
                             [:BlockStringCharacters {}
                              [:Printable {} (apply str (reduce
                                                          (fn [coll [_node-name _opts s]]
@@ -160,17 +136,9 @@
                                                          xs))]])
    :BooleanValue boolean-value
    :BraceClose (fn [x] [:BraceClose {} [:Printable {} x]])
-   ;; XXX(ilmoraunio): Okay, it seems this is now the exception wherein a
-   ;; leaf node type now is wrapped within a Printable, making it stand out of
-   ;; all the leaf node types which are at this point *not* wrapped. I think
-   ;; this ought to be resolved somehow at some point, IMO this will not be
-   ;; tenable in the long run.
    :BraceOpen (fn [x] [:BraceOpen {} [:Printable {} x]])
    :BracketClose (fn [x] [:Printable {} x])
    :BracketOpen (fn [x] [:Printable {} x])
-   ;; XXX(ilmoraunio): Ok, it seems we are having to do wrap-overs to some
-   ;; leaf element as we move forward with formatting. That's actually OK. Let's
-   ;; see how far this takes us.
    :Colon (fn [x] [:Colon {} [:Printable {} x]])
    :Comment comment
    :CommentChar str
@@ -1265,7 +1233,6 @@
   [ast]
   (-> ast
     (format-block-string-values)
-    ;; TODO: remove all Comma elements from under structured-tree? (except from under ListValues)
     (amend-newline-spacing)
     (amend-horizontal-spacing)
     (amend-softline)))
