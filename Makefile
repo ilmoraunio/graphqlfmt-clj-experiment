@@ -1,8 +1,8 @@
 SOURCE = $(wildcard src/*/* resources/*)
 
-target/graphql-fmt.jar: $(SOURCE)
+target/graphqlfmt.jar: $(SOURCE)
 	lein uberjar
-	mv target/graphql-fmt-0.1.0-SNAPSHOT-standalone.jar $@
+	mv target/graphqlfmt-0.1.0-SNAPSHOT-standalone.jar $@
 
 # Linux
 
@@ -11,7 +11,7 @@ graalvm-native-image-linux: Dockerfile.linux
 	docker build -t $@ -f $< .
 
 .PHONY: build-linux
-build-linux: graalvm-native-image-linux target/graphql-fmt.jar 
+build-linux: graalvm-native-image-linux target/graphqlfmt.jar 
 	./compile-linux $<
 
 # MacOS
@@ -27,6 +27,6 @@ graalvm-darwin.tar.gz:
 	./$</Contents/Home/bin/gu install native-image
 
 .PHONY: build-darwin
-build-darwin: target/graphql-fmt.jar .graalvm-ce-java8-darwin/Contents/Home/bin/native-image
+build-darwin: target/graphqlfmt.jar .graalvm-ce-java8-darwin/Contents/Home/bin/native-image
 	./compile-darwin
 

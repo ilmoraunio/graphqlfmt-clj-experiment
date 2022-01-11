@@ -24,10 +24,10 @@ This is a learning project and not fit for production use. PRs welcome.
 
 ```
 make build-linux
-./target/graphql-fmt '{hello world}'
+./target/graphqlfmt '{hello world}'
 
 make build-darwin
-./graphql-fmt '{hello world}'
+./graphqlfmt '{hello world}'
 ```
 
 ## Scope

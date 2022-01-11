@@ -1,7 +1,7 @@
-(ns graphql-fmt.core-test
+(ns graphqlfmt.core-test
   (:refer-clojure :exclude [name comment])
   (:require [clojure.test :refer [are deftest is testing]]
-            [graphql-fmt.core :refer :all]
+            [graphqlfmt.core :refer :all]
             [instaparse.core :as insta]))
 
 (def ignored-parser

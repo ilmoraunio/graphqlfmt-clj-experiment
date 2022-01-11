@@ -5,9 +5,9 @@ set -eu
 docker run -it \
     -v "${PWD}/target:/target" \
     "${1?Pass docker image as first parameter}" \
-    -jar graphql-fmt.jar \
+    -jar graphqlfmt.jar \
     "--static" \
-    "-H:Name=graphql-fmt" \
+    "-H:Name=graphqlfmt" \
     "-H:+ReportExceptionStackTraces" \
     "--initialize-at-build-time" \
     "--report-unsupported-elements-at-runtime" \

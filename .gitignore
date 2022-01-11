@@ -1,8 +1,8 @@
 target/
-graphql-fmt
+graphqlfmt
 .idea/
 .lein-failures
 .nrepl-port
-graphql-fmt.iml
+graphqlfmt.iml
 .graalvm-ce-java8-darwin/
 graalvm-darwin.tar.gz

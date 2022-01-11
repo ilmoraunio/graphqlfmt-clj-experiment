@@ -1,4 +1,4 @@
-(ns graphql-fmt.core
+(ns graphqlfmt.core
   (:refer-clojure :exclude [name comment])
   (:require [clojure.java.io :as io]
             [clojure.pprint]

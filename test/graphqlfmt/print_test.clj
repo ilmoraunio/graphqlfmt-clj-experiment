@@ -1,7 +1,7 @@
-(ns graphql-fmt.print-test
+(ns graphqlfmt.print-test
   (:refer-clojure :exclude [name comment])
   (:require [clojure.test :refer [are deftest is testing]]
-            [graphql-fmt.core :refer :all :as graphqlfmt]
+            [graphqlfmt.core :refer :all :as graphqlfmt]
             [instaparse.core :as insta]))
 
 (def graphql-statements

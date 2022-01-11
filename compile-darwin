@@ -3,8 +3,8 @@
 set -eu
 
 ./.graalvm-ce-java8-darwin/Contents/Home/bin/native-image \
-    -jar target/graphql-fmt.jar \
-    "-H:Name=graphql-fmt" \
+    -jar target/graphqlfmt.jar \
+    "-H:Name=graphqlfmt" \
     "-H:+ReportExceptionStackTraces" \
     "--initialize-at-build-time" \
     "--report-unsupported-elements-at-runtime" \
