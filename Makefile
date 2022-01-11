@@ -10,7 +10,6 @@ target/graphql-fmt.jar: $(SOURCE)
 graalvm-native-image-linux: Dockerfile.linux
 	docker build -t $@ -f $< .
 
-# Actual clojure sources need be defined as prerequisites.
 .PHONY: build-linux
 build-linux: graalvm-native-image-linux target/graphql-fmt.jar 
 	./compile-linux $<
@@ -27,7 +26,6 @@ graalvm-darwin.tar.gz:
 .graalvm-ce-java8-darwin/Contents/Home/bin/native-image: .graalvm-ce-java8-darwin
 	./$</Contents/Home/bin/gu install native-image
 
-# Actual clojure sources need be defined as prerequisites.
 .PHONY: build-darwin
 build-darwin: target/graphql-fmt.jar .graalvm-ce-java8-darwin/Contents/Home/bin/native-image
 	./compile-darwin
