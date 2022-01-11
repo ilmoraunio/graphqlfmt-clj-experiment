@@ -24,10 +24,14 @@ This is a learning project and not fit for production use. PRs welcome.
 
 ```
 make build-linux
-./target/graphqlfmt '{hello world}'
+./target/graphqlfmt <<EOF
+{hello world}
+EOF
 
 make build-darwin
-./graphqlfmt '{hello world}'
+./graphqlfmt <<EOF
+{hello world}
+EOF
 ```
 
 ## Scope
