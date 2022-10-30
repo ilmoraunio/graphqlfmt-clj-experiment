@@ -1,0 +1,4 @@
+query frob($foo: bar @blarg, $qux: baz = true @blorg) {
+  a
+  b
+}

@@ -901,8 +901,10 @@
            :VariableDefinition (fn [opts & xs]
                                  (:acc (reduce (fn [{:keys [head] :as acc-head} [node opts & rst :as x]]
                                                  (-> (update acc-head :acc conj
-                                                             (if (and (= node :Type)
-                                                                      (= (ffirst head) :DefaultValue))
+                                                             (if (or (and (= node :Type)
+                                                                          (#{:DefaultValue :Directives} (ffirst head)))
+                                                                     (and (= node :DefaultValue)
+                                                                          (= (ffirst head) :Directives)))
                                                                (into [node (assoc opts :append-whitespace? true)]
                                                                      rst)
                                                                x))
