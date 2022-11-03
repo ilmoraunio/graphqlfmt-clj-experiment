@@ -182,17 +182,17 @@
   (cond
     (nil? rst) [node opts]
     (= node :Softline) (let [softline (into [node opts] rst)]
-                         (vswap! row conj softline)
+                         (swap! row conj softline)
                          softline)
     (string? (first rst)) (let [s (first rst)
                                 newline? (= s (System/lineSeparator))]
-                            (vswap! row conj [(cond
-                                                newline? :Newline
-                                                (#{:Comma :Softspace} node) node
-                                                :else :Printable) {} s])
+                            (swap! row conj [(cond
+                                               newline? :Newline
+                                               (#{:Comma :Softspace} node) node
+                                               :else :Printable) {} s])
                             (when newline?
-                              (vswap! rows conj @row)
-                              (vreset! row empty-row))
+                              (swap! rows conj @row)
+                              (reset! row empty-row))
                             [node opts s])
     (seq rst) (into [node opts] (mapv (partial -row-ast! rows row) rst))))
 
@@ -212,9 +212,9 @@
 
 (defn row-ast
   [ast]
-  (let [rows (volatile! [:Rows {}])
-        row (volatile! empty-row)]
+  (let [rows (atom [:Rows {}])
+        row (atom empty-row)]
     (-row-ast! rows row ast)
     (when (not= @row empty-row)
-      (vswap! rows conj @row))
+      (swap! rows conj @row))
     @rows))
