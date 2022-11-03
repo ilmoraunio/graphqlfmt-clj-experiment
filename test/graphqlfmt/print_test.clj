@@ -1,7 +1,7 @@
 (ns graphqlfmt.print-test
   (:refer-clojure :exclude [name comment])
   (:require [clojure.test :refer [deftest is testing]]
-            [graphqlfmt.core :refer :all :as graphqlfmt]))
+            [graphqlfmt.core :as graphqlfmt]))
 
 (def graphql-statements
   (->> (clojure.java.io/file "test-resources/graphql")

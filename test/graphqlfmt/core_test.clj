@@ -1,14 +1,15 @@
 (ns graphqlfmt.core-test
   (:refer-clojure :exclude [name comment])
-  (:require [clojure.test :refer [are deftest is testing]]
+  (:require [clojure.test :refer [are deftest is]]
+            [graphqlfmt.ast :as ast]
             [graphqlfmt.core :refer :all]
             [instaparse.core :as insta]))
 
 (def ignored-parser
-  (insta/parser (ebnf "ignored")))
+  (insta/parser (ast/ebnf "ignored")))
 
 (def token-parser
-  (insta/parser (ebnf "token")))
+  (insta/parser (ast/ebnf "token")))
 
 (deftest test-ignored
   (are [input ast]
@@ -270,9 +271,9 @@
        (if (vector? document)
          (do
            (doseq [document-representation document]
-             (is (= ast (document-parser document-representation)) document-representation))
+             (is (= ast (ast/document-parser document-representation)) document-representation))
            true)
-         (is (= ast (document-parser document)) document))
+         (is (= ast (ast/document-parser document)) document))
 
     ["{foo}"
      "{ foo }"
