@@ -12,10 +12,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build macOS binary
-      run: build-darwin
+      run: make build-darwin
   build-linux:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: Build linux binary
-      run: build-linux
+      run: make build-linux
