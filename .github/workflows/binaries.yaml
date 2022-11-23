@@ -11,11 +11,15 @@ jobs:
     runs-on: macos-12
     steps:
     - uses: actions/checkout@v2
+    - name: Login to Docker hub
+      run: docker login --username ${{ secrets.DOCKER_USERNAME }} --password ${{ secrets.DOCKER_PASSWORD }}
     - name: Build macOS binary
       run: make build-darwin
   build-linux:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Login to Docker hub
+      run: docker login --username ${{ secrets.DOCKER_USERNAME }} --password ${{ secrets.DOCKER_PASSWORD }}
     - name: Build linux binary
       run: make build-linux
