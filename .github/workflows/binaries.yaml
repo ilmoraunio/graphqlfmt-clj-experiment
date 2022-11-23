@@ -7,13 +7,13 @@ on:
     branches: [ cli-builds ]
 
 jobs:
-  build-amd
+  build-macos:
     runs-on: macos-12
     steps:
     - uses: actions/checkout@v2
     - name: Build macOS binary
       run: build-darwin
-  build-arm:
+  build-linux:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
