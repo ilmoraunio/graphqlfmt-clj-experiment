@@ -16,17 +16,17 @@ build-linux: graalvm-native-image-linux target/graphqlfmt.jar
 
 # MacOS
 
-graalvm-darwin.tar.gz:
-	wget -O graalvm-darwin.tar.gz https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-19.3.0/graalvm-ce-java8-darwin-amd64-19.3.0.tar.gz
+graalvm-darwin-amd64.tar.gz:
+	wget -O graalvm-darwin-amd64.tar.gz https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.3.0/graalvm-ce-java19-darwin-amd64-22.3.0.tar.gz
 
-.graalvm-ce-java8-darwin: graalvm-darwin.tar.gz
+.graalvm-ce-darwin-amd64: graalvm-darwin-amd64.tar.gz
 	mkdir $@
 	tar --directory $@ -xvf $< --strip-components 1
 
-.graalvm-ce-java8-darwin/Contents/Home/bin/native-image: .graalvm-ce-java8-darwin
+.graalvm-ce-darwin-amd64/Contents/Home/bin/native-image: .graalvm-ce-darwin-amd64
 	./$</Contents/Home/bin/gu install native-image
 
-.PHONY: build-darwin
-build-darwin: target/graphqlfmt.jar .graalvm-ce-java8-darwin/Contents/Home/bin/native-image
+.PHONY: build-darwin-amd64
+build-darwin-amd64: target/graphqlfmt.jar .graalvm-ce-darwin-amd64/Contents/Home/bin/native-image
 	./compile-darwin
 

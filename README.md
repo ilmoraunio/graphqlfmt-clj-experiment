@@ -28,7 +28,7 @@ make build-linux
 {hello world}
 EOF
 
-make build-darwin
+make build-darwin-amd64
 ./graphqlfmt <<EOF
 {hello world}
 EOF

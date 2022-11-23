@@ -2,7 +2,7 @@
 
 set -eu
 
-./.graalvm-ce-java8-darwin/Contents/Home/bin/native-image \
+./.graalvm-ce-darwin-amd64/Contents/Home/bin/native-image \
     -jar target/graphqlfmt.jar \
     "-H:Name=graphqlfmt" \
     "-H:+ReportExceptionStackTraces" \
