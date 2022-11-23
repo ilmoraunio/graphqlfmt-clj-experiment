@@ -1,0 +1,21 @@
+name: Clojure CI
+
+on:
+  push:
+    branches: [ cli-builds ]
+  pull_request:
+    branches: [ cli-builds ]
+
+jobs:
+  build-amd
+    runs-on: macos-11
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build macOS binary
+      run: build-darwin
+  build-arm:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build linux binary
+      run: build-linux
