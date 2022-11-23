@@ -5,4 +5,5 @@
   :aot :all
   :resource-paths ["resources"]
   :test-paths ["test" "test/resources"]
-  :profiles {:dev {:resource-paths ["test/resources"]}})
+  :profiles {:dev {:source-paths ["demo"]
+                   :resource-paths ["test/resources"]}})
