@@ -5,5 +5,7 @@
   :aot :all
   :resource-paths ["resources"]
   :test-paths ["test" "test/resources"]
-  :profiles {:dev {:source-paths ["demo"]
+  :profiles {:dev {:dependencies [[com.clojure-goes-fast/clj-async-profiler "1.0.3"]
+                                  [criterium "0.4.6"]]
+                   :source-paths ["demo"]
                    :resource-paths ["test/resources"]}})
