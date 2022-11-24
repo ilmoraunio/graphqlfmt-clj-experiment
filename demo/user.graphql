@@ -1,0 +1,97 @@
+#
+#                            *** MIT LICENSE ***
+# -------------------------------------------------------------------------
+# This code may be modified and distributed under the MIT license.
+# See the LICENSE file for details.
+# -------------------------------------------------------------------------
+#
+# @summary   GraphQL schema related to a User
+#
+# @author    Alvis HT Tang <alvis@hilbert.space>
+# @license   MIT
+# @copyright Copyright (c) 2018 - All Rights Reserved.
+# -------------------------------------------------------------------------
+#
+
+# import * from 'directives.graphql'
+
+#
+# QUERY
+#
+
+type Query {
+  # no @forbid means it'll simply returns null if the user is not autheicated
+  me: User @doc(description: "everything about myself")
+
+  # field visibility on each user is controlled by the permission specified in User
+  users: [User!] @doc(description: "all users in the system")
+}
+
+type User {
+  id: ID!
+    @doc(description: "the unique identifier of the user")
+    @forbid(unless: { hasScope: "read:user:id" })
+
+  name: String!
+    @doc(description: "the name of the user")
+    # visible to logged in users
+    @forbid(unless: { isAuthenticated: true })
+
+  # this field is visible only if the user is me
+  # e.g. `{ users { groups { name } } }` should return null for all other users
+  # except the currently authenticated user
+  accessGroups: [AccessGroup!]
+    @doc(description: "memberships of which the user holds")
+    @forbid(unless: { isMe: true })
+
+  emails: [Email!]
+    @doc(description: "email addresses objected from Auth0")
+    # visible only if the user is me or I'm an ADMIN
+    @forbid(unless: { isMe: true, isAuthorised: true })
+
+  blogs: [Blog!]
+  # this field is public
+}
+
+type Email @forbid(unless: { isAuthenticated: true }) {
+  address: String!
+}
+
+#
+# MUTATION
+#
+
+type Mutation {
+  authenticate(accessToken: String!): User
+    @doc(
+      description: """
+      after returning from auth0 at the end of the autheication process, the web
+      client should send the access token to this endpoint in order to create create
+      a new user if not exist with the auth0 id extracted from the token
+      """
+    )
+
+  # perform actions on a user
+  user(id: String!): UserOperation
+}
+
+type UserOperation {
+  update(name: String): User
+    @doc(description: "update infromation of a user")
+    @forbid(unless: { isMe: true, hasScope: "manage:user" })
+  remove: Boolean
+    @doc(description: "remove a user")
+    @forbid(unless: { isMe: true, hasScope: "manage:user" })
+  addGroup(groupID: ID!): Boolean
+    @doc(description: "add a user to a group")
+    @forbid(unless: { isMe: true })
+  removeGroup(groupID: ID!): Boolean
+    @doc(description: "remove a user from a group")
+    @forbid(unless: { isMe: true })
+  grantScope(userID: ID!, scope: String!): Boolean
+    @doc(description: "grant a scope to a user via auth0")
+    @forbid(unless: { hasScope: "manage:scope" })
+  revokeScope(userID: ID!, scope: String!): Boolean
+    @doc(description: "revoke a scope from the a via auth0")
+    @forbid(unless: { hasScope: "manage:scope" })
+}

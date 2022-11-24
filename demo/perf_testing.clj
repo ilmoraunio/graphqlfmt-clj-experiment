@@ -38,4 +38,7 @@
   }
 }
 "))
+ (let [user-schema (slurp "demo/user.graphql")]
+   (flame-graphs/profile
+    (core/fmt user-schema)))
  (flame-graphs/serve-ui 8080))
