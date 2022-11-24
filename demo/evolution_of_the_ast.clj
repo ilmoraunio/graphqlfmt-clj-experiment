@@ -35,19 +35,5 @@
 
 ;; 5. Formatted output
 
-(print (->> "{foo(bar: 1)}"
-            ast/parse
-            transform/transform
-            options/amend-options
-            transform/re-transform
-            transform/row-ast
-            options/amend-characters-opts
-            print/pr-s))
-
-;; non-trivial wrapping example
-
-(print (core/fmt "
-query Foo($a: String = \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\") {
-  a(a: \"a\")
-}
-"))
+(def formatted
+  (print (core/fmt "{foo(bar: 1)}")))
