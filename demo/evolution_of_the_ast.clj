@@ -10,7 +10,7 @@
 
 (->> "{foo(bar: 1)}" ast/document-parser)
 
-;; 2. Transform into hiccup style
+;; 2. Transform into "enhanced" hiccup style
 
 (->> "{foo(bar: 1)}"
      ast/document-parser
@@ -24,9 +24,7 @@
      options/amend-newline-opts
      options/amend-indentation-level-opts
      options/amend-horizontal-spacing-opts
-     options/amend-structured-tree-opts
-     options/amend-newline-to-structure-tree-opts
-     options/amend-prefer-inlining-opts)
+     #_…)
 
 ;; 4. Re-transform based on options
 
@@ -39,7 +37,7 @@
      transform/amend-horizontal-spacing
      transform/amend-softline)
 
-;; 5. Change to row-based AST
+;; 5. Change to row-based AST (instead of grammar-token-based)
 
 (->> "{foo(bar: 1)}"
      ast/parse
