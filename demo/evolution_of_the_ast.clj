@@ -3,37 +3,60 @@
             [graphqlfmt.core :as core]
             [graphqlfmt.options :as options]
             [graphqlfmt.print :as print]
-            [graphqlfmt.transform :as transform]))
+            [graphqlfmt.transform :as transform]
+            [instaparse.core :as insta]))
 
 ;; 1. Instaparse output
 
 (->> "{foo(bar: 1)}" ast/document-parser)
 
-;; 2. Vectors with options
+;; 2. Transform into hiccup style
 
-(->> "{foo(bar: 1)}" ast/parse)
+(->> "{foo(bar: 1)}"
+     ast/document-parser
+     (insta/transform ast/transform-map))
 
-;; 3. Emit options & apply re-transformation
-;;    eg. block string characters, indentation,
-;;        horizontal spacing
+;; 3. Emit options
 
 (->> "{foo(bar: 1)}"
      ast/parse
-     transform/transform
+     ;
+     options/amend-newline-opts
+     options/amend-indentation-level-opts
+     options/amend-horizontal-spacing-opts
+     options/amend-structured-tree-opts
+     options/amend-newline-to-structure-tree-opts
+     options/amend-prefer-inlining-opts)
+
+;; 4. Re-transform based on options
+
+(->> "{foo(bar: 1)}"
+     ast/parse
      options/amend-options
-     transform/re-transform)
+     ;
+     transform/format-block-string-values
+     transform/amend-newline-spacing
+     transform/amend-horizontal-spacing
+     transform/amend-softline)
 
-;; 4. Change to row-based AST & recalculate some opts
+;; 5. Change to row-based AST
 
 (->> "{foo(bar: 1)}"
      ast/parse
-     transform/transform
      options/amend-options
      transform/re-transform
+     ;
      transform/row-ast
      options/amend-characters-opts)
 
-;; 5. Formatted output
+;; 6. Formatted output
 
-(def formatted
-  (print (core/fmt "{foo(bar: 1)}")))
+(->> "{foo(bar: 1)}"
+     ast/parse
+     options/amend-options
+     transform/re-transform
+     transform/row-ast
+     options/amend-characters-opts
+     ;
+     print/pr-s
+     #_print)
