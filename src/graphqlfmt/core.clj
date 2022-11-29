@@ -9,7 +9,6 @@
   [s]
   (->> s
     ast/parse
-    transform/transform
     options/amend-options
     transform/re-transform
     transform/row-ast

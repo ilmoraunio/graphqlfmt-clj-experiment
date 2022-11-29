@@ -30,6 +30,9 @@
                   [:Selection {}]
                   xs)))
 
+(def comma-value
+  [:Comma {} ","])
+
 (defn float-value [x & ys]
   [:FloatValue {} (str x (apply str ys))])
 
@@ -48,14 +51,27 @@
                                 [:Argument {}]
                                 xs))
    :Arguments (fn [& xs]
-                (reduce
-                  (fn [coll x] (conj coll x))
-                  [:Arguments {}]
-                  xs))
+                (:acc (reduce (fn [{:keys [head] :as acc-head} [node :as x]]
+                                (-> (update acc-head :acc conj
+                                            (if (and (= node :Argument)
+                                                     (= (ffirst head) :Argument))
+                                              (into x [comma-value])
+                                              x))
+                                    (update :head rest)))
+                              {:acc [:Arguments {}]
+                               :head (rest xs)}
+                              xs)))
    :ArgumentsDefinition (fn [& xs]
-                          (reduce (fn [coll x] (conj coll x))
-                                  [:ArgumentsDefinition {}]
-                                  xs))
+                          (:acc (reduce (fn [{:keys [head] :as acc-head} [node :as x]]
+                                          (-> (update acc-head :acc conj
+                                                      (if (and (= node :InputValueDefinition)
+                                                               (= (ffirst head) :InputValueDefinition))
+                                                        (into x [comma-value])
+                                                        x))
+                                              (update :head rest)))
+                                        {:acc [:ArgumentsDefinition {}]
+                                         :head (rest xs)}
+                                        xs)))
    :BlockQuote (fn [] [:BlockQuote {} "\"\"\""])
    :BlockQuoteOpen (fn [] [:BlockQuoteOpen {} [:Printable {} "\"\"\""]])
    :BlockQuoteClose (fn [] [:BlockQuoteClose {} [:Printable {} "\"\"\""]])
@@ -63,10 +79,10 @@
    :BlockStringCharacters (fn [& xs]
                             [:BlockStringCharacters {}
                              [:Printable {} (apply str (reduce
-                                                         (fn [coll [_node-name _opts s]]
-                                                           (conj coll s))
-                                                         []
-                                                         xs))]])
+                                                        (fn [coll [_node-name _opts s]]
+                                                          (conj coll s))
+                                                        []
+                                                        xs))]])
    :BooleanValue boolean-value
    :BraceClose (fn [x] [:BraceClose {} [:Printable {} x]])
    :BraceOpen (fn [x] [:BraceOpen {} [:Printable {} x]])
@@ -211,9 +227,17 @@
                        [:ListType {}]
                        xs))
    :ListValue (fn [& xs]
-                (reduce (fn [coll x] (conj coll x))
-                        [:ListValue {}]
-                        xs))
+                (conj (:acc (reduce (fn [{:keys [head] :as acc-head} [node :as x]]
+                                      (-> (update acc-head :acc conj
+                                                  (if (and (= node :Value)
+                                                           (= (ffirst head) :Value))
+                                                    (into x [comma-value])
+                                                    x))
+                                          (update :head rest)))
+                                    {:acc [:ListValue {} [:Printable {} "["]]
+                                     :head (rest xs)}
+                                    xs))
+                      [:Printable {} "]"]))
    :Name (fn [x] [:Name {} [:Printable {} x]])
    :NamedType (fn [x] [:NamedType {} x])
    :NegativeSign str
@@ -237,11 +261,16 @@
                                   [:ObjectTypeExtension {}]
                                   (interpose [:Printable {} " "] xs)))
    :ObjectValue (fn [& xs]
-                  (reduce
-                    (fn [coll x]
-                      (conj coll x))
-                    [:ObjectValue {}]
-                    xs))
+                  (:acc (reduce (fn [{:keys [head] :as acc-head} [node :as x]]
+                                  (-> (update acc-head :acc conj
+                                              (if (and (= node :ObjectField)
+                                                       (= (ffirst head) :ObjectField))
+                                                (into x [comma-value])
+                                                x))
+                                      (update :head rest)))
+                                {:acc [:ObjectValue {}]
+                                 :head (rest xs)}
+                                xs)))
    :OnKeyword (fn [x] [:OnKeyword {} [:Printable {} x]])
    :OperationDefinition (fn [& xs]
                           (reduce (fn [coll x] (conj coll x))
@@ -348,9 +377,16 @@
                                  [:VariableDefinition {}]
                                  xs))
    :VariableDefinitions (fn [& xs]
-                          (conj (reduce (fn [coll x] (conj coll x))
-                                        [:VariableDefinitions {}]
-                                        xs)
+                          (conj (:acc (reduce (fn [{:keys [head] :as acc-head} [node :as x]]
+                                           (-> (update acc-head :acc conj
+                                                       (if (and (= node :VariableDefinition)
+                                                                (= (ffirst head) :VariableDefinition))
+                                                         (into x [comma-value])
+                                                         x))
+                                               (update :head rest)))
+                                         {:acc [:VariableDefinitions {}]
+                                          :head (rest xs)}
+                                         xs))
                                 [:Printable {} " "]))})
 
 ;; public

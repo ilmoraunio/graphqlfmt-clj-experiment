@@ -3,68 +3,7 @@
     [instaparse.core :as insta]
     [graphqlfmt.util :as util]))
 
-(def comma-value
-  [:Comma {} ","])
-
 (def empty-row [:Row {}])
-
-(def transform-map
-  {:Arguments (fn [opts & xs]
-                (:acc (reduce (fn [{:keys [head] :as acc-head} [node & _ :as x]]
-                                (-> (update acc-head :acc conj
-                                            (if (and (= node :Argument)
-                                                     (= (ffirst head) :Argument))
-                                              (into x [comma-value])
-                                              x))
-                                  (update :head rest)))
-                              {:acc [:Arguments opts]
-                               :head (rest xs)}
-                              xs)))
-   :ArgumentsDefinition (fn [opts & xs]
-                          (:acc (reduce (fn [{:keys [head] :as acc-head} [node & _ :as x]]
-                                          (-> (update acc-head :acc conj
-                                                      (if (and (= node :InputValueDefinition)
-                                                               (= (ffirst head) :InputValueDefinition))
-                                                        (into x [comma-value])
-                                                        x))
-                                            (update :head rest)))
-                                        {:acc [:ArgumentsDefinition opts]
-                                         :head (rest xs)}
-                                        xs)))
-   :ListValue (fn [opts & xs]
-                (conj (:acc (reduce (fn [{:keys [head] :as acc-head} [node & _ :as x]]
-                                      (-> (update acc-head :acc conj
-                                                  (if (and (= node :Value)
-                                                           (= (ffirst head) :Value))
-                                                    (into x [comma-value])
-                                                    x))
-                                        (update :head rest)))
-                                    {:acc [:ListValue opts [:Printable {} "["]]
-                                     :head (rest xs)}
-                                    xs))
-                      [:Printable {} "]"]))
-   :ObjectValue (fn [opts & xs]
-                  (:acc (reduce (fn [{:keys [head] :as acc-head} [node & _ :as x]]
-                                  (-> (update acc-head :acc conj
-                                              (if (and (= node :ObjectField)
-                                                       (= (ffirst head) :ObjectField))
-                                                (into x [comma-value])
-                                                x))
-                                    (update :head rest)))
-                                {:acc [:ObjectValue opts]
-                                 :head (rest xs)}
-                                xs)))
-   :VariableDefinitions (fn [opts & xs]
-                          (:acc (reduce (fn [{:keys [head] :as acc-head} [node & _ :as x]]
-                                          (-> (update acc-head :acc conj
-                                                      (if (and (= node :VariableDefinition)
-                                                               (= (ffirst head) :VariableDefinition))
-                                                        (into x [comma-value])
-                                                        x))
-                                            (update :head rest)))
-                                        {:acc [:VariableDefinitions opts]
-                                         :head (rest xs)}
-                                        xs)))})
 
 (defn block-string-value
   [s]
@@ -197,10 +136,6 @@
     (seq rst) (into [node opts] (mapv (partial -row-ast! rows row) rst))))
 
 ;; public
-
-(defn transform
-  [ast]
-  (insta/transform transform-map ast))
 
 (defn re-transform
   [ast]
