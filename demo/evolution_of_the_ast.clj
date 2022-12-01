@@ -57,4 +57,4 @@
      options/amend-characters-opts
      ;
      print/pr-s
-     #_print)
+     print)
