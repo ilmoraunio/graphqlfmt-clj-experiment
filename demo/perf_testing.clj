@@ -3,6 +3,7 @@
             [graphqlfmt.core :as core]))
 
 (comment
+ ;; simple test case
  (flame-graphs/profile
   (core/fmt "
  {
@@ -38,6 +39,7 @@
   }
 }
 "))
+ ;; slightly more complex test case
  (let [user-schema (slurp "demo/user.graphql")]
    (flame-graphs/profile
     (core/fmt user-schema)))
