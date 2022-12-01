@@ -37,7 +37,7 @@
      transform/amend-horizontal-spacing
      transform/amend-softline)
 
-;; 5. Change to row-based AST (instead of grammar-token-based)
+;; 5. Change to row-based AST
 
 (->> "{foo(bar: 1)}"
      ast/parse
